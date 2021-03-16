@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
+    <title>Job Search</title>
+</head>
+<body class="search">
+
+    
+    <!--Navigation Bar-->
+    <header>
+
+        <div class="navigation">
+
+            <form action="/" method="post">
+                <input type="Image" class="Logo" src="../static/WorkNow.png">
+            </form>
+
+            <nav class="navigator">
+                <ul>
+                    <li><a href="/search">Job Search</a></li>
+                    <li><a href="/employers">Employers</a></li>
+                    <li><a href="choice.html">Why Us?</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <ul class="login">
+                <li><a href="login.html">Login/Register</a></li>
+            </ul>
+
+            <div class="navigator-small" id="navigate" onclick="navigation()">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="last"></div>
+
+            </div>
+
+        </div>
+
+        <nav class="navigator_second" id="navigator">
+            <ul>
+                <li><a href="/search">Job Search</a></li>
+                <li><a href="/employers">Employers</a></li>
+                <li><a href="choice.html">Why Us?</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html">Login/Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="search_area">
+            <video src="../static/journey.mp4" autoplay loop muted></video>
+            <div class="show_search">
+                <div class="search_box">
+                    <div class="wrapper">
+                        <div class="select-box">
+
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="radio" class="radio" id="dublin" name="category" />
+                                    <label for="dublin">Dublin</label>
+                                </div>
+
+                                <div class="option">
+                                    <input type="radio" class="radio" id="drogheda" name="category" />
+                                    <label for="drogheda">Drogheda</label>
+                                </div>
+
+                                <div class="option">
+                                    <input type="radio" class="radio" id="galway" name="category" />
+                                    <label for="galway">Galway</label>
+                                </div>
+
+                                <div class="option">
+                                    <input type="radio" class="radio" id="kilkenny" name="category" />
+                                    <label for="kilkenny">Kilkenny</label>
+                                </div>
+
+                                <div class="option">
+                                    <input type="radio" class="radio" id="limerick" name="category" />
+                                    <label for="limerick">Limerick</label>
+                                </div>
+
+                                <div class="option">
+                                    <input type="radio" class="radio" id="wexford" name="category" />
+                                    <label for="wexford">Wexford</label>
+                                </div>
+
+                            </div>
+
+                            <div class="selected" id="select">
+                                Location
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <input type="text" class="search_bar" value="Search Job Position" onblur="if(this.value==''){ this.value='Search Job Position'; this.style.color='#FFFFFF';}"
+                           onfocus="if(this.value=='Search Job Position'){ this.value=''; this.style.color='#FFFFFF';}"
+                           style="color:#FFFFFF;" />"
+                    <button type="submit" class="search_button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer_content">
+                    <p>&copy; WorkNow 2021</p>
+                </div>
+            </div>
+
+        </div>
+
+       
+
+    </main>
+    <script src="../static/script.js"></script>
+</body>
+
+
+</html>
