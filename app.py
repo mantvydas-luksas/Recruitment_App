@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import spacy
 import json
 import random
-from spacy import en_core_web_sm
+import en_core_web_sm
 
 from spacy.tokens import Doc
 from spacy.training import Example
