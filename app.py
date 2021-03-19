@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import spacy
 import json
 import random
-import en
+import en_core_web_sm
 
 from spacy.tokens import Doc
 from spacy.training import Example
@@ -11,7 +11,7 @@ from spacy.training import Example
 from spacy.util import minibatch, compounding
 from pathlib import Path
 
-nlp = en.load()
+nlp = en_core_web_sm.load()
 
 
 ner = nlp.get_pipe("ner")
