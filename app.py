@@ -55,8 +55,8 @@ def redirect():
 @app.route('/')
 def index():
 
-    for token in doc:
-        print(token.text)
+    #for token in doc:
+       # print(token.text)
 
     return render_template('index.html')
 
