@@ -3,38 +3,38 @@ from flask_sqlalchemy import SQLAlchemy
 import spacy
 import json
 import random
-#from spacy import en_core_web_sm
+from spacy import en_core_web_sm
 
-#from spacy.tokens import Doc
-#from spacy.training import Example
+from spacy.tokens import Doc
+from spacy.training import Example
 
-#from spacy.util import minibatch, compounding
+from spacy.util import minibatch, compounding
 from pathlib import Path
 
-#nlp = en_core_web_sm.load()
+nlp = en_core_web_sm.load()
 
-#ner = nlp.get_pipe("ner")
+ner = nlp.get_pipe("ner")
 
-#TRAIN_DATA = [
-#("Dynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business applications using OOP and Java/J2EE technologies. ",{"entities":[(0,60,"years")]})
-#]
+TRAIN_DATA = [
+("Dynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business applications using OOP and Java/J2EE technologies. ",{"entities":[(0,60,"years")]})
+]
 
-#ner.add_label('skills')
+ner.add_label('skills')
 
-#pipe_exceptions = ["ner"]
-#unaffected_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptions]
+pipe_exceptions = ["ner"]
+unaffected_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptions]
 
-#with nlp.disable_pipes(*unaffected_pipes):
- #   for iteration in range(20):
-  #      random.shuffle(TRAIN_DATA)
-   #     for raw_text,entity_offsets in TRAIN_DATA:
-    #        doc=nlp.make_doc(raw_text)
-     #       nlp.update([Example.from_dict(doc,entity_offsets)])
+with nlp.disable_pipes(*unaffected_pipes):
+    for iteration in range(20):
+        random.shuffle(TRAIN_DATA)
+        for raw_text,entity_offsets in TRAIN_DATA:
+            doc=nlp.make_doc(raw_text)
+            nlp.update([Example.from_dict(doc,entity_offsets)])
 
-#doc = nlp("Dynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business ")
+doc = nlp("Dynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business ")
 
-#for ent in doc.ents:
- #   print(ent.label_, ent.text)
+for ent in doc.ents:
+   print(ent.label_, ent.text)
 
 ENV = 'prod'
    
@@ -55,8 +55,8 @@ def redirect():
 @app.route('/')
 def index():
 
-    #for token in doc:
-       # print(token.text)
+    for token in doc:
+        print(token.text)
 
     return render_template('index.html')
 
