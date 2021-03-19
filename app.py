@@ -10,6 +10,8 @@ from spacy.training import Example
 from spacy.util import minibatch, compounding
 from pathlib import Path
 
+from spacy import en_core_web_sm
+
 nlp = spacy.load('en_core_web_sm')
 
 
