@@ -10,9 +10,7 @@ from spacy.training import Example
 from spacy.util import minibatch, compounding
 from pathlib import Path
 
-
-import en_core_web_sm
-nlp = en_core_web_sm.load()
+nlp = spacy.load('en_core_web_sm')
 
 
 ner = nlp.get_pipe("ner")
