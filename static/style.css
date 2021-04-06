@@ -371,14 +371,6 @@ video {
     display: none;    
 }
 
-.employers {
-    width: 100%;
-    height: 100vh;
-    position: relative;
-    z-index: -1;
-    margin-bottom: 20px;
-}
-
 #v2 {
     max-width: 20%;
     position: absolute;
@@ -388,6 +380,111 @@ video {
     background-color: rgba(0,0,0,0.8);
     color: #FFFFFF;
     padding: 6rem 6rem;
+}
+
+.employer_info {
+
+    display: flex;
+    
+    
+}
+
+.employer_display {
+    
+    position: absolute;
+    background: url(employer_section.jpg);
+    background-size: cover;
+    position: absolute;
+    margin-left: 20px;
+    width: 96vw;
+    height: 240vh;
+    
+}
+
+.features_display {
+
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-top:118px;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    
+}
+
+.employer_introduction {
+    width: 74%;
+    padding: 40px;
+}
+
+    .employer_introduction h1 {
+
+        font-weight: bold;
+        font-family: sans-serif;
+        text-align: center;
+        margin-bottom: 28px;
+    }
+
+    .employer_introduction > div p {
+
+        padding: 12px;
+        font-size: 1.2rem;
+        font-family: sans-serif;
+        line-height: 1.4rem;
+        text-align: center;
+        font-weight: bold;
+    }
+
+.register_link {
+
+    display: inline-block;
+    background-color: #FFFFFF;
+    color: #111111;
+    font-weight: bold;
+    margin-left: 200px;
+    font-family:sans-serif;
+    padding: 12px;
+    cursor: pointer;
+}
+
+    .register_link:hover {
+        opacity: 0.6;
+    }
+
+.description {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
+    background-color: rgba(0,0,0,0.8);
+    padding: 12px;
+    margin-top: 40px;
+    max-width: 68vw;
+    text-align: left;
+  
+}
+
+    .description:nth-child(2n+1) img {
+        order:2;
+    }
+
+    .description img {
+        
+        height: 260px;
+       
+    }
+
+    .description h3 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+.description > div {
+    
+    padding: 12px;
+    font-size: 1.0rem;
+    font-family: sans-serif;
+    line-height: 1.4rem;
 }
 
 
@@ -545,5 +642,45 @@ video {
     transform: translateX(0%);
 }
 
+@media (max-width: 1180px) {
+    .employer_display {
+        z-index: -100;
+    }
+    
+    .description {
+        display:block;
+        min-width: 40%; 
+    }
 
+        .description img {
+            
+            height: 30vh;
+        }
 
+    .register_link {
+        display: inline-block;
+        background-color: #FFFFFF;
+        color: #111111;
+        font-weight: bold;
+        margin-left: 40px;
+        font-family: sans-serif;
+        padding: 12px;
+        cursor: pointer;
+    }
+
+        .register_link:hover {
+            opacity: 0.6;
+        }
+
+    .employer_display {
+        position: absolute;
+        background: #111111;
+        background-size: cover;
+        position: absolute;
+        margin-left: 20px;
+        width: 96vw;
+        height: 700vh;
+    }
+    
+
+}

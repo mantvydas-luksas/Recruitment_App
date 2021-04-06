@@ -58,6 +58,8 @@ def index():
 
     return render_template('index.html')
 
+
+
 @app.route('/search')
 def search():
 
@@ -66,7 +68,14 @@ def search():
 @app.route('/employers')
 def employers():
     
+    
     return render_template('employers.html')
+
+@app.route('/register_redirect')
+def register_redirect():
+    
+    
+    return render_template('search.html')
 
 if __name__ == '__main__':
    

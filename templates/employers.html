@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
     <title>Employers</title>
 </head>
@@ -52,24 +53,89 @@
     </header>
 
     <main>
-        <div class="employers">
-            <div class="employers_display">
-                <img src="../static/employer_section.jpg" alt="Employers" />
-                <div class="showcase-item-text" id="v2">
-                    <p>
-                        Step into freedom with our machine technology selecting the right candidates for you. 
-                    </p>
+
+        <div class="employer_info">
+            <div class="employer_display">
+                <div class="features_display">
+
+                    <div class="employer_introduction">
+                        <div>
+                            <h1>Recruitment Simplified</h1>
+                            <p>
+                                Let us select candidates on behalf of you with the following list of features below...
+                            </p>
+                        </div>
+
+
+                    </div>
+
+                    <div class="description">
+
+                        <img src="../static/search.jpg" />
+                        <div>
+                            <h3>Search For Talent</h3>
+                            <p>
+                                WorkNow allows you to post a job advert for any city in Ireland! <br />Simply, login with your details, fill out the details of the job posting
+                                and specify the job description, consisting of all the requirements you are looking for. <br /><br />All your job posting are listed in one place
+                                and you can easily view the successful candidates that have been picked for any job posting.
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="description" data-aos="fade-left">
+
+                        <img src="../static/resume.jpg" />
+                        <div>
+                            <h3>Automatic CV Evaluation</h3>
+                            <p>
+                                Every little detail of a candidate's resume is checked, so you can sit back, relax and let us do the WorkNow on behalf of you!<br /><br />
+                                Thanks to our AI technology, if the skills and past history employment of a candidate satisfies the requirements that you are looking for,
+                                the details of the candidate are passed on to you automatically, if you wish to evaluate it further.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="description" data-aos="fade-right">
+
+                        <img src="../static/interview_meeting.jpg" />
+                        <div>
+                            <h3>Interview Scheduling</h3>
+                            <p>
+                                Have a list of successful candidates at your disposal, what's next? Have you got to a schedule a meeting now ? <br /> <br />Not at all!
+                                Let us send a reminder to each successful candidate of the date and location you specified for holding an interview meeting.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="description" data-aos="fade-left">
+
+                        <img src="../static/registration.jpg" />
+                        <div>
+                            <h3>Register Today</h3>
+                            <p>
+                                So what are you waiting for! Register today and begin your search for potential talent to avail of all these
+                                features. <br /><br />Through your account dashboard, you will be able to post a job advert, specify the requirements you are looking for in the
+                                job description and view successful candidates from a variety of your job postings.<br /><br /><a href="register_redirect"><button class="register_link">Register</button></a>
+                            </p>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-
-
         </div>
-
-
 
     </main>
 
     <script src="../static/script.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            offset: 200,
+            duration: 1000
+
+        });
+    </script>
 </body>
 
 </html>
