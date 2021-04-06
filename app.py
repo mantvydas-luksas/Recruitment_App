@@ -4,15 +4,12 @@ import spacy
 import json
 import random
 import en_core_web_sm
-
 from spacy.tokens import Doc
 from spacy.training import Example
-
 from spacy.util import minibatch, compounding
 from pathlib import Path
 
 nlp = en_core_web_sm.load()
-
 
 ner = nlp.get_pipe("ner")
 
@@ -37,7 +34,7 @@ doc = nlp("Dynamic individual with 6 years of software development experience in
 for ent in doc.ents:
    print(ent.label_, ent.text)
 
-ENV = 'prod'
+ENV = 'dev'
    
 app= Flask(__name__)
 
@@ -56,8 +53,8 @@ def redirect():
 @app.route('/')
 def index():
 
-    for token in doc:
-        print(token.text)
+    #for token in doc:
+      #  print(token.text)
 
     return render_template('index.html')
 

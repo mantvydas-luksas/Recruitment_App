@@ -371,6 +371,25 @@ video {
     display: none;    
 }
 
+.employers {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    z-index: -1;
+    margin-bottom: 20px;
+}
+
+#v2 {
+    max-width: 20%;
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.8);
+    color: #FFFFFF;
+    padding: 6rem 6rem;
+}
+
 
 @keyframes changeImages {
     25% {
@@ -525,4 +544,6 @@ video {
 .nav-active {
     transform: translateX(0%);
 }
+
+
 
