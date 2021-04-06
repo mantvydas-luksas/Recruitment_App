@@ -382,14 +382,14 @@ video {
     padding: 6rem 6rem;
 }
 
-.employer_info {
+.info {
 
     display: flex;
     
     
 }
 
-.employer_display {
+.display {
     
     position: absolute;
     background: url(employer_section.jpg);
@@ -413,12 +413,12 @@ video {
     
 }
 
-.employer_introduction {
+.introduction {
     width: 74%;
     padding: 40px;
 }
 
-    .employer_introduction h1 {
+    .introduction h1 {
 
         font-weight: bold;
         font-family: sans-serif;
@@ -426,7 +426,7 @@ video {
         margin-bottom: 28px;
     }
 
-    .employer_introduction > div p {
+    .introduction > div p {
 
         padding: 12px;
         font-size: 1.2rem;
@@ -643,8 +643,15 @@ video {
 }
 
 @media (max-width: 1180px) {
-    .employer_display {
+    .display {
         z-index: -100;
+        position: absolute;
+        background: #111111;
+        background-size: cover;
+        position: absolute;
+        margin-left: 20px;
+        width: 96vw;
+        height: 700vh;
     }
     
     .description {
@@ -671,16 +678,4 @@ video {
         .register_link:hover {
             opacity: 0.6;
         }
-
-    .employer_display {
-        position: absolute;
-        background: #111111;
-        background-size: cover;
-        position: absolute;
-        margin-left: 20px;
-        width: 96vw;
-        height: 700vh;
-    }
-    
-
 }

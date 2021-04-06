@@ -58,8 +58,6 @@ def index():
 
     return render_template('index.html')
 
-
-
 @app.route('/search')
 def search():
 
@@ -71,11 +69,21 @@ def employers():
     
     return render_template('employers.html')
 
-@app.route('/register_redirect')
-def register_redirect():
-    
-    
-    return render_template('search.html')
+
+@app.route('/choice')
+def choice():
+
+    return render_template('choice.html')
+
+@app.route('/contact')
+def contact():
+
+    return render_template('contact.html')
+
+@app.route('/login')
+def login():
+
+    return render_template('login.html')
 
 if __name__ == '__main__':
    
