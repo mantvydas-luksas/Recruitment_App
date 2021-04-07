@@ -401,6 +401,16 @@ video {
     
 }
 
+.jobs_display {
+    position: absolute;
+    background: url(talent.jpg);
+    background-size: cover;
+    position: absolute;
+    margin-left: 20px;
+    width: 96vw;
+    height: 240vh;
+}
+
 .features_display {
 
     display: flex;
@@ -411,6 +421,14 @@ video {
     justify-content: center;
     align-content: center;
     
+}
+
+.custom_introduction h1 {
+    color: #FFFFFF;
+}
+
+.custom_introduction p {
+    color: #FFFFFF;
 }
 
 .introduction {
@@ -436,19 +454,20 @@ video {
         font-weight: bold;
     }
 
-.register_link {
+.redirect_link {
 
     display: inline-block;
     background-color: #FFFFFF;
     color: #111111;
     font-weight: bold;
     margin-left: 200px;
+    margin-top: 20px;
     font-family:sans-serif;
     padding: 12px;
     cursor: pointer;
 }
 
-    .register_link:hover {
+    .redirect_link:hover {
         opacity: 0.6;
     }
 
@@ -484,7 +503,114 @@ video {
     padding: 12px;
     font-size: 1.0rem;
     font-family: sans-serif;
-    line-height: 1.4rem;
+    line-height: 1.6rem;
+}
+
+.employer_link {
+    display: inline-block;
+    background-color: #FFFFFF;
+    color: #111111;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: 170px;
+    font-family: sans-serif;
+    padding: 12px;
+    cursor: pointer;
+}
+
+    .employer_link:hover {
+        opacity: 0.6;
+    }
+
+.contact_display {
+    
+    position: absolute;
+    background: url(contact_us.jpg);
+    background-size: cover;
+    position: absolute;
+    margin-left: 20px;
+    width: 96vw;
+    height: 160vh;
+    z-index: -100;
+
+}
+
+    .contact_display h1 {
+        text-align: center;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+
+.contact_form {
+
+    z-index: -100;
+    max-width: 1200px;
+    border-radius: 8px;
+    display: flex;
+    position: relative;
+    margin: 0 auto;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    background: rgba(0, 0, 0, 0.8)
+}
+
+.input_fields {
+    z-index: -100;
+    display: flex;
+    flex-direction:column;
+    margin-right: 6%;
+}
+
+.input_fields, .message {
+    width: 40%;
+}
+
+.input_fields .input, .message textarea{
+    margin: 12px 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 4px solid #FFFFFF;
+    padding: 12px;
+    color: #FFFFFF;
+    text-align: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    width: 100%;
+}
+
+.contact_button {
+
+    background-color: #FFFFFF;
+    color: #111111;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.contact_button:hover {
+    opacity: 0.6;
+}
+
+.message textarea{
+
+    height: 400px;
+}
+
+::-webkit-input-placeholder {
+
+    margin-top: 50%;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+
+::-moz-placeholder {
+    margin-top: 50%;
+    color: #FFFFFF;
+    text-align: center;
 }
 
 
@@ -539,6 +665,20 @@ video {
 }
 
 @media screen and (max-width: 620px) {
+
+    .contact_form {
+        flex-direction: column;
+    }
+
+    .message textarea {
+
+        height: 60px;
+    }
+
+    .input_fields, message {
+
+        width: 100%;
+    }
 
     body {
         overflow-y: hidden;
@@ -664,18 +804,19 @@ video {
             height: 30vh;
         }
 
-    .register_link {
+    .redirect_link {
         display: inline-block;
         background-color: #FFFFFF;
         color: #111111;
         font-weight: bold;
-        margin-left: 40px;
+        margin-left: 0px;
         font-family: sans-serif;
         padding: 12px;
         cursor: pointer;
     }
 
-        .register_link:hover {
+        .redirect_link:hover {
             opacity: 0.6;
         }
+
 }
