@@ -45,6 +45,11 @@ else:
      app.debug = False
      app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm'
 
+@app.route('/registration_landing')
+def registration_landing():
+
+    return render_template('registration_landing.html')
+
 @app.route('/', methods=['POST'])
 def redirect():
     
@@ -84,6 +89,21 @@ def contact():
 def login():
 
     return render_template('login.html')
+
+@app.route('/candidate_registration')
+def candidate_registration():
+
+    return render_template('candidate_registration.html')
+
+@app.route('/employer_registration')
+def employer_registration():
+    
+    return render_template('employer_registration.html')
+
+@app.route('/email_request')
+def email_request():
+
+    return render_template('email_request.html')
 
 if __name__ == '__main__':
    

@@ -6,7 +6,7 @@
     <link rel="shortcut icon" type="image/png" href="../static/favicon.png" />
     <link rel="stylesheet" href="../static/style.css" />
     <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
-    <title>Login/Register</title>
+    <title>Candidate Registration</title>
 </head>
 <body>
 
@@ -51,30 +51,52 @@
             </ul>
         </nav>
     </header>
-
     <main>
         <div class="login_display">
             <div class="login_form">
                 <div class="login_page">
-                    <h1>Login</h1>
+                    <h1>Register</h1>
                     <div class="textbox">
                         <i class="fas fa-user" aria-hidden="true"></i>
-                        <input type="text" placeholder="Username" name="" value="" />
+                        <input type="text" placeholder="First Name" name="" value="" />
+                    </div>
+
+                    <div class="textbox">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                        <input type="text" placeholder="Last Name" name="" value="" />
+                    </div>
+
+                    <div class="textbox">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <input type="email" placeholder="Email" name="" value="" />
+                    </div>
+
+                    <div class="textbox">
+                        <i class="fas fa-warehouse" aria-hidden="true"></i>
+                        <input type="text" placeholder="Company Name" name="" value="" />
+                    </div>
+
+                    <div class="textbox">
+                        <i class="fas fa-phone-square-alt" aria-hidden="true"></i>
+                        <input type="tel" placeholder="Phone" name="" value="" />
                     </div>
 
                     <div class="textbox">
                         <i class="fas fa-lock" aria-hidden="true"></i>
-                        <input type="password" placeholder="Password" name="" value="" />
+                        <input type="password" placeholder="Create Password" name="" value="" />
                     </div>
 
-                    <input class="login_button" type="button" placeholder="Login" name="" value="Login" />
-                    <a href="/registration_landing"><input class="login_button" type="button" placeholder="Login" name="" value="Register" /></a>
-                    <a href="/email_request"><input class="login_button" type="button" placeholder="Login" name="" value="Forgot Password?" /></a>
-</div>
+                    <div class="textbox">
+                        <i class="fas fa-lock" aria-hidden="true"></i>
+                        <input type="password" placeholder="Confirm Password" name="" value="" />
+                    </div>
+
+                    <input class="login_button" type="button" name="" value="Register" />
+
+                </div>
             </div>
         </div>
     </main>
-
     <script src="../static/script.js"></script>
 
 </body>

@@ -735,6 +735,88 @@ input:focus:-ms-input-placeholder {
         color: #111111;
     }
 
+.login_display h2{
+
+    font-size: 40px;
+    color: #FFFFFF;
+    text-align: center;
+    margin-top: 84px;
+}
+
+.account_selection {
+    display: flex;
+    position: relative;
+    top:260px;
+    left:50%;
+    font-size: 28px;
+    height: 400px;
+    transform: translate(-50%, -50%);
+    width: 48%;
+    justify-items: center;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    
+}
+
+.job_seeker_button {
+    text-align: center;
+    width: 268px;
+    font-weight: bold;
+    height: 268px;
+    border-radius: 268px;
+    background-color: rgba(0,0,0,0.8);
+    border: 2px solid #AAAAAA;
+    margin-right: 12px;
+    opacity: 1;
+    font-family: sans-serif;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+    .job_seeker_button p {
+        
+            margin-top: 114px;
+    }
+
+    
+
+    .job_seeker_button:hover {
+
+        transition-duration: 0.4s;
+        background-color: #AAAAAA;
+        opacity: 0.6;
+        color: #111111;
+    }
+
+.employer_button {
+    text-align: center;
+    width: 268px;
+    font-weight: bold;
+    height: 268px;
+    border-radius: 268px;
+    background-color: rgba(0,0,0,0.8);
+    border: 2px solid #AAAAAA;
+    opacity: 1;
+    font-family: sans-serif;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.employer_button p {
+    margin-top: 114px;
+}
+
+    .employer_button:hover {
+        transition-duration: 0.4s;
+        background-color: #AAAAAA;
+        opacity: 0.6;
+        color: #111111;
+    }
+
+a {
+    text-decoration: none;
+}
+
 @keyframes changeImages {
     25% {
         opacity: 1;
