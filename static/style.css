@@ -1,3 +1,4 @@
+
 * {
     padding: 0;
     margin: 0;
@@ -38,7 +39,7 @@ li {
             text-decoration: underline;
             text-decoration-color: #AAAAAA;
             transition-duration: 0.4s;
-            color: #AAAAAA
+            color: #AAAAAA;
         }
 
 h1, h2 {
@@ -51,6 +52,7 @@ h1, h2 {
     top: 0;
     display: flex;
     margin: auto;
+    font-family: sans-serif;
     background-color: #111111;
     justify-content: space-between;
     align-content: center;
@@ -423,13 +425,10 @@ video {
     
 }
 
-.custom_introduction h1 {
+.custom_introduction {
     color: #FFFFFF;
 }
 
-.custom_introduction p {
-    color: #FFFFFF;
-}
 
 .introduction {
     width: 74%;
@@ -459,16 +458,19 @@ video {
     display: inline-block;
     background-color: #FFFFFF;
     color: #111111;
+    border-radius: 8px;
     font-weight: bold;
     margin-left: 200px;
     margin-top: 20px;
+    outline: none;  
     font-family:sans-serif;
     padding: 12px;
     cursor: pointer;
 }
 
     .redirect_link:hover {
-        opacity: 0.6;
+        transition-duration: 0.4s;  
+        background-color: #AAAAAA;
     }
 
 .description {
@@ -509,6 +511,7 @@ video {
 .employer_link {
     display: inline-block;
     background-color: #FFFFFF;
+    border-radius: 8px;
     color: #111111;
     font-weight: bold;
     margin-top: 20px;
@@ -519,7 +522,8 @@ video {
 }
 
     .employer_link:hover {
-        opacity: 0.6;
+        transition-duration: 0.4s;
+        background-color: #AAAAAA;
     }
 
 .contact_display {
@@ -531,7 +535,7 @@ video {
     margin-left: 20px;
     width: 96vw;
     height: 160vh;
-    z-index: -100;
+   
 
 }
 
@@ -542,8 +546,7 @@ video {
     }
 
 .contact_form {
-
-    z-index: -100;
+   
     max-width: 1200px;
     border-radius: 8px;
     display: flex;
@@ -557,10 +560,11 @@ video {
 }
 
 .input_fields {
-    z-index: -100;
+    
     display: flex;
     flex-direction:column;
     margin-right: 6%;
+    
 }
 
 .input_fields, .message {
@@ -571,27 +575,35 @@ video {
     margin: 12px 0;
     background: transparent;
     border: 0;
-    border-bottom: 4px solid #FFFFFF;
+    border-bottom: 4px solid #AAAAAA;
     padding: 12px;
     color: #FFFFFF;
     text-align: center;
     font-family: sans-serif;
     font-weight: bold;
     width: 100%;
+    
 }
 
-.contact_button {
+    .input_fields .input {
+        outline: none;
+    }
 
-    background-color: #FFFFFF;
-    color: #111111;
+.contact_button {
+    border: 2px solid #AAAAAA;
+    background: none;
+    color: #FFFFFF;
     font-family: sans-serif;
     font-weight: bold;
+    font-size: 18px;
     text-align: center;
     cursor: pointer;
 }
 
 .contact_button:hover {
-    opacity: 0.6;
+    transition-duration: 0.4s;
+    background-color: #AAAAAA;
+    color: #111111;
 }
 
 .message textarea{
@@ -613,6 +625,115 @@ video {
     text-align: center;
 }
 
+input:focus::-webkit-input-placeholder {
+    color: transparent;
+}
+
+input:focus:-moz-placeholder {
+    color: transparent;
+}
+
+input:focus::-moz-placeholder {
+    color: transparent;
+}
+
+input:focus:-ms-input-placeholder {
+    color: transparent;
+}
+    
+
+.login_display {
+
+    position: absolute;
+    background: url(login.jpg);
+    background-size: cover;
+    position: absolute;
+    margin-left: 20px;
+    width: 96vw;
+    height: 100vh;
+}
+
+.login_form {
+
+    width: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    
+}
+
+.login_page {
+   
+   margin: 0 auto;  
+}
+
+    .login_page h1 {
+        margin-bottom: 46px;
+        border-bottom: 6px solid #AAAAAA;
+        width: 40%;
+    }
+
+    .login_page .textbox {
+        width: 800px;
+        height: 80px;
+        background: none;
+        border: none;
+    
+    }
+
+        .login_page .textbox input {
+
+            border-bottom: 4px solid #AAAAAA;
+        }
+
+.textbox {
+    width: 100%;
+    overflow: hidden;
+    font-size: 24px;
+    padding: 8px;
+}
+
+.textbox i {
+    margin-right: 24px;
+    
+    
+}
+
+    .textbox input {
+        font-family: sans-serif;
+        font-size: 18px;
+        border: none;
+        background: none;
+        color: #FFFFFF;
+        text-align: left;
+        width: 340px;
+        font-weight: bold;
+        outline: none;
+    }
+
+.login_button {
+    width: 100%;
+    background: none;
+    margin-top: 12px;
+    border: 2px solid #AAAAAA;
+    color: #FFFFFF;
+    text-align: left;
+    padding: 4px;
+    font-size: 18px;
+    font-family: sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 6px;
+}
+
+    .login_button:hover {
+        transition-duration: 0.4s;
+        background-color: #AAAAAA;
+        color: #111111;
+    }
 
 @keyframes changeImages {
     25% {
@@ -793,6 +914,39 @@ video {
         width: 96vw;
         height: 700vh;
     }
+
+    .jobs_display {
+        z-index: -100;
+        position: absolute;
+        background: #111111;
+        background-size: cover;
+        position: absolute;
+        margin-left: 20px;
+        width: 96vw;
+        height: 700vh;
+    }
+
+    .info {
+        z-index: -100;
+    }
+
+
+
+    .contact_display {
+        z-index: -100;
+    }
+
+    .contact_form {
+        z-index: -100;
+    }
+
+    .login_display {
+        z-index: -100;
+    }
+
+    .login_form {
+        z-index: -100;
+    }
     
     .description {
         display:block;
@@ -802,6 +956,11 @@ video {
         .description img {
             
             height: 30vh;
+        }
+
+        .description h3 {
+
+            text-align:left;
         }
 
     .redirect_link {
@@ -816,7 +975,8 @@ video {
     }
 
         .redirect_link:hover {
-            opacity: 0.6;
+            transition-duration: 0.4s;
+            background-color: #AAAAAA;
         }
 
 }

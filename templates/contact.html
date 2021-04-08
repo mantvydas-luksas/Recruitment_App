@@ -9,76 +9,79 @@
     <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
     <title>Contact Us</title>
 </head>
+<body>
+    <!--Navigation Bar-->
+    <header>
 
-<!--Navigation Bar-->
-<header>
+        <div class="navigation">
 
-    <div class="navigation">
+            <form action="/" method="post">
+                <input type="Image" class="Logo" src="../static/WorkNow.png">
+            </form>
 
-        <form action="/" method="post">
-            <input type="Image" class="Logo" src="../static/WorkNow.png">
-        </form>
+            <nav class="navigator">
+                <ul>
+                    <li><a href="/search">Job Search</a></li>
+                    <li><a href="/employers">Employers</a></li>
+                    <li><a href="/choice">Why Us?</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
 
-        <nav class="navigator">
+            <ul class="login">
+                <li><a href="/login">Login/Register</a></li>
+            </ul>
+
+            <div class="navigator-small" id="navigate" onclick="navigation()">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="last"></div>
+
+            </div>
+
+        </div>
+
+        <nav class="navigator_second" id="navigator">
             <ul>
                 <li><a href="/search">Job Search</a></li>
                 <li><a href="/employers">Employers</a></li>
                 <li><a href="/choice">Why Us?</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="/login">Login/Register</a></li>
             </ul>
         </nav>
+    </header>
+    <main>
+        
+        <div class="info">
+            <div class="contact_display">
+                <h1>Contact Us</h1>
+                <div class="contact_form">
+                    <div class="input_fields">
+                        <input type="text" class="input" placeholder="Subject" />
+                        <input type="text" class="input" placeholder="First Name" />
+                        <input type="text" class="input" placeholder="Last Name" />
+                        <input type="text" class="input" placeholder="Email" />
+                        <input type="text" class="input" placeholder="Phone" />
+                    </div>
+                    <div class="message">
+                        <textarea placeholder="Write Message"></textarea>
+                        <div class="contact_button">Send</div>
+                    </div>
 
-        <ul class="login">
-            <li><a href="/login">Login/Register</a></li>
-        </ul>
 
-        <div class="navigator-small" id="navigate" onclick="navigation()">
-            <div class="line1"></div>
-            <div class="line2"></div>
-            <div class="last"></div>
-
-        </div>
-
-    </div>
-
-    <nav class="navigator_second" id="navigator">
-        <ul>
-            <li><a href="/search">Job Search</a></li>
-            <li><a href="/employers">Employers</a></li>
-            <li><a href="/choice">Why Us?</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/login">Login/Register</a></li>
-        </ul>
-    </nav>
-</header>
-<body>
-
-    <div class="info">
-        <div class="contact_display">
-            <h1>Contact Us</h1>
-            <div class="contact_form">
-                <div class="input_fields">
-                    <input type="text" class="input" placeholder="Subject" />
-                    <input type="text" class="input" placeholder="First Name" />
-                    <input type="text" class="input" placeholder="Last Name" />
-                    <input type="text" class="input" placeholder="Email" />
-                    <input type="text" class="input" placeholder="Phone" />
                 </div>
-                <div class="message">
-                    <textarea placeholder="Write Message"></textarea>
-                    <div class="contact_button">Send</div>
-                </div>
-
-
             </div>
-        </div>
+            
         <div class="footer">
             <div class="footer_content">
                 <p>&copy; WorkNow 2021</p>
             </div>
         </div>
-    </div>
+        </div>
+    </main>
 
+    <script src="../static/script.js"></script>
 
 
 </body>
