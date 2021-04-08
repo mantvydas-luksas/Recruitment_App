@@ -52,3 +52,15 @@ nav.onclick = function () {
 
     window.alert("clicked");
 };
+
+function validateCandidateForm() {
+
+    var first_name = document.forms["candidate_form"]["first"].value;
+    if (first_name == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+
+    return true
+
+}

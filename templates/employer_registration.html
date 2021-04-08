@@ -55,43 +55,42 @@
         <div class="login_display">
             <div class="login_form">
                 <div class="login_page">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
                     <h1>Register</h1>
-                    <div class="textbox">
-                        <i class="fas fa-user" aria-hidden="true"></i>
-                        <input type="text" placeholder="First Name" name="" value="" />
-                    </div>
+                    <form name="employer_form" action="/employer_submit" method="post">
+                        <div class="textbox">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <input type="email" placeholder="Company Email" name="email" required />
+                        </div>
 
-                    <div class="textbox">
-                        <i class="fas fa-user" aria-hidden="true"></i>
-                        <input type="text" placeholder="Last Name" name="" value="" />
-                    </div>
+                        <div class="textbox">
+                            <i class="fas fa-warehouse" aria-hidden="true"></i>
+                            <input type="text" placeholder="Company Name" name="company" required />
+                        </div>
 
-                    <div class="textbox">
-                        <i class="fas fa-envelope" aria-hidden="true"></i>
-                        <input type="email" placeholder="Email" name="" value="" />
-                    </div>
+                        <div class="textbox">
+                            <i class="fas fa-phone-square-alt" aria-hidden="true"></i>
+                            <input type="tel" placeholder="Phone" name="phone" required />
+                        </div>
 
-                    <div class="textbox">
-                        <i class="fas fa-warehouse" aria-hidden="true"></i>
-                        <input type="text" placeholder="Company Name" name="" value="" />
-                    </div>
+                        <div class="textbox">
+                            <i class="fas fa-lock" aria-hidden="true"></i>
+                            <input type="password" placeholder="Create Password" name="password" required />
+                        </div>
 
-                    <div class="textbox">
-                        <i class="fas fa-phone-square-alt" aria-hidden="true"></i>
-                        <input type="tel" placeholder="Phone" name="" value="" />
-                    </div>
+                        <div class="textbox">
+                            <i class="fas fa-lock" aria-hidden="true"></i>
+                            <input type="password" placeholder="Confirm Password" name="confirm" required />
+                        </div>
 
-                    <div class="textbox">
-                        <i class="fas fa-lock" aria-hidden="true"></i>
-                        <input type="password" placeholder="Create Password" name="" value="" />
-                    </div>
-
-                    <div class="textbox">
-                        <i class="fas fa-lock" aria-hidden="true"></i>
-                        <input type="password" placeholder="Confirm Password" name="" value="" />
-                    </div>
-
-                    <input class="login_button" type="button" name="" value="Register" />
+                        <input class="login_button" type="submit" value="Register" />
+                    </form>
 
                 </div>
             </div>
