@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session, logging
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Integer, ForeignKey, String, Column, Text
+from sqlalchemy.orm import relationship 
 from passlib.hash import sha256_crypt
 import spacy
 import json
@@ -53,12 +55,17 @@ db = SQLAlchemy(app)
 
 class Candidates(db.Model):
     __tablename__ = 'candidates'
-    id = db.Column(db.Integer, primary_key=True)
+    candidate_id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(255))
     lastname = db.Column(db.String(255))
     phone = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
+    profile = db.Column(db.Text())
+    resume = db.Column(db.Text())
+    
+    
+    submissions = relationship("Submissions", backref="candidates")
 
     def __init__(self, firstname, lastname, phone, email, password):
         self.firstname = firstname
@@ -67,6 +74,62 @@ class Candidates(db.Model):
         self.email = email
         self.password = password
 
+class Submissions(db.Model):
+    __tablename__ = 'submissions'
+    submission_id = db.Column(db.Integer, primary_key=True)
+    result = db.Column(db.Integer)
+    resume_entities= db.Column(db.Text())
+    candidate_id = db.Column(db.Integer, ForeignKey("candidates.candidate_id"))
+    job_id = db.Column(db.Integer, ForeignKey("jobs.job_id"))
+    employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
+  
+    def __init__(self, result, resume_entities):
+        self.result = result
+        self.resume_entities = resume_entities
+     
+class Jobs(db.Model):
+    __tablename__ = 'jobs'
+    job_id = db.Column(db.Integer, primary_key=True)
+    description_entities= db.Column(db.Text())
+
+    submissions = relationship("Submissions", backref="jobs")
+
+    def __init__(self, description_entities):
+        self.description_entities = description_entities
+
+class Adverts(db.Model):
+    __tablename__ = 'adverts'
+    advert_id = db.Column(db.Integer, primary_key=True)
+    skills = db.Column(db.Text())
+    position = db.Column(db.String(255))
+    description = db.Column(db.Text())
+    experience = db.Column(db.Integer)
+    employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
+   
+    def __init__(self, skills, position, description, experience):
+        self.skills = skills
+        self.position = position
+        self.description = description
+        self.experience = experience
+
+class Employers(db.Model):
+    __tablename__ = 'employers'
+    employer_id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    company = db.Column(db.String(255))
+    phone = db.Column(db.String(255))
+    password = db.Column(db.String(255))
+    profile = db.Column(db.Text())
+    
+    submissions = relationship("Submissions", backref="employers")
+    adverts = relationship("Adverts", backref="employers")
+
+    def __init__(self, email, company, phone, password):
+        self.email = email
+        self.company = company
+        self.phone = phone
+        self.password = password
+ 
 
 @app.route('/registration_landing')
 def registration_landing():
@@ -126,6 +189,63 @@ def email_request():
 
     return render_template('email_request.html')
 
+@app.route('/login_submit', methods=['GET', 'POST'])
+def login_submit():
+
+    if  request.method == 'POST':
+            submitted_email = request.form['email']
+            submitted_password = request.form['password']
+
+            flag = 0
+
+            try:
+                    candidate = Candidates.query.filter_by(email=submitted_email).first()
+
+                    password = candidate.password
+
+                    first_name = candidate.firstname
+
+                    if sha256_crypt.verify(submitted_password, password):
+                        
+                        session['logged_in'] = True
+
+                        session['username'] = first_name
+
+                        flash("You are now logged in", "success")
+                        return redirect(url_for('information'))
+                    else:
+                        flash("Invalid Password", "fail")
+                        return redirect(url_for('login'))
+            except:
+                    flag = 1;
+
+            try:
+                   employer = Employers.query.filter_by(email=submitted_email).first() 
+
+                   password = employer.password
+
+                   company_name = employer.company
+
+                   if sha256_crypt.verify(submitted_password, password):
+
+                       session['logged_in'] = True
+
+                       session['username'] = company_name
+
+                       flash("You are now logged in", "success")
+                       return redirect(url_for('work_information'))
+                        
+                   else:
+                        flash("Invalid Password", "fail")
+                        return redirect(url_for('login'))
+            except:
+                    flag = 1;
+
+            if flag == 1:
+                
+                flash("User does not exist", "fail")
+                return redirect(url_for('login'))
+
 @app.route('/candidate_submit', methods=['GET', 'POST'])
 def candidate_submit():
 
@@ -138,15 +258,18 @@ def candidate_submit():
             confirm = request.form['confirm']
 
             if password == confirm:
-                stored_password = sha256_crypt.encrypt(str(password))
+                stored_password = sha256_crypt.hash(str(password))
 
                 data = Candidates(first_name, last_name, phone, email, stored_password)
+
                 try:
                     db.session.add(data)
                     db.session.commit()
+                   
                 except:
                     flash("User Already Exists", "fail")
                     return redirect(url_for('candidate_registration'))
+
                 flash("Thank you for registering", "success")
                 return redirect(url_for('login'))
             else:
@@ -157,6 +280,7 @@ def candidate_submit():
 def employer_submit():
 
     if  request.method == 'POST':
+    
             email = request.form['email']
             company = request.form['company']
             phone = request.form['phone']
@@ -165,6 +289,17 @@ def employer_submit():
 
             if password == confirm:
                 stored_password = sha256_crypt.encrypt(str(password))
+
+                data = Employers(email, company, phone, stored_password)
+
+                try:
+                    db.session.add(data)
+                    db.session.commit()
+                   
+                except:
+                    flash("Employer Already Exists", "fail")
+                    return redirect(url_for('employer_registration'))
+
                 flash("Thank you for registering", "success")
                 return redirect(url_for('login'))
             else:
@@ -184,6 +319,16 @@ def password_submit():
             else:
                 flash("Error: Passwords don't match", "fail")
                 return redirect(url_for('candidate_registration'))
+
+@app.route('/information')
+def information():
+
+    return render_template('information.html')
+
+@app.route('/work_information')
+def work_information():
+
+    return render_template('work_information.html')
     
 if __name__ == '__main__':
 

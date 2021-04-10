@@ -737,8 +737,9 @@ input:focus:-ms-input-placeholder {
 
 .login_display h2{
 
-    font-size: 40px;
+    font-size: 28px;
     color: #FFFFFF;
+    font-weight: bold;
     text-align: center;
     margin-top: 84px;
 }
@@ -748,7 +749,7 @@ input:focus:-ms-input-placeholder {
     position: relative;
     top:260px;
     left:50%;
-    font-size: 24px;
+    font-size: 18px;
     height: 400px;
     transform: translate(-50%, -50%);
     width: 48%;
@@ -763,7 +764,7 @@ input:focus:-ms-input-placeholder {
     text-align: center;
     width: 268px;
     font-weight: bold;
-    height: 140px;
+    height: 80px;
     border-radius: 48px;
     background-color: rgba(0,0,0,0.6);
     border: 2px solid #AAAAAA;
@@ -776,7 +777,7 @@ input:focus:-ms-input-placeholder {
 
     .job_seeker_button p {
         
-            margin-top: 48px;
+            margin-top: 22px;
     }
 
     
@@ -793,7 +794,7 @@ input:focus:-ms-input-placeholder {
     text-align: center;
     width: 268px;
     font-weight: bold;
-    height: 140px;
+    height: 80px;
     border-radius: 48px;
     background-color: rgba(0,0,0,0.6);
     border: 2px solid #AAAAAA;
@@ -803,7 +804,7 @@ input:focus:-ms-input-placeholder {
     cursor: pointer;
 }
 .employer_button p {
-    margin-top: 48px;
+    margin-top: 22px;
 }
 
     .employer_button:hover {
