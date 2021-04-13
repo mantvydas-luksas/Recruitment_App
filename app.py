@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, ForeignKey, String, Column, Text
 from sqlalchemy.orm import relationship 
 from passlib.hash import sha256_crypt
+from werkzeug.utils import secure_filename
 import spacy
 import json
 import random
@@ -62,8 +63,8 @@ class Candidates(db.Model):
     phone = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
-    profile = db.Column(db.Text())
-    resume = db.Column(db.Text())
+    profile = db.Column(db.Text)
+    resume = db.Column(db.Text)
     
     
     submissions = relationship("Submissions", backref="candidates")
@@ -79,7 +80,7 @@ class Submissions(db.Model):
     __tablename__ = 'submissions'
     submission_id = db.Column(db.Integer, primary_key=True)
     result = db.Column(db.Integer)
-    resume_entities= db.Column(db.Text())
+    resume_entities= db.Column(db.Text)
     candidate_id = db.Column(db.Integer, ForeignKey("candidates.candidate_id"))
     job_id = db.Column(db.Integer, ForeignKey("jobs.job_id"))
     employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
@@ -91,7 +92,7 @@ class Submissions(db.Model):
 class Jobs(db.Model):
     __tablename__ = 'jobs'
     job_id = db.Column(db.Integer, primary_key=True)
-    description_entities= db.Column(db.Text())
+    description_entities= db.Column(db.Text)
 
     submissions = relationship("Submissions", backref="jobs")
 
@@ -101,9 +102,9 @@ class Jobs(db.Model):
 class Adverts(db.Model):
     __tablename__ = 'adverts'
     advert_id = db.Column(db.Integer, primary_key=True)
-    skills = db.Column(db.Text())
+    skills = db.Column(db.Text)
     position = db.Column(db.String(255))
-    description = db.Column(db.Text())
+    description = db.Column(db.Text)
     experience = db.Column(db.Integer)
     employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
    
@@ -120,7 +121,7 @@ class Employers(db.Model):
     company = db.Column(db.String(255))
     phone = db.Column(db.String(255))
     password = db.Column(db.String(255))
-    profile = db.Column(db.Text())
+    profile = db.Column(db.Text)
     
     submissions = relationship("Submissions", backref="employers")
     adverts = relationship("Adverts", backref="employers")
@@ -136,8 +137,6 @@ class Employers(db.Model):
 def registration_landing():
 
     return render_template('registration_landing.html')
-
-
 
 @app.route('/login/')
 def login():
@@ -209,7 +208,7 @@ def email_request():
 
     return render_template('email_request.html')
 
-@app.route('/login_submit', methods=['GET', 'POST'])
+@app.route('/login_submit/', methods=['GET', 'POST'])
 def login_submit():
 
     if  request.method == 'POST':
@@ -227,6 +226,8 @@ def login_submit():
 
                     last_name = candidate.lastname
 
+                    profile = candidate.profile
+
                     email = candidate.email
 
                     phone = candidate.phone
@@ -241,11 +242,11 @@ def login_submit():
 
                         session['last'] = last_name
 
+                        session['profile'] = profile
+
                         session['email'] = email
 
                         session['phone'] = phone
-
-
 
                         return redirect(url_for('information'))
                     else:
@@ -261,11 +262,19 @@ def login_submit():
 
                    company_name = employer.company
 
+                   email = employer.email
+
+                   phone = employer.phone
+
                    if sha256_crypt.verify(submitted_password, password):
 
                        session.pop('employer', None)
 
                        session['employer'] = company_name
+
+                       session['email'] = email
+
+                       session['phone'] = phone
 
                        return redirect(url_for('work_information'))
                         
@@ -301,7 +310,8 @@ def is_logged_in_employer(f):
     return wrap
 
 
-@app.route('/candidate_submit', methods=['GET', 'POST'])
+
+@app.route('/candidate_submit/', methods=['GET', 'POST'])
 def candidate_submit():
 
     if  request.method == 'POST':
@@ -317,6 +327,8 @@ def candidate_submit():
 
                 data = Candidates(first_name, last_name, phone, email, stored_password)
 
+                data.profile = "Testing"
+
                 try:
                     db.session.add(data)
                     db.session.commit()
@@ -331,45 +343,75 @@ def candidate_submit():
                 flash("Error: Passwords don't match", "fail")
                 return redirect(url_for('candidate_registration'))
 
-@app.route('/candidate_result')
+@app.route('/employer_upload/', methods=['GET', 'POST'])
+@is_logged_in_employer
+def upload_employer_picture():
+
+   try:
+       employer = Employers.query.filter_by(email=session['email']).first()
+
+       employer.profile = 'Hello'
+
+       db.sessions.commit()
+   
+   except:
+
+        return redirect(url_for('search'))
+
+@app.route('/candidate_upload/', methods=['GET', 'POST'])
+@is_logged_in_candidate
+def upload_candidate_profile():
+
+   try:
+       candidate = Candidates.query.filter_by(email=session['email']).first()
+
+       candidate.profile = 'Hello'
+
+       db.sessions.commit()
+   
+   except:
+
+        return redirect(url_for('search'))
+
+@app.route('/candidate_result/')
 @is_logged_in_employer
 def candidate_result():
 
     return render_template('candidate_result.html', user=session)
 
 
-@app.route('/adverts')
+@app.route('/adverts/')
 @is_logged_in_employer
 def adverts():
 
     return render_template('adverts.html', user=session)
 
 
-@app.route('/employer_settings')
+@app.route('/employer_settings/')
 @is_logged_in_employer
 def employer_settings():
 
     return render_template('employer_settings.html', user=session)
 
-@app.route('/post_job')
+@app.route('/post_job/')
 @is_logged_in_employer
 def post_job():
 
     return render_template('post_job.html', user=session)
 
-@app.route('/candidate_settings')
+@app.route('/candidate_settings/')
 @is_logged_in_candidate
 def candidate_settings():
 
     return render_template('candidate_settings.html', user=session)
 
-@app.route('/submissions')
+@app.route('/submissions/')
 @is_logged_in_candidate
 def submissions():
 
     return render_template('submissions.html', user=session)
 
-@app.route('/employer_submit', methods=['GET', 'POST'])
+@app.route('/employer_submit/', methods=['GET', 'POST'])
 def employer_submit():
 
     if  request.method == 'POST':
@@ -399,7 +441,7 @@ def employer_submit():
                 flash("Error: Passwords don't match", "fail")
                 return redirect(url_for('employer_registration'))
 
-@app.route('/password_request', methods=['GET', 'POST'])
+@app.route('/password_request/', methods=['GET', 'POST'])
 def password_submit():
 
     if  request.method == 'POST':

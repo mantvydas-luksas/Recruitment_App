@@ -68,22 +68,24 @@
         <div class="info">
             <div class="contact_display">
                 <h1>Contact Us</h1>
-                <div class="contact_form">
-                    <div class="input_fields">
-                        <input type="text" class="input" placeholder="Subject" />
-                        <input type="text" class="input" placeholder="First Name" />
-                        <input type="text" class="input" placeholder="Last Name" />
-                        <input type="text" class="input" placeholder="Email" />
-                        <input type="text" class="input" placeholder="Phone" />
-                    </div>
-                    <div class="message">
-                        <textarea placeholder="Write Message"></textarea>
-                        <div class="contact_button">Send</div>
-                    </div>
+                <form name="contact" action="post">
+                    <div class="contact_form">
+                        <div class="input_fields">
+                            <input type="text" class="input" placeholder="Subject" required />
+                            <input type="text" class="input" placeholder="First Name" required />
+                            <input type="text" class="input" placeholder="Last Name" required />
+                            <input type="text" class="input" placeholder="Email" required />
+                            <input type="text" class="input" placeholder="Phone" required />
+                        </div>
+                        <div class="message">
+                            <textarea placeholder="Write Message" required></textarea>
+                            <div class="contact_button">Send</div>
+                        </div>
+                
 
-
-                </div>
             </div>
+            </form>
+        </div>
             
         <div class="footer">
             <div class="footer_content">

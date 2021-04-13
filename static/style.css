@@ -1235,6 +1235,15 @@ a {
         margin: 0;
         margin-left: 40px;
     }
+
+    .home_description > div p {
+        color: #FFFFFF;
+        margin: 0;
+        margin-left: 40px;
+        padding: 24px;
+    }
+
+
     
 
 .description_home {
@@ -1252,7 +1261,159 @@ a {
         font-size: 64px;
     }
 
+.job_form {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(0,0,0,0.8);
+    padding: 14px;
+    margin-top: 48px;
+    margin-left: 40px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+    .job_form h2 {
+        margin: 0;
+        margin-left: 24px;
+        margin-bottom: 40px;
+        margin-top: 24px;
+        font-size: 18px;
+        color: rgb(196,78,0, 0.8);
+        text-align: left;
+    }
+
+.form_details {
+    align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    width: 100%;
+    
+    
+}
+
+.form_items {
+
+        display: flex;
+        flex-direction: row;
+        margin-left: 24px;
+        padding: 24px;
+    
+    
+
+}
+
+.form_items i{
+
+    font-size: 24px;
+    margin-right: 64px;
+
+}
+
+
+    .form_items input {
+        width: 200px;
+        background-color: rgba(0,0,0,0.8);
+        border: none;
+        outline: none;
+        border-bottom: 4px solid #AAAAAA;
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+                
+    }
+
+  
+#special {
+    
+    font-size: 24px;
+    margin-right: 54px;
+}
+
+#job {
+
+   border: none;
    
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.job_description {
+
+    background-color: #111111;
+    width: 100%;
+    padding: 24px;
+    font-weight: bold;
+    height: 280px;
+    font-family: sans-serif;
+    outline: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+}
+
+.submit_job {
+
+    
+    width: 40%;
+    background: transparent;
+    border: 2px solid #AAAAAA;
+    height: 40px;
+    color: #FFFFFF;
+    font-weight: bold;
+    border-radius: 8px;
+    transform: translateX(76%);
+}
+
+
+.submit_job:hover {
+    transition-duration: 0.8s;
+    background-color: #AAAAAA;
+    color: #111111;
+    cursor: pointer;
+}
+
+.settings_display {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(0,0,0,0.8);
+    padding: 14px;
+    margin-top: 24px;
+    margin-left: 40px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.settings_items {
+
+    display: flex;
+    flex-direction: row;
+    margin-left: 24px;
+
+}
+
+.settings_items img{
+
+    width: 140px;
+    height: 140px;
+    border-radius: 140px;
+
+}
+
+.settings_item i{
+
+    font-size: 26px;
+}
+
 
 @keyframes changeImages {
     25% {
@@ -1288,7 +1449,11 @@ a {
 }
 
 @media screen and (max-width: 767px) {
-    
+
+    .form_details {
+        flex-direction: column;
+    }
+
     .showcase-item-text {
         max-width: 70%;
         padding: 4rem 4rem;
