@@ -208,7 +208,7 @@ def email_request():
 
     return render_template('email_request.html')
 
-@app.route('/login_submit/', methods=['GET', 'POST'])
+@app.route('/login_submit', methods=['GET', 'POST'])
 def login_submit():
 
     if  request.method == 'POST':

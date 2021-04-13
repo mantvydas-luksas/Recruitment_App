@@ -35,7 +35,7 @@
 
             <div class="user_dashboard">
 
-                <img class="account_picture" src="../static/search.jpg" />
+                <img class="account_picture" src="../static/employer_profile.jpg" />
 
                 <h2>{{user.employer}}</h2>
 
@@ -55,19 +55,37 @@
 
                 <div class="profile_home">
                     <p>
-                        Edit your profile description to be displayed on the website and change other account preferences.  
+                        Edit your profile description to be displayed on the website and change other account preferences.
                     </p>
 
                 </div>
 
                 <div class="settings_display">
-                    <h2>Current Picture</h2>
                     <div class="settings_items">
-                        <img src="../static/search.jpg" />
-
+                        <img src="../static/employer_profile.jpg" />
+                        <input type="submit" class="settings_button" value="Change Picture" />
 
                     </div>
 
+                </div>
+
+                <div class="settings_display">
+
+                    <div class="settings_items">
+                        <textarea class="profile_description" placeholder="New Profile Description" required></textarea>
+                        <input type="submit" class="settings_button_2" value="Change Description" />
+
+                    </div>
+
+                </div>
+
+                <div class="settings_display">
+
+                    <div class="settings_items">
+                        <input type="password" class="password_field" placeholder="New Password" required></input>
+                        <input type="submit" class="password_button" value="Change Password" />
+
+                    </div>
 
                 </div>
 

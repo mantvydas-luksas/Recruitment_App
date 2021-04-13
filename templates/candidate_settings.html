@@ -21,7 +21,7 @@
             </form>
 
             <ul class="account_menu">
-                <li class="welcome">{{user.candidate}}</p></li>
+                <li class="welcome">{{user.employer}}</p></li>
                 <li class="account_select" onclick="accountToggle();"><i data-status="on" id="account_button" class="far fa-user-circle"></i></li>
             </ul>
 
@@ -35,15 +35,15 @@
 
             <div class="user_dashboard">
 
-                <img class="account_picture" src="../static/search.jpg" />
+                <img class="account_picture" src="../static/employer_profile.jpg" />
 
-                <h2>{{user.candidate}} {{user.last}}</h2>
+                <h2>{{user.employer}}</h2>
 
                 <div class="functions">
-                    <a href="/information/"><i class="fas fa-poll-h"></i>Dashboard</a>
-                    <a href="/submissions"><i class="fas fa-briefcase"></i>Submissions</a>
-                    <a href="/search" hre><i class="fas fa-paste"></i>Apply for a job</a>
-                    <a href="/candidate_settings"><i class="fas fa-wrench"></i>Account Settings</a>
+                    <a href="/work_information/"><i class="fas fa-poll-h"></i>Dashboard</a>
+                    <a href="/adverts"><i class="fas fa-briefcase"></i>Current Adverts</a>
+                    <a href="/post_job" hre><i class="fas fa-paste"></i>Post a job advert</a>
+                    <a href="/employer_settings"><i class="fas fa-wrench"></i>Account Settings</a>
                     <a href="/logout"><i class="fas fa-sign-out-alt"></i>Log Out</a>
 
                 </div>
@@ -51,20 +51,55 @@
             </div>
 
             <div class="welcome_page">
-                <h2>Account Dashboard</h2>
+                <h2>Account Settings</h2>
 
+                <div class="profile_home">
+                    <p>
+                        Edit your profile description to be displayed on the website and change other account preferences.
+                    </p>
+
+                </div>
+
+                <div class="settings_display">
+
+                    <div class="settings_items">
+                        <img src="../static/employer_profile.jpg" />
+                        <input type="submit" class="settings_button" value="Change Picture" />
+
+                    </div>
+
+                </div>
+
+                <div class="settings_display">
+
+                    <div class="settings_items">
+                        <textarea class="profile_description" placeholder="New Profile Description" required></textarea>
+                        <input type="submit" class="settings_button_2" value="Change Description" />
+
+                    </div>
+
+                </div>
+
+                <div class="settings_display">
+
+                    <div class="settings_items">
+                        <input type="password" class="password_field" placeholder="New Password" required></input>
+                        <input type="submit" class="password_button" value="Change Password" />
+
+                    </div>
+
+                </div>
 
             </div>
 
             <div class="account">
 
-                <a href="/candidate_settings"><i class="fas fa-user"></i>Account</a>
+                <a href="/employer_settings"><i class="fas fa-user"></i>Account</a>
                 <a href="/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
 
             </div>
-
-
         </div>
+
     </main>
 
     <script src="../static/script.js"></script>
