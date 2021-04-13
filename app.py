@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, session, logging
+from flask import Flask, render_template, request, flash, redirect, url_for, session, logging, g
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, ForeignKey, String, Column, Text
 from sqlalchemy.orm import relationship 
@@ -11,6 +11,7 @@ from spacy.tokens import Doc
 from spacy.training import Example
 from spacy.util import minibatch, compounding
 from pathlib import Path
+from functools import wraps
 
 
 nlp = en_core_web_sm.load()
@@ -136,15 +137,34 @@ def registration_landing():
 
     return render_template('registration_landing.html')
 
+
+
 @app.route('/login/')
 def login():
 
-    return render_template('login.html')
+    if 'candidate' in session:
+        return redirect(url_for('information'))
+    elif 'employer' in session:
+        return redirect(url_for('work_information'))
+    else:
+        return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+
+    session.pop('candidate', None)
+    session.pop('employer', None)
+
+    session.clear()
+
+    flash("You have been successfully logged out", "success")
+    
+    return redirect(url_for('login'))
 
 @app.route('/', methods=['POST'])
 def change():
     
-        return render_template('index.html')
+        return render_template('index.html', user=session)
 
 @app.route('/')
 def index():
@@ -152,28 +172,28 @@ def index():
     #for token in doc:
       #  print(token.text)
 
-    return render_template('index.html')
+    return render_template('index.html', user=session)
 
 @app.route('/search')
 def search():
 
-    return render_template('search.html')
+    return render_template('search.html', user=session)
 
 @app.route('/employers')
 def employers():
     
     
-    return render_template('employers.html')
+    return render_template('employers.html', user=session)
 
 @app.route('/choice')
 def choice():
 
-    return render_template('choice.html')
+    return render_template('choice.html', user=session)
 
 @app.route('/contact')
 def contact():
 
-    return render_template('contact.html')
+    return render_template('contact.html', user=session)
 @app.route('/employer_registration/')
 def employer_registration():
     
@@ -205,13 +225,28 @@ def login_submit():
 
                     first_name = candidate.firstname
 
+                    last_name = candidate.lastname
+
+                    email = candidate.email
+
+                    phone = candidate.phone
+
                     if sha256_crypt.verify(submitted_password, password):
                         
-                        session['logged_in'] = True
+                        session.pop('candidate', None)
 
-                        session['username'] = first_name
+                        session.pop('last', None)
 
-                        flash("You are now logged in", "success")
+                        session['candidate'] = first_name
+
+                        session['last'] = last_name
+
+                        session['email'] = email
+
+                        session['phone'] = phone
+
+
+
                         return redirect(url_for('information'))
                     else:
                         flash("Invalid Password", "fail")
@@ -228,11 +263,10 @@ def login_submit():
 
                    if sha256_crypt.verify(submitted_password, password):
 
-                       session['logged_in'] = True
+                       session.pop('employer', None)
 
-                       session['username'] = company_name
+                       session['employer'] = company_name
 
-                       flash("You are now logged in", "success")
                        return redirect(url_for('work_information'))
                         
                    else:
@@ -245,6 +279,27 @@ def login_submit():
                 
                 flash("User does not exist", "fail")
                 return redirect(url_for('login'))
+
+def is_logged_in_candidate(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'candidate' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('Unauthorized Access, Please Login', 'fail')
+            return redirect(url_for('login'))
+    return wrap
+
+def is_logged_in_employer(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'employer' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('Unauthorized Access, Please Login', 'fail')
+            return redirect(url_for('login'))
+    return wrap
+
 
 @app.route('/candidate_submit', methods=['GET', 'POST'])
 def candidate_submit():
@@ -275,6 +330,44 @@ def candidate_submit():
             else:
                 flash("Error: Passwords don't match", "fail")
                 return redirect(url_for('candidate_registration'))
+
+@app.route('/candidate_result')
+@is_logged_in_employer
+def candidate_result():
+
+    return render_template('candidate_result.html', user=session)
+
+
+@app.route('/adverts')
+@is_logged_in_employer
+def adverts():
+
+    return render_template('adverts.html', user=session)
+
+
+@app.route('/employer_settings')
+@is_logged_in_employer
+def employer_settings():
+
+    return render_template('employer_settings.html', user=session)
+
+@app.route('/post_job')
+@is_logged_in_employer
+def post_job():
+
+    return render_template('post_job.html', user=session)
+
+@app.route('/candidate_settings')
+@is_logged_in_candidate
+def candidate_settings():
+
+    return render_template('candidate_settings.html', user=session)
+
+@app.route('/submissions')
+@is_logged_in_candidate
+def submissions():
+
+    return render_template('submissions.html', user=session)
 
 @app.route('/employer_submit', methods=['GET', 'POST'])
 def employer_submit():
@@ -320,16 +413,18 @@ def password_submit():
                 flash("Error: Passwords don't match", "fail")
                 return redirect(url_for('candidate_registration'))
 
-@app.route('/information')
+@app.route('/information/')
+@is_logged_in_candidate
 def information():
 
-    return render_template('information.html')
-
-@app.route('/work_information')
+   return render_template('information.html', user=session)
+    
+@app.route('/work_information/')
+@is_logged_in_employer
 def work_information():
 
-    return render_template('work_information.html')
-    
+    return render_template('work_information.html', user=session)
+
 if __name__ == '__main__':
 
     app.secret_key = 'super secret key'

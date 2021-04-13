@@ -29,7 +29,13 @@
             </nav>
 
             <ul class="login">
+                {% if user.candidate %}
+                <li><a href="/login">Account</a></li>
+                {% elif user.employer %}
+                <li><a href="/login">Account</a></li>
+                {% else %}
                 <li><a href="/login">Login/Register</a></li>
+                {% endif %}
             </ul>
 
             <div class="navigator-small" id="navigate" onclick="navigation()">
@@ -47,7 +53,13 @@
                 <li><a href="/employers">Employers</a></li>
                 <li><a href="/choice">Why Us?</a></li>
                 <li><a href="/contact">Contact</a></li>
+                {% if user.candidate %}
+                <li><a href="/login">Account</a></li>
+                {% elif user.employer %}
+                <li><a href="/login">Account</a></li>
+                {% else %}
                 <li><a href="/login">Login/Register</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

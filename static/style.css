@@ -387,8 +387,7 @@ video {
 .info {
 
     display: flex;
-    
-    
+   
 }
 
 .display {
@@ -833,6 +832,427 @@ a {
     text-align: center;
     color: #FFFFFF;
 }
+
+.account_menu {
+
+    margin-right: 20px;
+    font-size: 1.8rem;
+    color: #FFFFFF;
+    
+}
+
+    .account_menu i:hover {
+        color: rgb(196,78,0, 0.8);
+        cursor: pointer;
+        transition-duration: 0.8s;
+    }
+
+    
+    
+
+.welcome {
+    list-style: none;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 18px;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: #AAAAAA;
+}
+
+.account {
+    display: flex;
+    list-style: none;
+    flex-direction:column;
+    visibility: hidden;
+    border-radius: 14px;
+    margin-right: 20px;
+    padding: 12px;
+    width: 200px;
+    opacity: 0;
+    border: 2px solid #AAAAAA;
+    background-color: #111111;
+    color: #FFFFFF;
+    float: right;
+    height: 14%;
+    z-index: 400;
+    
+}
+
+    .account.active {
+        transition-duration: 1.4s;
+        visibility: visible;
+        opacity: 1;
+    }
+
+    
+
+    .account i {
+
+        margin-right: 8px;
+    }
+
+    .account a{
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 14px;
+        padding: 8px;
+        text-decoration: none;
+        color: #FFFFFF;
+        margin-top: 14px;
+       
+        
+    }
+
+        .account a:hover {
+            color: #111111;
+            transition-duration: 0.4s;
+            background-color: #AAAAAA;
+            cursor: pointer;
+        }
+
+
+.user_dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    background-color: #111111;
+    width: 20%;
+    border-top: 2px solid #AAAAAA;
+    border-right: 2px solid #AAAAAA;
+    height: 100%;
+    font-size: 14px;
+}
+
+    .user_dashboard h2 {
+        margin-top: 40px;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+
+.functions{
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    justify-content: space-evenly;
+    height: 480px;
+    align-content: center;
+   
+}
+
+    .functions i {
+
+        margin-right: 28px;
+    }
+   
+
+.account_picture {
+    width: 140px;
+    height: 140px;
+    margin-top: 24px;
+    border-radius: 140px;
+    border: 2px solid #AAAAAA;
+}
+
+
+.dashboard {
+    display: flex;
+    align-content: center;
+    width: 100vw;
+    height: 140vh;
+    z-index: -100;
+}
+
+.functions a {
+    padding: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #FFFFFF;
+    font-weight: bold;
+    border-radius: 14px; 
+}
+
+.functions a:hover{
+
+    transition-duration: 0.8s;
+    font-weight: bold;
+    background-color: #AAAAAA;
+    color: #111111;
+  
+}
+
+.name {
+    color: #c44e00;
+}
+
+.welcome_page {
+    position: relative;
+    width: 80%;
+    height: 100%;
+}
+
+    .welcome_page h2 {
+        font-weight: bold;
+        color: #FFFFFF;
+        margin: 48px;
+        
+    }
+
+
+.cards {
+
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 40px;
+    margin-left: 40px;
+    margin-top: 40px;
+  
+}
+
+.card {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-around;
+    padding: 40px;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.8)
+}
+
+    .card i {
+        font-size: 64px;
+    }
+
+
+.interview_cards {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 40px;
+    margin-left: 40px;
+    margin-top: 24px;
+    
+}
+
+.interview_card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: space-around;
+    height: 180px;
+    padding: 40px;
+    text-align: left;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.8);
+}
+
+    .interview_card i {
+
+        font-size: 64px;
+    }
+
+    .interview_card > div {
+
+        margin-left: 48px;
+    }
+
+        .interview_card > div h2 {
+            font-weight: bold;
+            color: rgb(196,78,0, 0.8);
+            font-size: 18px;
+            margin: 0;
+            margin-bottom: 12px;
+        }
+
+        .interview_card > div p {
+           
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+
+.custom_table {
+
+    border-radius: 8px;
+    margin-top: 40px;
+    margin-left: 40px;
+    text-align: center;
+    background-color: rgba(0,0,0,0.8);
+    padding: 12px;
+    color:#FFFFFF;
+    border-spacing: 200px;
+    margin-bottom: 40px;
+}
+
+
+.table {
+    width: 100%;
+    border-spacing: 20px;
+    
+}
+
+        .table thead tr th {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0.45px;
+            vertical-align: top;
+            color: rgb(196,78,0, 0.8);
+            padding: 8px;
+        }
+
+    .table tbody tr td{
+        font-size: 14px;
+        letter-spacing: 0.45px;
+        font-weight: normal;
+        border-radius: 8px;
+        padding: 8px;
+        color: #FFFFFF;
+        background-color: rgba(0,0,0,0.8);
+        text-align: center;
+    }
+
+    .table .result {
+        background: red;
+        padding: 8px;
+        padding-left: 40px;
+        padding-right: 40px;
+        border-radius: 8px;
+        opacity: 0.6;
+    }
+
+    .table .job_details {
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        color: #111111;
+        background-color: #AAAAAA;
+        padding: 8px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 8px;
+    }
+
+    .table .job_details i{
+        font-size: 14px;
+        margin-right: 18px;
+    }
+
+    .table .job_details:hover {
+        
+        transition-duration: 0.8s;
+        color: #FFFFFF;
+        background-color: rgba(0,0,0,0.8);
+    }
+  
+  
+    
+
+.card_name {
+       margin-top: 28px;
+       font-size: 16px;
+
+}
+
+    .card_name .title {
+        color: rgb(196,78,0, 0.8);
+        font-weight: bold;
+    }
+}
+
+    .card_name .digit {
+
+        font-size: 24px;
+        font-weight: bold;
+       
+    }
+
+    .card_name > span {
+        padding: 28px;
+    }
+
+.profile_home {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(0,0,0,0.8);
+    padding: 14px;
+    margin-left: 40px;
+    border-radius: 8px;
+    width: 100%;
+}
+    .profile_home h1 {
+        margin: 24px;
+        font-size: 20px;
+        margin-bottom: 40px;
+    }
+    
+    .profile_home p {
+        margin: 24px;
+        font-size: 16px;
+
+    }
+
+    .profile_home h2 {
+        margin: 0;
+        margin-left: 24px;
+        font-size: 18px;
+        color: rgb(196,78,0, 0.8);
+        text-align: left;
+    }
+    
+
+    .profile_home h4 {
+        margin: 0;
+        margin-left: 40px;
+        font-size: 18px;
+    }
+
+.home_picture {
+
+    height: 180px;
+    width: 180px;
+    border-radius: 180px;
+    margin-left: 40px;
+    margin-top: 28px;
+    margin-bottom: 48px;
+    
+   
+}
+
+.home_description {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    line-height: 24px;
+
+}
+    .home_description > div {
+        color:#FFFFFF;
+        margin: 0;
+        margin-left: 40px;
+    }
+    
+
+.description_home {
+    display: flex;
+    background-color: rgb(0,0,0,0.8);
+    padding: 14px;
+    margin-left: 40px;
+    border-radius: 8px;
+    width: 100%;
+    
+}
+
+    .description_home i {
+
+        font-size: 64px;
+    }
+
+   
 
 @keyframes changeImages {
     25% {

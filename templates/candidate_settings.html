@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="shortcut icon" type="image/png" href="../static/favicon.png" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
+    <title>Employers</title>
+</head>
+<body>
+
+    <!--Navigation Bar-->
+    <header>
+
+        <div class="navigation">
+
+            <form action="/" method="post">
+                <input type="Image" class="Logo" src="../static/WorkNow.png">
+            </form>
+
+            <ul class="account_menu">
+                <li class="welcome">{{user.candidate}}</p></li>
+                <li class="account_select" onclick="accountToggle();"><i data-status="on" id="account_button" class="far fa-user-circle"></i></li>
+            </ul>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <div class="dashboard">
+
+            <div class="user_dashboard">
+
+                <img class="account_picture" src="../static/search.jpg" />
+
+                <h2>{{user.candidate}} {{user.last}}</h2>
+
+                <div class="functions">
+                    <a href="/information/"><i class="fas fa-poll-h"></i>Dashboard</a>
+                    <a href="/submissions"><i class="fas fa-briefcase"></i>Submissions</a>
+                    <a href="/search" hre><i class="fas fa-paste"></i>Apply for a job</a>
+                    <a href="/candidate_settings"><i class="fas fa-wrench"></i>Account Settings</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i>Log Out</a>
+
+                </div>
+
+            </div>
+
+            <div class="welcome_page">
+                <h2>Account Dashboard</h2>
+
+
+            </div>
+
+            <div class="account">
+
+                <a href="/candidate_settings"><i class="fas fa-user"></i>Account</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+
+            </div>
+
+
+        </div>
+    </main>
+
+    <script src="../static/script.js"></script>
+
+</body>
+
+</html>

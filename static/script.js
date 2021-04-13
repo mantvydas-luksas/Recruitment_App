@@ -1,5 +1,6 @@
 const selected = document.querySelector(".selected");
 const optionsContainer = document.querySelector(".options-container");
+const account = document.querySelector(".account_select");
 
 const optionsList = document.querySelectorAll(".option");
 
@@ -19,6 +20,12 @@ optionsList.forEach(o => {
     });
 
 });
+
+account.addEventListener("click", () => {
+
+    document.getElementById('account').style.cssText = 'opacity: 1';
+
+})
 
 navigation.addEventListener("click", () => {
 
@@ -47,6 +54,33 @@ function navigation() {
     navigation_block.classList.toggle('nav-active');
 
 }
+
+function accountToggle() {
+
+    let button = document.getElementById("account_button");
+
+    let toggleStatus = button.dataset.status;
+
+    const account = document.querySelector(".account");
+
+    account.classList.toggle('active');
+ 
+    switch (toggleStatus) {
+        case "on":
+            button.dataset.status = "off";
+            button.style.color = "#c44e00";
+            break;
+        case "off":
+            button.dataset.status = "on";
+            button.style.color = "#FFFFFF";
+            break;
+    }
+}
+
+
+
+
+
 
 nav.onclick = function () {
 

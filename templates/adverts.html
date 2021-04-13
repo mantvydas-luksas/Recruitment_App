@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="shortcut icon" type="image/png" href="../static/favicon.png" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
+    <title>Employers</title>
+</head>
+<body>
+
+    <!--Navigation Bar-->
+    <header>
+
+        <div class="navigation">
+
+            <form action="/" method="post">
+                <input type="Image" class="Logo" src="../static/WorkNow.png">
+            </form>
+
+            <ul class="account_menu">
+                <li class="welcome">{{user.employer}}</p></li>
+                <li class="account_select" onclick="accountToggle();"><i data-status="on" id="account_button" class="far fa-user-circle"></i></li>
+            </ul>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <div class="dashboard">
+
+            <div class="user_dashboard">
+
+                <img class="account_picture" src="../static/search.jpg" />
+
+                <h2>{{user.employer}}</h2>
+
+                <div class="functions">
+                    <a href="/work_information/"><i class="fas fa-poll-h"></i>Dashboard</a>
+                    <a href="/candidate_result"><i class="fas fa-briefcase"></i>Candidate Selection</a>
+                    <a href="/post_job" hre><i class="fas fa-paste"></i>Post a job advert</a>
+                    <a href="/employer_settings"><i class="fas fa-wrench"></i>Account Settings</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i>Log Out</a>
+
+                </div>
+
+            </div>
+
+            <div class="welcome_page">
+                <h2>Artificial Intelligence Results</h2>
+
+                <div class="custom_table">
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Selection</th>
+                                <th>Accepted</th>
+                                <th>Rejected</th>
+                                <th>Information</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Job Title</td>
+                                <td><span class="result">Pending</span></td>
+                                <td>Job Title</td>
+                                <td>Job Title</td>
+                                <td><a href="/candidate_result" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
+
+                            </tr>
+
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+
+
+            </div>
+
+            <div class="account">
+
+                <a href="/employer_settings"><i class="fas fa-user"></i>Account</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+    </main>
+
+    <script src="../static/script.js"></script>
+
+</body>
+
+</html>
