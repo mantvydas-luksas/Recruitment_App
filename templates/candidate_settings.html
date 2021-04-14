@@ -35,7 +35,7 @@
 
             <div class="user_dashboard">
 
-                <img class="account_picture" src="../static/employer_profile.jpg" />
+                <img class="account_picture" src="{{image_file}}" />
 
                 <h2>{{user.employer}}</h2>
 
@@ -61,12 +61,15 @@
                 </div>
 
                 <div class="settings_display">
+                    <form action="/candidate_settings/" method="post" enctype="multipart/form-data">
+                        <div class="settings_items">
+                            <img src="{{image_file}}" />
+                            {{ form.csrf_token }}
+                            {{form.picture(class="select_image")}}
+                            <input type="submit" class="settings_button" value="Change Picture" />
 
-                    <div class="settings_items">
-                        <img src="../static/employer_profile.jpg" />
-                        <input type="submit" class="settings_button" value="Change Picture" />
-
-                    </div>
+                        </div>
+                    </form>
 
                 </div>
 

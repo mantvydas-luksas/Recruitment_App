@@ -704,7 +704,7 @@ input:focus:-ms-input-placeholder {
         border: none;
         background: none;
         color: #FFFFFF;
-        text-align: left;
+        text-align: center;
         width: 340px;
         font-weight: bold;
         outline: none;
@@ -1214,6 +1214,7 @@ a {
     margin-left: 40px;
     margin-top: 28px;
     margin-bottom: 48px;
+    border: 2px solid #AAAAAA;
     
    
 }
@@ -1238,6 +1239,7 @@ a {
         padding: 24px;
     }
 
+   
 
     
 
@@ -1424,6 +1426,19 @@ input[type=number] {
     font-size: 26px;
 }
 
+.file_button {
+    margin-left: 80px;
+    padding: 24px;
+    
+    width: 400px;
+    margin-top: 120px;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-weight: bold;
+    background: transparent;
+    
+}
+
 .settings_button {
 
     margin-left: 140px;
@@ -1466,7 +1481,7 @@ input[type=number] {
 
 .profile_description {
     background-color: #111111;
-    width: 68%;
+    width: 64%;
     padding: 24px;
     font-size: 14px;
     font-weight: bold;
@@ -1509,6 +1524,20 @@ input[type=number] {
     border-bottom: 2px solid #AAAAAA;
     outline: none;
 
+}
+
+.select_image {
+    border: 2px solid #AAAAAA;
+    background: transparent;
+    color: #FFFFFF;
+    border-radius: 8px;
+    margin-top: 120px;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 8px;
+    border-spacing: 14px;
+    height: 48px;
+    width: 460px;
 }
 
 

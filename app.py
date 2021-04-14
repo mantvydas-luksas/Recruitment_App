@@ -4,6 +4,11 @@ from sqlalchemy import Integer, ForeignKey, String, Column, Text
 from sqlalchemy.orm import relationship 
 from passlib.hash import sha256_crypt
 from werkzeug.utils import secure_filename
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import validators
+import secrets
+import os
 import spacy
 import json
 import random
@@ -55,6 +60,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+class ImageForm(FlaskForm):
+    
+    picture = FileField('Update Picture', validators=[FileAllowed(['jpg', 'png'])])
+
 class Candidates(db.Model):
     __tablename__ = 'candidates'
     candidate_id = db.Column(db.Integer, primary_key=True)
@@ -65,7 +74,7 @@ class Candidates(db.Model):
     password = db.Column(db.String(255))
     profile = db.Column(db.Text)
     resume = db.Column(db.Text)
-    
+    image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
     
     submissions = relationship("Submissions", backref="candidates")
 
@@ -122,6 +131,8 @@ class Employers(db.Model):
     phone = db.Column(db.String(255))
     password = db.Column(db.String(255))
     profile = db.Column(db.Text)
+    image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
+    
     
     submissions = relationship("Submissions", backref="employers")
     adverts = relationship("Adverts", backref="employers")
@@ -226,7 +237,7 @@ def login_submit():
 
                     last_name = candidate.lastname
 
-                    profile = candidate.profile
+                    profile = "None"
 
                     email = candidate.email
 
@@ -265,6 +276,8 @@ def login_submit():
                    email = employer.email
 
                    phone = employer.phone
+
+                   image = employer.image_file
 
                    if sha256_crypt.verify(submitted_password, password):
 
@@ -311,7 +324,7 @@ def is_logged_in_employer(f):
 
 
 
-@app.route('/candidate_submit/', methods=['GET', 'POST'])
+@app.route('/candidate_submit', methods=['GET', 'POST'])
 def candidate_submit():
 
     if  request.method == 'POST':
@@ -343,75 +356,112 @@ def candidate_submit():
                 flash("Error: Passwords don't match", "fail")
                 return redirect(url_for('candidate_registration'))
 
-@app.route('/employer_upload/', methods=['GET', 'POST'])
-@is_logged_in_employer
-def upload_employer_picture():
-
-   try:
-       employer = Employers.query.filter_by(email=session['email']).first()
-
-       employer.profile = 'Hello'
-
-       db.sessions.commit()
-   
-   except:
-
-        return redirect(url_for('search'))
-
-@app.route('/candidate_upload/', methods=['GET', 'POST'])
-@is_logged_in_candidate
-def upload_candidate_profile():
-
-   try:
-       candidate = Candidates.query.filter_by(email=session['email']).first()
-
-       candidate.profile = 'Hello'
-
-       db.sessions.commit()
-   
-   except:
-
-        return redirect(url_for('search'))
-
 @app.route('/candidate_result/')
 @is_logged_in_employer
 def candidate_result():
 
-    return render_template('candidate_result.html', user=session)
+    employer = Employers.query.filter_by(email=session["email"]).first()
+    image_file = url_for('static', filename='profile_pics/' + employer.image_file)
+
+    return render_template('candidate_result.html', user=session, image_file=image_file)
 
 
 @app.route('/adverts/')
 @is_logged_in_employer
 def adverts():
 
-    return render_template('adverts.html', user=session)
+    employer = Employers.query.filter_by(email=session["email"]).first()
+    image_file = url_for('static', filename='profile_pics/' + employer.image_file)
+    return render_template('adverts.html', user=session, image_file=image_file)
 
 
-@app.route('/employer_settings/')
+def save_picture(form_picture):
+
+    random_hex = secrets.token_hex(8)
+
+    _, f_ext = os.path.splitext(form_picture.filename)
+
+    image_fn = random_hex + f_ext
+
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', image_fn)
+
+    form_picture.save(picture_path)
+
+    return image_fn
+
+
+@app.route('/employer_settings/', methods=['GET', 'POST'])
 @is_logged_in_employer
 def employer_settings():
 
-    return render_template('employer_settings.html', user=session)
+    employer = Employers.query.filter_by(email=session["email"]).first()
+
+    form = ImageForm()
+
+    if form.validate_on_submit():
+       if form.picture.data:
+
+          picture_file = save_picture(form.picture.data)
+            
+          employer = Employers.query.filter_by(email=session["email"]).first()
+
+          employer.image_file = picture_file
+
+          db.session.commit()
+
+          session.pop("picture", None)
+
+          session["picture"] = picture_file
+
+          return redirect(url_for('employer_settings'))
+
+    image_file = url_for('static', filename='profile_pics/' + employer.image_file)
+    return render_template('employer_settings.html', user=session, form=form, image_file=image_file)
 
 @app.route('/post_job/')
 @is_logged_in_employer
 def post_job():
 
-    return render_template('post_job.html', user=session)
+    employer = Employers.query.filter_by(email=session["email"]).first()
+    image_file = url_for('static', filename='profile_pics/' + employer.image_file)
 
-@app.route('/candidate_settings/')
+    return render_template('post_job.html', user=session, image_file=image_file)
+
+@app.route('/candidate_settings/', methods=['GET', 'POST'])
 @is_logged_in_candidate
 def candidate_settings():
 
-    return render_template('candidate_settings.html', user=session)
+    candidate = Candidates.query.filter_by(email=session["email"]).first()
+
+    form = ImageForm()
+
+    if form.validate_on_submit():
+       if form.picture.data:
+
+          picture_file = save_picture(form.picture.data)
+            
+          candidate = Candidates.query.filter_by(email=session["email"]).first()
+
+          candidate.image_file = picture_file
+
+          db.session.commit()
+
+          return redirect(url_for('candidate_settings'))
+
+    image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
+
+    return render_template('candidate_settings.html', user=session, form=form, image_file=image_file)
 
 @app.route('/submissions/')
 @is_logged_in_candidate
 def submissions():
 
-    return render_template('submissions.html', user=session)
+    candidate = Candidates.query.filter_by(email=session["email"]).first()
+    image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
 
-@app.route('/employer_submit/', methods=['GET', 'POST'])
+    return render_template('submissions.html', user=session, image_file=image_file)
+
+@app.route('/employer_submit', methods=['GET', 'POST'])
 def employer_submit():
 
     if  request.method == 'POST':
@@ -459,13 +509,18 @@ def password_submit():
 @is_logged_in_candidate
 def information():
 
-   return render_template('information.html', user=session)
+   candidate = Candidates.query.filter_by(email=session["email"]).first()
+   image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
+
+   return render_template('information.html', user=session, image_file=image_file)
     
 @app.route('/work_information/')
 @is_logged_in_employer
 def work_information():
+    employer = Employers.query.filter_by(email=session["email"]).first()
+    image_file = url_for('static', filename='profile_pics/' + employer.image_file)
 
-    return render_template('work_information.html', user=session)
+    return render_template('work_information.html', user=session, image_file = image_file)
 
 if __name__ == '__main__':
 

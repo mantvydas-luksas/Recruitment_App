@@ -24,7 +24,6 @@
                 <li class="welcome">{{user.employer}}</p></li>
                 <li class="account_select" onclick="accountToggle();"><i data-status="on" id="account_button" class="far fa-user-circle"></i></li>
             </ul>
-
         </div>
 
     </header>
@@ -35,7 +34,7 @@
 
             <div class="user_dashboard">
 
-                <img class="account_picture" src="../static/employer_profile.jpg" />
+                <img class="account_picture" src="{{image_file}}" />
 
                 <h2>{{user.employer}}</h2>
 
@@ -61,11 +60,15 @@
                 </div>
 
                 <div class="settings_display">
-                    <div class="settings_items">
-                        <img src="../static/employer_profile.jpg" />
-                        <input type="submit" class="settings_button" value="Change Picture" />
+                    <form action="/employer_settings/" method="post" enctype="multipart/form-data">
+                        <div class="settings_items">
+                            <img src="{{image_file}}" />
+                            {{ form.csrf_token }}
+                            {{form.picture(class="select_image")}}
+                            <input type="submit" class="settings_button" value="Change Picture" />
 
-                    </div>
+                        </div>
+                    </form>
 
                 </div>
 
@@ -97,9 +100,9 @@
                 <a href="/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
 
             </div>
-            </div>
+        </div>
 
-</main>
+    </main>
 
     <script src="../static/script.js"></script>
 
