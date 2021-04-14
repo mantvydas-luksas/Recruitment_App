@@ -7,6 +7,7 @@
     <link rel="shortcut icon" type="image/png" href="../static/favicon.png" />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
+    
     <title>Account Settings</title>
 </head>
 <body>
@@ -53,6 +54,16 @@
             <div class="welcome_page">
                 <h2>Account Settings</h2>
 
+                <div class="update">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+
                 <div class="profile_home">
                     <p>
                         Edit your profile description to be displayed on the website and change other account preferences.
@@ -74,22 +85,25 @@
                 </div>
 
                 <div class="settings_display">
+                    <form action="/upload_description/" method="post">
 
-                    <div class="settings_items">
-                        <textarea class="profile_description" placeholder="New Profile Description" required></textarea>
-                        <input type="submit" class="settings_button_2" value="Change Description" />
+                        <div class="settings_items">
+                            <textarea class="profile_description" name="description" placeholder="New Profile Description" required>{{user.profile}}</textarea>
+                            <input type="submit" class="settings_button_2" value="Change Description" />
 
-                    </div>
+                        </div>
+                    </form>
 
                 </div>
 
                 <div class="settings_display">
+                    <form action="/upload_password/" method="post">
+                        <div class="settings_items">
+                            <input type="password" name="password" class="password_field" placeholder="New Password" required></input>
+                            <input type="submit" class="password_button" value="Change Password" />
 
-                    <div class="settings_items">
-                        <input type="password" class="password_field" placeholder="New Password" required></input>
-                        <input type="submit" class="password_button" value="Change Password" />
-
-                    </div>
+                        </div>
+                    </form>
 
                 </div>
 
@@ -106,7 +120,7 @@
     </main>
 
     <script src="../static/script.js"></script>
-
+    
 </body>
 
 </html>

@@ -219,7 +219,7 @@ h1, h2 {
     background-color:#111111;
     text-align:center;
     width:140px;
-    font-size:1rem;
+    font-size:14px;
     font-weight:bold;
     border: 4px solid #AAAAAA;
     padding-top: 12px;
@@ -298,7 +298,7 @@ selected {
     color: #FFFFFF;
     background-color: #111111;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 14px;
     font-family: sans-serif;
 }
 
@@ -323,16 +323,31 @@ selected {
     margin-left: -8px;
     outline: none;
     border-left: none;
-    border: 1px solid #AAAAAA;
-    background: #AAAAAA;
+    border-bottom: 4px solid #AAAAAA;
+    border-top: 4px solid #AAAAAA;
+    border-right: 4px solid #AAAAAA;
+    background: #111111;
     border-bottom-right-radius:12px;
     border-top-right-radius:12px;
-    width: 80px;
+    width: 148px;
+    cursor: pointer;
     height: 60px;
 }
 
+    .search_button i {
+
+        color: #FFFFFF;
+        font-size: 14px;
+    }
+
+    
+    .search_button:hover {
+        transition-duration: 0.4s;
+        background-color: #AAAAAA;
+    }
+
     .search_button:active {
-        background: #111111;
+        background-color: #111111;
         box-shadow: 0 0 12px #AAAAAA;
     }
 
@@ -454,8 +469,9 @@ video {
 .redirect_link {
 
     display: inline-block;
-    background-color: #FFFFFF;
-    color: #111111;
+    background-color: transparent;
+    border: 2px solid #AAAAAA;
+    color: #FFFFFF;
     border-radius: 8px;
     font-weight: bold;
     margin-left: 200px;
@@ -467,8 +483,9 @@ video {
 }
 
     .redirect_link:hover {
-        transition-duration: 0.4s;  
+        transition-duration: 0.8s;  
         background-color: #AAAAAA;
+        color: #111111;
     }
 
 .description {
@@ -508,9 +525,10 @@ video {
 
 .employer_link {
     display: inline-block;
-    background-color: #FFFFFF;
+    background-color: transparent;
     border-radius: 8px;
-    color: #111111;
+    color: #FFFFFF;
+    border: 2px solid #AAAAAA;
     font-weight: bold;
     margin-top: 20px;
     margin-left: 170px;
@@ -520,8 +538,9 @@ video {
 }
 
     .employer_link:hover {
-        transition-duration: 0.4s;
+        transition-duration: 0.8s;
         background-color: #AAAAAA;
+        color: #111111;
     }
 
 .contact_display {
@@ -538,7 +557,7 @@ video {
 
     .contact_display h1 {
         text-align: center;
-        margin-top: 2%;
+        margin-top: 8%;
         margin-bottom: 2%;
     }
 
@@ -549,6 +568,7 @@ video {
     display: flex;
     position: relative;
     margin: 0 auto;
+    margin-top: 120px;
     padding: 20px;
     align-items: center;
     justify-content: center;
@@ -589,6 +609,7 @@ video {
 .contact_button {
     border: 2px solid #AAAAAA;
     background: none;
+    border-radius: 8px;
     color: #FFFFFF;
     font-family: sans-serif;
     font-weight: bold;
@@ -670,6 +691,7 @@ input:focus:-ms-input-placeholder {
         margin-bottom: 46px;
         border-bottom: 6px solid #AAAAAA;
         width: 40%;
+        font-size: 24px;
     }
 
     .login_page .textbox {
@@ -688,7 +710,7 @@ input:focus:-ms-input-placeholder {
 .textbox {
     width: 100%;
     overflow: hidden;
-    font-size: 24px;
+    font-size: 16px;
     padding: 8px;
 }
 
@@ -700,7 +722,7 @@ input:focus:-ms-input-placeholder {
 
     .textbox input {
         font-family: sans-serif;
-        font-size: 18px;
+        font-size: 16px;
         border: none;
         background: none;
         color: #FFFFFF;
@@ -718,7 +740,7 @@ input:focus:-ms-input-placeholder {
     color: #FFFFFF;
     text-align: left;
     padding: 4px;
-    font-size: 18px;
+    font-size: 16px;
     font-family: sans-serif;
     font-weight: bold;
     cursor: pointer;
@@ -759,9 +781,9 @@ input:focus:-ms-input-placeholder {
 
 .job_seeker_button {
     text-align: center;
-    width: 268px;
+    width: 200px;
     font-weight: bold;
-    height: 80px;
+    height: 68px;
     border-radius: 48px;
     background-color: rgba(0,0,0,0.6);
     border: 2px solid #AAAAAA;
@@ -774,13 +796,14 @@ input:focus:-ms-input-placeholder {
 
     .job_seeker_button p {
         
-            margin-top: 22px;
+            margin-top: 18px;
     }
 
-    
+
 
     .job_seeker_button:hover {
-
+        text-align: center;
+        font-weight: bold;
         transition-duration: 0.8s;
         background-color: #AAAAAA;
         opacity: 0.4;
@@ -789,9 +812,9 @@ input:focus:-ms-input-placeholder {
 
 .employer_button {
     text-align: center;
-    width: 268px;
+    width: 200px;
     font-weight: bold;
-    height: 80px;
+    height: 68px;
     border-radius: 48px;
     background-color: rgba(0,0,0,0.6);
     border: 2px solid #AAAAAA;
@@ -801,7 +824,7 @@ input:focus:-ms-input-placeholder {
     cursor: pointer;
 }
 .employer_button p {
-    margin-top: 22px;
+    margin-top: 18px;
 }
 
     .employer_button:hover {
@@ -819,6 +842,7 @@ a {
     background-color: green;
     opacity: 0.6;
     text-align: center;
+    border-radius: 8px;
     margin-bottom: 12px;
     color:#FFFFFF;
 }
@@ -827,6 +851,7 @@ a {
     background-color: red;
     opacity: 0.6;
     margin-bottom: 12px;
+    border-radius: 8px;
     text-align: center;
     color: #FFFFFF;
 }
@@ -869,7 +894,7 @@ a {
     background-color: #111111;
     color: #FFFFFF;
     float: right;
-    height: 14%;
+    height: 12%;
     z-index: 400;
     
 }
@@ -915,7 +940,6 @@ a {
     width: 20%;
     border-top: 2px solid #AAAAAA;
     border-right: 2px solid #AAAAAA;
-    height: 100%;
     font-size: 14px;
 }
 
@@ -952,10 +976,12 @@ a {
 
 
 .dashboard {
+    position: absolute;
     display: flex;
-    align-content: center;
+    align-content: center; 
+    background-size: cover;
     width: 100vw;
-    height: 140vh;
+    height: auto;
     z-index: -100;
 }
 
@@ -984,7 +1010,7 @@ a {
 .welcome_page {
     position: relative;
     width: 80%;
-    height: 100%;
+    height: 200vh;
 }
 
     .welcome_page h2 {
@@ -1001,6 +1027,7 @@ a {
     width: 100%;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 40px;
+
     margin-left: 40px;
     margin-top: 40px;
   
@@ -1019,7 +1046,7 @@ a {
 }
 
     .card i {
-        font-size: 64px;
+        font-size: 40px;
     }
 
 
@@ -1043,12 +1070,12 @@ a {
     padding: 40px;
     text-align: left;
     border-radius: 8px;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
 }
 
     .interview_card i {
 
-        font-size: 64px;
+        font-size: 48px;
     }
 
     .interview_card > div {
@@ -1059,7 +1086,7 @@ a {
         .interview_card > div h2 {
             font-weight: bold;
             color: rgb(196,78,0, 0.8);
-            font-size: 18px;
+            font-size: 16px;
             margin: 0;
             margin-bottom: 12px;
         }
@@ -1091,7 +1118,7 @@ a {
 }
 
         .table thead tr th {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             letter-spacing: 0.45px;
             vertical-align: top;
@@ -1112,7 +1139,7 @@ a {
 
     .table .result {
         background: red;
-        padding: 8px;
+        padding: 4px;
         padding-left: 40px;
         padding-right: 40px;
         border-radius: 8px;
@@ -1125,7 +1152,7 @@ a {
         font-weight: bold;
         color: #111111;
         background-color: #AAAAAA;
-        padding: 8px;
+        padding: 4px;
         padding-left: 20px;
         padding-right: 20px;
         border-radius: 8px;
@@ -1153,7 +1180,7 @@ a {
 }
 
     .card_name .title {
-        color: rgb(196,78,0, 0.8);
+        color: rgb(196,78,0, 0.6);
         font-weight: bold;
     }
 }
@@ -1172,11 +1199,12 @@ a {
 .profile_home {
     display: flex;
     flex-direction: column;
-    background-color: rgb(0,0,0,0.8);
+    background-color: rgb(0,0,0,0.6);
     padding: 14px;
     margin-left: 40px;
     border-radius: 8px;
     width: 100%;
+    
 }
     .profile_home h1 {
         margin: 24px;
@@ -1187,15 +1215,15 @@ a {
     
     .profile_home p {
         margin: 24px;
-        font-size: 16px;
+        font-size: 14px;
 
     }
 
     .profile_home h2 {
         margin: 0;
         margin-left: 24px;
-        font-size: 18px;
-        color: rgb(196,78,0, 0.8);
+        font-size: 16px;
+        color: rgb(196,78,0, 0.6);
         text-align: left;
     }
     
@@ -1236,7 +1264,7 @@ a {
         color: #FFFFFF;
         margin: 0;
         margin-left: 40px;
-        padding: 24px;
+        padding: 14px;
     }
 
    
@@ -1245,7 +1273,7 @@ a {
 
 .description_home {
     display: flex;
-    background-color: rgb(0,0,0,0.8);
+    background-color: rgb(0,0,0,0.6);
     padding: 14px;
     margin-left: 40px;
     border-radius: 8px;
@@ -1261,7 +1289,7 @@ a {
 .job_form {
     display: flex;
     flex-direction: column;
-    background-color: rgb(0,0,0,0.8);
+    background-color: rgb(0,0,0,0.6);
     padding: 14px;
     margin-top: 48px;
     margin-left: 40px;
@@ -1274,7 +1302,7 @@ a {
         margin-left: 24px;
         margin-bottom: 40px;
         margin-top: 24px;
-        font-size: 18px;
+        font-size: 16px;
         color: rgb(196,78,0, 0.8);
         text-align: left;
     }
@@ -1285,8 +1313,6 @@ a {
     justify-content: space-evenly;
     flex-direction: row;
     width: 100%;
-    
-    
 }
 
 .form_items {
@@ -1302,7 +1328,7 @@ a {
 
 .form_items i{
 
-    font-size: 24px;
+    font-size: 20px;
     margin-right: 64px;
 
 }
@@ -1310,12 +1336,12 @@ a {
 
     .form_items input {
         width: 200px;
-        background-color: rgba(0,0,0,0.8);
+        background-color: rgba(0,0,0,0.6);
         border: none;
         outline: none;
         border-bottom: 4px solid #AAAAAA;
         color: #FFFFFF;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: bold;
         text-align: center;
                 
@@ -1324,7 +1350,7 @@ a {
   
 #special {
     
-    font-size: 24px;
+    font-size: 20px;
     margin-right: 54px;
 }
 
@@ -1346,14 +1372,15 @@ input[type=number] {
 }
 
 .job_description {
-
     background-color: #111111;
     width: 100%;
     padding: 24px;
-    font-weight: bold;
+    font-size: 14px;
+    line-height: 24px;
     height: 280px;
     font-family: sans-serif;
     outline: none;
+    text-align: left;
     border-radius: 8px;
     color: #FFFFFF;
 }
@@ -1364,7 +1391,7 @@ input[type=number] {
     width: 40%;
     background: transparent;
     border: 2px solid #AAAAAA;
-    height: 40px;
+    height: 28px;
     color: #FFFFFF;
     font-weight: bold;
     border-radius: 8px;
@@ -1382,7 +1409,7 @@ input[type=number] {
 .settings_display {
     display: flex;
     flex-direction: column;
-    background-color: rgb(0,0,0,0.8);
+    background-color: rgb(0,0,0,0.6);
     padding: 14px;
     margin-top: 24px;
     margin-left: 40px;
@@ -1404,10 +1431,8 @@ input[type=number] {
     flex-direction: row;
     align-items: center;
     align-content: center;
-    
     justify-content: space-between;
     margin-bottom: 14px;
-
 }
 
 .settings_items img{
@@ -1442,7 +1467,7 @@ input[type=number] {
 .settings_button {
 
     margin-left: 140px;
-    height: 48px;
+    height: 40px;
     width: 200px;
     margin-top: 120px;
     border-radius: 8px;
@@ -1461,7 +1486,7 @@ input[type=number] {
 
 .settings_button_2 {
     margin-left: 140px;
-    height: 48px;
+    height: 40px;
     width: 200px;
     margin-top: 228px;
     border-radius: 8px;
@@ -1484,17 +1509,18 @@ input[type=number] {
     width: 64%;
     padding: 24px;
     font-size: 14px;
-    font-weight: bold;
+    line-height: 24px;
     height: 280px;
     font-family: sans-serif;
     outline: none;
+    text-align: left;
     border-radius: 8px;
     color: #FFFFFF;
 }
 
 .password_button {
     margin-left: 140px;
-    height: 48px;
+    height: 40px;
     width: 200px;
     margin-top: 40px;
     border-radius: 8px;
@@ -1539,6 +1565,16 @@ input[type=number] {
     height: 48px;
     width: 460px;
 }
+
+.update {
+
+    margin-left: 40px;
+    width: 100%;
+    
+
+}
+
+
 
 
 @keyframes changeImages {
@@ -1652,6 +1688,10 @@ input[type=number] {
     .search_button {
         height:40px;
     }
+
+        .search_button i {
+            font-size: 8px;
+        }
 
     .navigator {
         display: none;
@@ -1778,6 +1818,7 @@ input[type=number] {
         background-color: #FFFFFF;
         color: #111111;
         font-weight: bold;
+        border: none;
         margin-left: 0px;
         font-family: sans-serif;
         padding: 12px;

@@ -72,7 +72,7 @@ class Candidates(db.Model):
     phone = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
-    profile = db.Column(db.Text)
+    profile = db.Column(db.Text, nullable=False, default='No profile description added yet, change this in the account settings.')
     resume = db.Column(db.Text)
     image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
     
@@ -130,7 +130,7 @@ class Employers(db.Model):
     company = db.Column(db.String(255))
     phone = db.Column(db.String(255))
     password = db.Column(db.String(255))
-    profile = db.Column(db.Text)
+    profile = db.Column(db.Text, nullable=False, default='No profile description added yet, change this in the account settings.')
     image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
     
     
@@ -237,7 +237,7 @@ def login_submit():
 
                     last_name = candidate.lastname
 
-                    profile = "None"
+                    profile = candidate.profile
 
                     email = candidate.email
 
@@ -276,8 +276,8 @@ def login_submit():
                    email = employer.email
 
                    phone = employer.phone
-
-                   image = employer.image_file
+                   
+                   profile = employer.profile
 
                    if sha256_crypt.verify(submitted_password, password):
 
@@ -288,6 +288,8 @@ def login_submit():
                        session['email'] = email
 
                        session['phone'] = phone
+
+                       session['profile'] = profile 
 
                        return redirect(url_for('work_information'))
                         
@@ -301,6 +303,8 @@ def login_submit():
                 
                 flash("User does not exist", "fail")
                 return redirect(url_for('login'))
+
+    return render_template('login.html')
 
 def is_logged_in_candidate(f):
     @wraps(f)
@@ -411,10 +415,101 @@ def employer_settings():
 
           session["picture"] = picture_file
 
+          flash("Picture Updated", "success")
           return redirect(url_for('employer_settings'))
-
+    
     image_file = url_for('static', filename='profile_pics/' + employer.image_file)
     return render_template('employer_settings.html', user=session, form=form, image_file=image_file)
+
+@app.route('/upload_password/', methods=['GET', 'POST'])
+def upload_password():
+
+    if request.method == 'POST':
+
+        try:
+
+            candidate = Candidates.query.filter_by(email=session['email']).first()
+
+            password = request.form['password']
+
+            candidate.password = sha256_crypt.encrypt(str(password))
+
+            db.session.commit()
+
+            flash("Successfully changed password", "success")
+            return redirect(url_for('candidate_settings'))
+
+        except:
+            
+            pass
+
+        try:
+
+            employer = Employers.query.filter_by(email=session['email']).first()
+
+            password = request.form['password']
+
+            employer.password = sha256_crypt.encrypt(str(password))
+
+            db.session.commit()
+
+            flash("Successfully changed password", "success")
+            return redirect(url_for('employer_settings'))
+
+        except:
+
+            pass
+
+    return render_template('login.html')
+
+@app.route('/upload_description/', methods=['GET', 'POST'])
+def upload_description():
+
+    if request.method == 'POST':
+
+        try:
+
+            candidate = Candidates.query.filter_by(email=session['email']).first()
+
+            new_description = request.form['description']
+
+            candidate.profile = new_description
+
+            db.session.commit()
+
+            session.pop('profile', None)
+
+            session['profile'] = new_description 
+
+            flash("Successfully saved your job description", "success")
+            return redirect(url_for('candidate_settings'))
+
+        except:
+            
+            pass
+
+        try:
+
+            employer = Employers.query.filter_by(email=session['email']).first()
+
+            new_description = request.form['description']
+
+            employer.profile = new_description
+
+            db.session.commit()
+
+            session['profile'] = new_description 
+
+            flash("Successfully saved your job description", "success")
+            return redirect(url_for('employer_settings'))
+
+        except:
+
+            pass
+
+    return render_template('login.html')
+
+                
 
 @app.route('/post_job/')
 @is_logged_in_employer
@@ -444,7 +539,9 @@ def candidate_settings():
 
           db.session.commit()
 
+          flash('Picture updated', 'success')
           return redirect(url_for('candidate_settings'))
+   
 
     image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
 
