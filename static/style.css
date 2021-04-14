@@ -520,10 +520,15 @@ video {
 .description > div {
     
     padding: 12px;
-    font-size: 14px;
+    font-size: 16px;
     font-family: sans-serif;
     line-height: 1.6rem;
 }
+
+    .description div p {
+
+        margin-top: 40px;
+    }
 
 .employer_link {
     display: inline-block;
@@ -785,7 +790,7 @@ input:focus:-ms-input-placeholder {
     text-align: center;
     width: 200px;
     font-weight: bold;
-    height: 68px;
+    height: 60px;
     border-radius: 48px;
     background-color: rgba(0,0,0,0.6);
     border: 2px solid #AAAAAA;
@@ -798,7 +803,7 @@ input:focus:-ms-input-placeholder {
 
     .job_seeker_button p {
         
-            margin-top: 18px;
+            margin-top: 16px;
     }
 
 
@@ -816,7 +821,7 @@ input:focus:-ms-input-placeholder {
     text-align: center;
     width: 200px;
     font-weight: bold;
-    height: 68px;
+    height: 60px;
     border-radius: 48px;
     background-color: rgba(0,0,0,0.6);
     border: 2px solid #AAAAAA;
@@ -826,7 +831,7 @@ input:focus:-ms-input-placeholder {
     cursor: pointer;
 }
 .employer_button p {
-    margin-top: 18px;
+    margin-top: 16px;
 }
 
     .employer_button:hover {
@@ -1264,8 +1269,14 @@ a {
     .home_description > div p {
         color: #FFFFFF;
         margin: 0;
+        
         margin-left: 40px;
         padding: 14px;
+    }
+
+    .home_description .details {
+
+        margin-bottom: 18px;
     }
 
    
