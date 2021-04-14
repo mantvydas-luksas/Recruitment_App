@@ -322,8 +322,6 @@ def is_logged_in_employer(f):
             return redirect(url_for('login'))
     return wrap
 
-
-
 @app.route('/candidate_submit', methods=['GET', 'POST'])
 def candidate_submit():
 
