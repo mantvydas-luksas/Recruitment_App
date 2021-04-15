@@ -26,7 +26,7 @@
             </ul>
 
         </div>
-
+        
     </header>
 
     <main>
@@ -52,32 +52,34 @@
 
             <div class="welcome_page">
                 <h2>Post Job</h2>
-
+                <div class="update">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
                 <div class="profile_home">
                     <p>
                         Fill out the form below with all the requirements you are looking for in the new job position. Don't forget to specify the amount of
                         successful candidates you want the AI to select. You can view the list of successful candidates for any of
                         your job adverts by visiting your current adverts from the dashboard.
                     </p>
-
                 </div>
 
                 <div class="job_form">
                     <h2>New Job Advert</h2>
-                    <form name="job_advert" action="post">
+                    <form name="job_advert" action="/post_job/" method="post">
                         <div class="form_details">
                             <div class="form_items">
                                 <i class="fas fa-euro-sign"></i>
                                 <input type="number" class="form_input" name="salary" placeholder="Salary per year" required />
-
-
                             </div>
-
                             <div class="form_items">
                                 <i class="fas fa-id-badge"></i>
                                 <input type="text" class="form_input" name="position" placeholder="Job Position" required />
-
-
                             </div>
 
                         </div>
@@ -87,23 +89,76 @@
                             <div class="form_items">
                                 <i class="fas fa-history" id="special"></i>
                                 <input type="number" class="form_input" name="experience" placeholder="Years Of Experience" required />
-
-
-
                             </div>
 
                             <div class="form_items">
                                 <i class="fas fa-user-friends" id="special"></i>
-                                <input type="number" class="form_input" name="experience" placeholder="Number Of Candidates" required />
-
+                                <input type="number" class="form_input" name="candidatesNumber" placeholder="Number Of Candidates" required />
                             </div>
                         </div>
 
                         <div class="form_items">
+                            <textarea class="job_description" name="description" placeholder="Job Description" required></textarea>
+                        </div>
+
+                        <div class="form_details">
+                            <div class="date_item">
+                                {{ form.csrf_token }}
+                                {{form.entryDate.label(class='custom_label')}}
+                                {{form.entryDate(class_='datepicker')}}
+                                {{form.hidden_tag()}}
 
 
-                            <textarea class="job_description" placeholder="Job Description" required></textarea>
+                            </div>
 
+                            <div class="date_item">
+                                {{ form.csrf_token }}
+                                {{form.entryTime.label(class='custom_label')}}
+                                {{form.entryTime(class_='datepicker')}}
+                                {{form.hidden_tag()}}
+
+
+                            </div>
+                        </div>
+
+
+                        <div class="form_items">
+                            <label for="location" class="custom_label">Select city</label>
+                            <select class="custom_select" id="location" name="location" required>
+                                <option value="Antrim">Antrim</option>
+                                <option value="Armagh">Armagh</option>
+                                <option value="Belfast">Belfast</option>
+                                <option value="Carlow">Carlow</option>
+                                <option value="Cavan">Cavan</option>
+                                <option value="Clare">Clare</option>
+                                <option value="Cork">Cork</option>
+                                <option value="Derry">Derry</option>
+                                <option value="Donegal">Donegal</option>
+                                <option value="Down">Down</option>
+                                <option value="Dublin">Dublin</option>
+                                <option value="Fermanagh">Fermanagh</option>
+                                <option value="Galway">Galway</option>
+                                <option value="Kerry">Kerry</option>
+                                <option value="Kildare">Kildare</option>
+                                <option value="Kilkenny">Kilkenny</option>
+                                <option value="Laois">Laois</option>
+                                <option value="Leitrim">Leitrim</option>
+                                <option value="Limerick">Limerick</option>
+                                <option value="Longford">Longford</option>
+                                <option value="Louth">Louth</option>
+                                <option value="Mayo">Mayo</option>
+                                <option value="Meath">Meath</option>
+                                <option value="Monaghan">Monaghan</option>
+                                <option value="Offaly">Offaly</option>
+                                <option value="Roscommon">Roscommon</option>
+                                <option value="Sligo">Sligo</option>
+                                <option value="Tipperary">Tipperary</option>
+                                <option value="Tyrone">Tyrone</option>
+                                <option value="Waterford">Waterford</option>
+                                <option value="Westmeath">Westmeath</option>
+                                <option value="Wexford">Wexford</option>
+                                <option value="Wicklow">Wicklow</option>
+                            </select>
                         </div>
 
                         <input type="submit" class="submit_job" name="job_submit" value="Submit" />

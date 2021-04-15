@@ -7,6 +7,9 @@ from werkzeug.utils import secure_filename
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import validators
+from wtforms.fields.html5 import DateField
+from wtforms_components import TimeField
+from wtforms.validators import DataRequired
 import secrets
 import os
 import spacy
@@ -64,6 +67,11 @@ class ImageForm(FlaskForm):
     
     picture = FileField('Update Picture', validators=[FileAllowed(['jpg', 'png'])])
 
+class InterviewForm(FlaskForm):
+
+    entryDate = DateField('Interview Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
+    entryTime = TimeField('Interview Time', validators=(validators.DataRequired(),))
+
 class Candidates(db.Model):
     __tablename__ = 'candidates'
     candidate_id = db.Column(db.Integer, primary_key=True)
@@ -111,17 +119,26 @@ class Jobs(db.Model):
 class Adverts(db.Model):
     __tablename__ = 'adverts'
     advert_id = db.Column(db.Integer, primary_key=True)
-    skills = db.Column(db.Text)
+    salary = db.Column(db.Integer)
     position = db.Column(db.String(255))
-    description = db.Column(db.Text)
     experience = db.Column(db.Integer)
+    location = db.Column(db.String(255))
+    description = db.Column(db.Text)
+    candidates_number = db.Column(db.Integer)
+    date = db.Column(db.Text)
+    time = db.Column(db.Text)
     employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
    
-    def __init__(self, skills, position, description, experience):
-        self.skills = skills
+    def __init__(self, salary, position, experience, location, description, candidate_number, date, time, employer_id):
+        self.salary = salary
         self.position = position
-        self.description = description
         self.experience = experience
+        self.location = location
+        self.description = description
+        self.candidates_number = candidate_number
+        self.date = date
+        self.time = time
+        self.employer_id = employer_id
 
 class Employers(db.Model):
     __tablename__ = 'employers'
@@ -279,6 +296,8 @@ def login_submit():
                    
                    profile = employer.profile
 
+                   id = employer.employer_id
+
                    if sha256_crypt.verify(submitted_password, password):
 
                        session.pop('employer', None)
@@ -290,6 +309,8 @@ def login_submit():
                        session['phone'] = phone
 
                        session['profile'] = profile 
+
+                       session['id'] = id
 
                        return redirect(url_for('work_information'))
                         
@@ -373,9 +394,12 @@ def candidate_result():
 def adverts():
 
     employer = Employers.query.filter_by(email=session["email"]).first()
-    image_file = url_for('static', filename='profile_pics/' + employer.image_file)
-    return render_template('adverts.html', user=session, image_file=image_file)
 
+    image_file = url_for('static', filename='profile_pics/' + employer.image_file)
+
+    adverts = Adverts.query.filter_by(employer_id=employer.employer_id).all()
+
+    return render_template('adverts.html', user=session, image_file=image_file, adverts=adverts)
 
 def save_picture(form_picture):
 
@@ -509,16 +533,40 @@ def upload_description():
 
     return render_template('login.html')
 
-                
-
-@app.route('/post_job/')
+@app.route('/post_job/', methods=['GET', 'POST'])
 @is_logged_in_employer
 def post_job():
 
     employer = Employers.query.filter_by(email=session["email"]).first()
     image_file = url_for('static', filename='profile_pics/' + employer.image_file)
 
-    return render_template('post_job.html', user=session, image_file=image_file)
+    form = InterviewForm()
+
+    if form.validate_on_submit():
+
+        salary = request.form['salary']
+        position = request.form['position']
+        experience = request.form['experience']
+        candidatesNumber = request.form['candidatesNumber']
+        description = request.form['description']
+        interview_date = form.entryDate.data
+        interview_time = form.entryTime.data
+        location = request.form['location']
+        
+        employer = Employers.query.filter_by(email=session['email']).first()
+
+        id = int(employer.employer_id)       
+
+        advert = Adverts(salary, position, experience, location, description, candidatesNumber, interview_date, interview_time, id)
+
+        db.session.add(advert)
+
+        db.session.commit()
+
+        flash("Advert successfully added to your current adverts", "success")
+        return redirect(url_for('post_job'))
+
+    return render_template('post_job.html', user=session, image_file=image_file, form=form)
 
 @app.route('/candidate_settings/', methods=['GET', 'POST'])
 @is_logged_in_candidate

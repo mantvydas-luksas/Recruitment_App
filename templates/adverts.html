@@ -75,14 +75,16 @@
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>Job Title</td>
-                                <td><span class="result">Pending</span></td>
-                                <td>Job Title</td>
-                                <td>Job Title</td>
-                                <td><a href="/candidate_result" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
+                            {% for advert in adverts %}
+                                <tr>
+                                    <td>{{advert.position}}</td>
+                                    <td><span class="result">Pending</span></td>
+                                    <td>Job Title</td>
+                                    <td>Job Title</td>
+                                    <td><a href="/candidate_result" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
 
-                            </tr>
+                                </tr>
+                            {% endfor %}
 
                         </tbody>
 

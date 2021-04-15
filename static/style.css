@@ -1276,12 +1276,8 @@ a {
 
     .home_description .details {
 
-        margin-bottom: 18px;
+        margin-top: -16px;
     }
-
-   
-
-    
 
 .description_home {
     display: flex;
@@ -1327,6 +1323,27 @@ a {
     width: 100%;
 }
 
+.date_item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    padding: 24px;
+}
+
+.datepicker {
+    background-color: #AAAAAA;
+    color: #111111;
+    font-weight: bold;
+    font-size: 14px;
+    border: 2px solid #AAAAAA;
+    border-radius: 4px;
+    width: 200px;
+    margin-left: 40px;
+    text-align: center;
+
+}
+
 .form_items {
 
         display: flex;
@@ -1337,6 +1354,7 @@ a {
     
 
 }
+
 
 .form_items i{
 
@@ -1403,10 +1421,11 @@ input[type=number] {
     width: 40%;
     background: transparent;
     border: 2px solid #AAAAAA;
-    height: 28px;
+    height: 40px;
     color: #FFFFFF;
     font-weight: bold;
     border-radius: 8px;
+    margin-top: 40px;
     transform: translateX(76%);
 }
 
@@ -1582,8 +1601,28 @@ input[type=number] {
 
     margin-left: 40px;
     width: 100%;
-    
+   
+}
 
+.custom_label {
+    color: #FFFFFF;
+    font-size: 14px;
+    margin-left: 108px;
+
+}
+
+.custom_select {
+    color: #111111;
+    font-weight: bold;
+    background-color: #AAAAAA;
+    border: none;
+    border-radius: 4px;
+    border: 2px solid #AAAAAA;
+    width: 204px;
+    outline: none;
+    height: 26px;
+    margin-left: 64px;
+    text-align: center;
 }
 
 
