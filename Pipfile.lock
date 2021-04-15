@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4110862f55c4a4fd7f1e310db7a1eca95e8c01da6441d97bcd49ba4c45e72166"
+            "sha256": "4a60e7f3fc3c9f5d05de74f2fd23c6249122e882aa594eceb48826e6b1c4153e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -99,6 +99,22 @@
             ],
             "version": "==2.0.5"
         },
+        "decorator": {
+            "hashes": [
+                "sha256:6f201a6c4dac3d187352661f508b9364ec8091217442c9478f1f83c003a0f060",
+                "sha256:945d84890bb20cc4a2f4a31fc4311c0c473af65ea318617f13a7257c9a58bc98"
+            ],
+            "markers": "python_version >= '3.5'",
+            "version": "==5.0.7"
+        },
+        "dnspython": {
+            "hashes": [
+                "sha256:95d12f6ef0317118d2a1a6fc49aac65ffec7eb8087474158f42f26a639135216",
+                "sha256:e4a87f0b573201a0f3727fa18a516b055fd1107e0e5477cded4a2de497df1dd4"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==2.1.0"
+        },
         "download-tarball": {
             "hashes": [
                 "sha256:a6cdbf941021496a98ec58723858f2b0c4a549a4add04ff7034b2978150f80bc",
@@ -106,6 +122,13 @@
             ],
             "index": "pypi",
             "version": "==0.0.7"
+        },
+        "email-validator": {
+            "hashes": [
+                "sha256:094b1d1c60d790649989d38d34f69e1ef07792366277a2cf88684d03495d018f",
+                "sha256:1a13bd6050d1db4475f13e444e169b6fe872434922d38968c67cea9568cce2f0"
+            ],
+            "version": "==1.1.2"
         },
         "en-core-web-sm": {
             "file": "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0.tar.gz",
@@ -210,12 +233,25 @@
             "markers": "python_version < '3.8'",
             "version": "==3.2.0"
         },
+        "infinity": {
+            "hashes": [
+                "sha256:8daa7c15ce2100fdccfde212337e0cd5cf085869f54dc2634b6c30d61461ecda"
+            ],
+            "version": "==1.5"
+        },
         "init": {
             "hashes": [
                 "sha256:403e4d6a8cf1fc6e4df35593fcddb00272d97fde67df895bbbb31b53a165b5e2"
             ],
             "index": "pypi",
             "version": "==0.1.0"
+        },
+        "intervals": {
+            "hashes": [
+                "sha256:055bd20378e2728e2e1752dfc4c05d1647814c22cab390a3aaa3cd29bcd61138",
+                "sha256:c700909be7280b2d780294319a51b296c9557931f7eeb32141cf720ede2db177"
+            ],
+            "version": "==0.9.1"
         },
         "itsdangerous": {
             "hashes": [
@@ -530,6 +566,14 @@
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
             "version": "==2.25.1"
         },
+        "six": {
+            "hashes": [
+                "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259",
+                "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"
+            ],
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "version": "==1.15.0"
+        },
         "smart-open": {
             "hashes": [
                 "sha256:7f4e85b71df5a3618f5447d0b417b7a3576308c839690a24a70338b8993684c3"
@@ -689,6 +733,14 @@
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
             "version": "==1.26.4"
         },
+        "validators": {
+            "hashes": [
+                "sha256:0143dcca8a386498edaf5780cbd5960da1a4c85e0719f3ee5c9b41249c4fefbd",
+                "sha256:37cd9a9213278538ad09b5b9f9134266e7c226ab1fede1d500e29e0a8fbb9ea6"
+            ],
+            "markers": "python_version >= '3.4'",
+            "version": "==0.18.2"
+        },
         "wasabi": {
             "hashes": [
                 "sha256:a493e09d86109ec6d9e70d040472f9facc44634d4ae6327182f94091ca73a490",
@@ -710,6 +762,13 @@
                 "sha256:81195de0ac94fbc8368abbaf9197b88c4f3ffd6c2719b5bf5fc9da744f3d829c"
             ],
             "version": "==2.3.3"
+        },
+        "wtforms-components": {
+            "hashes": [
+                "sha256:7d0d83dec6d5352c661e522be628f49c2de3aa78cd79c9caf0c1cc3bff4e3872"
+            ],
+            "index": "pypi",
+            "version": "==0.10.5"
         },
         "zipp": {
             "hashes": [

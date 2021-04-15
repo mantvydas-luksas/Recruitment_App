@@ -15,6 +15,7 @@ init = "*"
 download-tarball = "*"
 passlib = "*"
 flask-wtf = "*"
+wtforms-components = "*"
 
 [dev-packages]
 
