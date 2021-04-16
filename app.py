@@ -27,9 +27,12 @@ nlp = en_core_web_sm.load()
 
 ner = nlp.get_pipe("ner")
 
-TRAIN_DATA = [
-("Dynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business applications using OOP and Java/J2EE technologies. ",{"entities":[(0,60,"years")]})
+TRAIN_RESUME_DATA = [
+('Hello Hello', {
+'entities': [(0, 11, 'DATE')]
+})
 ]
+
 
 ner.add_label('skills')
 
@@ -38,15 +41,15 @@ unaffected_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptio
 
 with nlp.disable_pipes(*unaffected_pipes):
     for iteration in range(20):
-        random.shuffle(TRAIN_DATA)
-        for raw_text,entity_offsets in TRAIN_DATA:
-            doc=nlp.make_doc(raw_text)
-            nlp.update([Example.from_dict(doc,entity_offsets)])
+        random.shuffle(TRAIN_RESUME_DATA)
+        for raw_text,entity_offsets in TRAIN_RESUME_DATA:
+            resume=nlp.make_doc(raw_text)
+            nlp.update([Example.from_dict(resume,entity_offsets)])
 
-doc = nlp("Dynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business ")
+#resume = nlp("Dynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business ")
 
-#for ent in doc.ents:
-   #print(ent.label_, ent.text)
+#for ent in resume.ents:
+ #  print(ent.label_, ent.text)
 
 ENV = 'dev'
    
@@ -80,7 +83,7 @@ class Candidates(db.Model):
     phone = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
-    profile = db.Column(db.Text, nullable=False, default='No profile description added yet, change this in the account settings.')
+    profile = db.Column(db.Text, nullable=False, default='No profile description added yet.')
     resume = db.Column(db.Text)
     image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
     
@@ -128,7 +131,7 @@ class Adverts(db.Model):
     date = db.Column(db.Text)
     time = db.Column(db.Text)
     employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
-   
+
     def __init__(self, salary, position, experience, location, description, candidate_number, date, time, employer_id):
         self.salary = salary
         self.position = position
@@ -147,9 +150,8 @@ class Employers(db.Model):
     company = db.Column(db.String(255))
     phone = db.Column(db.String(255))
     password = db.Column(db.String(255))
-    profile = db.Column(db.Text, nullable=False, default='No profile description added yet, change this in the account settings.')
+    profile = db.Column(db.Text, nullable=False, default='No profile description added yet.')
     image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
-    
     
     submissions = relationship("Submissions", backref="employers")
     adverts = relationship("Adverts", backref="employers")
@@ -552,14 +554,26 @@ def post_job():
         interview_date = form.entryDate.data
         interview_time = form.entryTime.data
         location = request.form['location']
+
+        job = position.lower()
         
         employer = Employers.query.filter_by(email=session['email']).first()
 
         id = int(employer.employer_id)       
 
-        advert = Adverts(salary, position, experience, location, description, candidatesNumber, interview_date, interview_time, id)
+        advert = Adverts(salary, job, experience, location, description, candidatesNumber, interview_date, interview_time, id)
 
         db.session.add(advert)
+
+        db.session.commit()
+
+        experience_years = str(experience) + " years"
+
+        text_to_be_analyzed = str(position) + " " + experience_years + " " + str(description)
+
+        job = Jobs(text_to_be_analyzed)
+
+        db.session.add(job)
 
         db.session.commit()
 
@@ -567,6 +581,60 @@ def post_job():
         return redirect(url_for('post_job'))
 
     return render_template('post_job.html', user=session, image_file=image_file, form=form)
+
+@app.route('/search_results', methods=['GET', 'POST'])
+def search_results():
+
+    if request.method == 'POST':
+       
+       try:
+
+            location_query = request.form['category']
+
+       except: 
+           flash("Please select a location", "result_feedback")
+           return redirect(url_for('search'))
+
+       try: 
+           query = request.form['search_query']
+           if query == "Search Job Position":
+                query = None
+           
+       except:
+           query = None
+
+       if location_query == "Any" and query == None:
+
+           adverts = Adverts.query.all()
+           
+       elif location_query == "Any" and query != None:
+
+           print("here")
+           adverts = Adverts.query.filter(Adverts.position.contains(query)).all()
+       
+       elif location_query != "Any" and query == None:
+
+           adverts = Adverts.query.filter_by(location=location_query).all()
+
+       elif location_query != "Any" and query != None:
+           
+           adverts = Adverts.query.filter(Adverts.location.contains(location_query), Adverts.position.contains(query)).all()
+      
+       employers = []
+
+       if not adverts:
+           flash("No results found", "result_feedback")
+           return redirect(url_for('search'))
+       else:
+            
+            for advert in adverts:
+
+                employer = Employers.query.filter_by(employer_id=advert.employer_id).first()
+
+                employers.append(employer)
+
+                return render_template('search_results.html', user=session, adverts=adverts, employers=employers)
+
 
 @app.route('/candidate_settings/', methods=['GET', 'POST'])
 @is_logged_in_candidate

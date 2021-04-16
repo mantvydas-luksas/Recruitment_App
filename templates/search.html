@@ -68,182 +68,193 @@
     <main>
         <div class="search_area">
             <video src="../static/journey.mp4" autoplay loop muted></video>
+          
             <div class="show_search">
-                <div class="search_box">
-                    <div class="wrapper">
+                <form action="/search_results" method="post">
+                    <div class="feedback">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="search_box">
+
                         <div class="select-box">
 
                             <div class="options-container">
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="all" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="all" name="category" value="Any">
                                     <label for="all">Any</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="antrim" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="antrim" name="category" value="Antrim" />
                                     <label for="antrim">Antrim</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="armagh" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="armagh" name="category" value="Armagh" />
                                     <label for="armagh">Armagh</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="belfast" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="belfast" name="category" value="Belfast" />
                                     <label for="belfast">Belfast</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="carlow" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="carlow" name="category" value="Carlow" />
                                     <label for="carlow">Carlow</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="cavan" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="cavan" name="category" value="Cavan" />
                                     <label for="cavan">Cavan</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="clare" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="clare" name="category" value="Clare" />
                                     <label for="clare">Clare</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="cork" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="cork" name="category" value="Cork" />
                                     <label for="cork">Cork</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="derry" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="derry" name="category" value="Derry" />
                                     <label for="derry">Derry</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="donegal" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="donegal" name="category" value="Donegal" />
                                     <label for="donegal">Donegal</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="down" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="down" name="category" value="Down" />
                                     <label for="down">Down</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="dublin" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="dublin" name="category" value="Dublin" />
                                     <label for="dublin">Dublin</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="fermanagh" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="fermanagh" name="category" value="Fermanagh" />
                                     <label for="fermanagh">Fermanagh</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="galway" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="galway" name="category" value="Galway" />
                                     <label for="galway">Galway</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="kerry" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="kerry" name="category" value="Kerry" />
                                     <label for="kerry">Kerry</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="kildare" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="kildare" name="category" value="Kildare" />
                                     <label for="kildare">Kildare</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="kilkenny" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="kilkenny" name="category" value="Kilkenny" />
                                     <label for="kilkenny">Kilkenny</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="laois" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="laois" name="category" value="Laois" />
                                     <label for="laois">Laois</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="leitrim" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="leitrim" name="category" value="Leitrim" />
                                     <label for="leitrim">Leitrim</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="limerick" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="limerick" name="category" value="Limerick" />
                                     <label for="limerick">Limerick</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="longford" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="longford" name="category" value="Longford" />
                                     <label for="longford">Longford</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="louth" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="louth" name="category" value="Louth" />
                                     <label for="louth">Louth</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="mayo" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="mayo" name="category" value="Mayo" />
                                     <label for="mayo">Mayo</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="meath" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="meath" name="category" value="Meath" />
                                     <label for="meath">Meath</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="monaghan" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="monaghan" name="category" value="Monaghan" />
                                     <label for="monaghan">Monaghan</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="offaly" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="offaly" name="category" value="Offaly" />
                                     <label for="offaly">Offaly</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="roscommon" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="roscommon" name="category" value="Roscommon" />
                                     <label for="roscommon">Roscommon</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="sligo" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="sligo" name="category" value="Sligo" />
                                     <label for="sligo">Sligo</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="tipperary" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="tipperary" name="category" value="Tipperary" />
                                     <label for="tipperary">Tipperary</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="tyrone" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="tyrone" name="category" value="Tyrone" />
                                     <label for="tyrone">Tyrone</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="waterford" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="waterford" name="category" value="Waterford" />
                                     <label for="waterford">Waterford</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="westmeath" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="westmeath" name="category" value="Westmeath" />
                                     <label for="westmeath">Westmeath</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="wexford" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="wexford" name="category" value="Wexford" />
                                     <label for="wexford">Wexford</label>
-                                </div>
+                                </label>
 
-                                <div class="option">
-                                    <input type="radio" class="radio" id="wicklow" name="category" />
+                                <label class="option">
+                                    <input type="radio" class="radio" id="wicklow" name="category" value="Wicklow" />
                                     <label for="wicklow">Wicklow</label>
-                                </div>
+                                </label>
 
 
                             </div>
@@ -253,15 +264,18 @@
                             </div>
 
                         </div>
+
+
+                        <input type="text" name="search_query" class="search_bar" value="Search Job Position" onblur="if(this.value==''){ this.value='Search Job Position'; this.style.color='#FFFFFF';}"
+                               onfocus="if(this.value=='Search Job Position'){ this.value=''; this.style.color='#FFFFFF';}"
+                               style="color:#FFFFFF;" />"
+                        <button type="submit" class="search_button">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
 
-                    <input type="text" class="search_bar" value="Search Job Position" onblur="if(this.value==''){ this.value='Search Job Position'; this.style.color='#FFFFFF';}"
-                           onfocus="if(this.value=='Search Job Position'){ this.value=''; this.style.color='#FFFFFF';}"
-                           style="color:#FFFFFF;" />"
-                    <button type="submit" class="search_button">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
+                </form>
+
             </div>
 
             <div class="footer">
