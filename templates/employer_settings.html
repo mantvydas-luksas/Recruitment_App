@@ -85,7 +85,7 @@
                 <div class="settings_display">
                     <form action="/upload_description/" method="post">
                         <div class="settings_items">
-                            <textarea class="profile_description" name="description" placeholder="New Profile Description" required>{{user.profile}}</textarea>
+                            <textarea maxlength="1600" class="profile_description" name="description" placeholder="New Profile Description" required>{{user.profile}}</textarea>
                             <input type="submit" class="settings_button_2" value="Change Description" />
 
                         </div>

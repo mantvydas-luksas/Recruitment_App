@@ -70,6 +70,10 @@ class ImageForm(FlaskForm):
     
     picture = FileField('Update Picture', validators=[FileAllowed(['jpg', 'png'])])
 
+class ResumeForm(FlaskForm):
+    
+    resume = FileField('Update Resume', validators=[FileAllowed(['pdf', 'docx'])])
+
 class InterviewForm(FlaskForm):
 
     entryDate = DateField('Interview Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
@@ -84,7 +88,7 @@ class Candidates(db.Model):
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     profile = db.Column(db.Text, nullable=False, default='No profile description added yet.')
-    resume = db.Column(db.Text)
+    resume = db.Column(db.String(20))
     image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
     
     submissions = relationship("Submissions", backref="candidates")
@@ -105,7 +109,7 @@ class Submissions(db.Model):
     job_id = db.Column(db.Integer, ForeignKey("jobs.job_id"))
     employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
   
-    def __init__(self, result, resume_entities):
+    def __init__(self, resume_entities, candidate_id, job_id, employer_id):
         self.result = result
         self.resume_entities = resume_entities
      
@@ -131,6 +135,7 @@ class Adverts(db.Model):
     date = db.Column(db.Text)
     time = db.Column(db.Text)
     employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
+    
 
     def __init__(self, salary, position, experience, location, description, candidate_number, date, time, employer_id):
         self.salary = salary
@@ -335,7 +340,7 @@ def is_logged_in_candidate(f):
         if 'candidate' in session:
             return f(*args, **kwargs)
         else:
-            flash('Unauthorized Access, Please Login', 'fail')
+            flash('Please login as a candidate account', 'fail')
             return redirect(url_for('login'))
     return wrap
 
@@ -345,7 +350,7 @@ def is_logged_in_employer(f):
         if 'employer' in session:
             return f(*args, **kwargs)
         else:
-            flash('Unauthorized Access, Please Login', 'fail')
+            flash('Please login as an employer account', 'fail')
             return redirect(url_for('login'))
     return wrap
 
@@ -417,6 +422,19 @@ def save_picture(form_picture):
 
     return image_fn
 
+def save_resume(form_resume):
+
+    random_hex = secrets.token_hex(8)
+
+    _, f_ext = os.path.splitext(form_resume.filename)
+
+    resume_fn = random_hex + f_ext
+
+    resume_path = os.path.join(app.root_path, 'static/resumes', resume_fn)
+
+    form_resume.save(resume_path)
+
+    return resume_fn
 
 @app.route('/employer_settings/', methods=['GET', 'POST'])
 @is_logged_in_employer
@@ -585,7 +603,7 @@ def post_job():
 @app.route('/search_results', methods=['GET', 'POST'])
 def search_results():
 
-    if request.method == 'POST':
+    if request.method == 'POST' or request.method == 'GET':
        
        try:
 
@@ -626,15 +644,33 @@ def search_results():
            flash("No results found", "result_feedback")
            return redirect(url_for('search'))
        else:
+
+           image_dictionary = {}
+
+           image_dictionary.clear()
             
-            for advert in adverts:
+           for advert in adverts:
 
-                employer = Employers.query.filter_by(employer_id=advert.employer_id).first()
+               employer = Employers.query.filter_by(employer_id=advert.employer_id).first()
 
-                employers.append(employer)
+               image_dictionary[advert.employer_id] = employer.image_file
 
-                return render_template('search_results.html', user=session, adverts=adverts, employers=employers)
+           return render_template('search_results.html', user=session, adverts=adverts, employers=employers, images=image_dictionary)
 
+   
+@app.route('/job_apply', methods=['GET', 'POST'])
+@is_logged_in_candidate
+def job_apply():
+
+    id = request.form['advert_id']
+
+    advert = Adverts.query.filter_by(advert_id=id).first()
+
+    employer = Employers.query.filter_by(employer_id=advert.employer_id).first()
+
+    image_file = employer.image_file
+
+    return render_template('job_apply.html', user=session, advert=advert, employer=employer, image_file=image_file)
 
 @app.route('/candidate_settings/', methods=['GET', 'POST'])
 @is_logged_in_candidate
@@ -643,6 +679,8 @@ def candidate_settings():
     candidate = Candidates.query.filter_by(email=session["email"]).first()
 
     form = ImageForm()
+
+    resumeForm = ResumeForm()
 
     if form.validate_on_submit():
        if form.picture.data:
@@ -657,11 +695,46 @@ def candidate_settings():
 
           flash('Picture updated', 'success')
           return redirect(url_for('candidate_settings'))
-   
 
+    if resumeForm.validate_on_submit():
+       if resumeForm.resume.data:
+
+          resume_file = save_resume(resumeForm.resume.data)
+            
+          candidate = Candidates.query.filter_by(email=session["email"]).first()
+
+          candidate.resume = resume_file
+
+          db.session.commit()
+
+          flash('Resume updated', 'success')
+
+          return redirect(url_for('candidate_settings'))
+   
     image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
 
-    return render_template('candidate_settings.html', user=session, form=form, image_file=image_file)
+    return render_template('candidate_settings.html', user=session, form=form, resumeForm=resumeForm, image_file=image_file)
+
+@app.route('/upload_resume/', methods=['GET', 'POST'])
+@is_logged_in_candidate
+def upload_resume():
+
+    form = ResumeForm()
+
+    if form.validate_on_submit():
+       if form.resume.data:
+
+          resume_file = save_resume(form.resume.data)
+            
+          candidate = Candidates.query.filter_by(email=session["email"]).first()
+
+          candidate.resume_file = resume_file
+
+          db.session.commit()
+
+          flash('Resume updated', 'success')
+          return redirect(url_for('candidate_settings'))
+   
 
 @app.route('/submissions/')
 @is_logged_in_candidate
@@ -671,6 +744,46 @@ def submissions():
     image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
 
     return render_template('submissions.html', user=session, image_file=image_file)
+
+@app.route('/employer_information', methods=["POST", "GET"])
+@is_logged_in_candidate
+def employer_information():
+
+    if request.method == "POST":
+
+        id = request.form["advert_id"]
+
+        advert = Adverts.query.filter_by(advert_id=id).first()
+        
+        employer = Employers.query.filter_by(employer_id=advert.employer_id).first()
+
+        image_file = employer.image_file
+
+        return render_template('employer_information.html', user=session, advert=advert, employer=employer, image_file=image_file)
+
+@app.route('/candidate_apply', methods=["POST", "GET"])
+@is_logged_in_candidate
+def candidate_apply():
+
+    if request.method == 'POST':
+
+        advert_id = request.form["advert_id"]
+
+        candidate = Candidates.query.filter_by(email=session["email"]).first()
+
+        job = Jobs.query.filter_by(job_id=advert_id)
+
+        if(candidate.resume == None):
+            flash("Please upload your resume", "result_feedback")
+            return redirect(url_for('search'))
+
+        #submission = Submission()
+
+        flash("You have successfully applied", "result_feedback")
+        return redirect(url_for('search'))
+
+    else:
+        return redirect(url_for('search'))
 
 @app.route('/employer_submit', methods=['GET', 'POST'])
 def employer_submit():
@@ -683,10 +796,12 @@ def employer_submit():
             password = request.form['password']
             confirm = request.form['confirm']
 
+            format_company = company.upper()
+
             if password == confirm:
                 stored_password = sha256_crypt.encrypt(str(password))
 
-                data = Employers(email, company, phone, stored_password)
+                data = Employers(email, format_company, phone, stored_password)
 
                 try:
                     db.session.add(data)
@@ -723,8 +838,13 @@ def information():
    candidate = Candidates.query.filter_by(email=session["email"]).first()
    image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
 
-   return render_template('information.html', user=session, image_file=image_file)
-    
+   if candidate.resume != None:
+
+        resume_file = url_for('static', filename='resumes/' + candidate.resume)
+        return render_template('information.html', user=session, image_file=image_file, resume_file=resume_file)
+   else: 
+        return render_template('information.html', user=session, image_file=image_file)
+
 @app.route('/work_information/')
 @is_logged_in_employer
 def work_information():

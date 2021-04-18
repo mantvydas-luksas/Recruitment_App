@@ -425,12 +425,12 @@ video {
 
 .jobs_display {
     position: absolute;
-    background: url(talent.jpg);
+    background: url(login.jpg);
     background-size: cover;
-    position: absolute;
     margin-left: 20px;
     width: 96vw;
-    height: 240vh;
+    min-height: 160vh;
+    overflow: hidden;
 }
 
 .features_display {
@@ -978,10 +978,10 @@ a {
    
 
 .account_picture {
-    width: 140px;
-    height: 140px;
+   
+    height: 120px;
     margin-top: 24px;
-    border-radius: 140px;
+    border-radius: 20px;
     border: 2px solid #AAAAAA;
 }
 
@@ -1245,9 +1245,9 @@ a {
 
 .home_picture {
 
-    height: 180px;
-    width: 180px;
-    border-radius: 180px;
+    height: 140px;
+   
+    border-radius: 20px;
     margin-left: 40px;
     margin-top: 28px;
     margin-bottom: 48px;
@@ -1473,9 +1473,8 @@ input[type=number] {
 
 .settings_items img{
 
-    width: 140px;
-    height: 140px;
-    border-radius: 140px;
+    height: 100px;
+    border-radius: 20px;
     border: 2px solid #AAAAAA;
     margin-top: 24px;
     margin-left: 28px;
@@ -1665,7 +1664,7 @@ input[type=number] {
     }
 
     .job_card p {
-        text-align: left;
+        text-align: center;
         line-height: 28px;
         font-size: 14px;
     }
@@ -1716,6 +1715,89 @@ input[type=number] {
     text-align: center;
     color: #FFFFFF;
 }
+
+.advert_display {
+    background-color: rgb(0,0,0,0.8);
+    display: flex;
+    height: 200vh;
+    width: 80%;
+    padding: 20px;
+}
+
+.advert_display img {
+
+    height: 140px;
+}
+
+.advert_wrapper {
+
+    display: flex;  
+    justify-content: center;
+    margin-top: 140px;
+    min-height: 200vh;
+    
+    
+}
+
+.description_wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-left: 40px;
+    
+    width: 100%;
+}
+
+.description_wrapper p{
+
+    text-align: left; 
+    
+}
+
+
+
+.advert {
+    display: flex;
+    flex-direction: row;
+    
+    height: 200vh;
+    padding: 8px;
+    justify-content: space-between;
+    width: 100%;
+    
+}
+
+    .advert img {
+        height: 140px;
+    }
+
+.advert_apply {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-content: center;
+    align-items: center;
+}
+
+    .advert_apply img {
+        height: 140px;
+    }
+
+    .advert_apply h2 {
+        margin-top: 20px;
+        font-size: 18px;
+        text-align: center;
+        padding: 8px;
+    }
+
+.job_item_additional > form{
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
 
 @keyframes changeImages {
     25% {

@@ -68,33 +68,44 @@
 
         <div class="info">
             <div class="jobs_display">
-                <div class="features_display">
-                    {% for advert in adverts %}
-                    <form action="/job_apply", method="post">
-                    <div class="job_card">
-                        <div class="job_item">
-                           
-                            <img src="../static/profile_pics/{{images[advert.employer_id]}}" />
-                        </div>
-                        <div class="job_item">
+                <div class="advert_wrapper">
+                    <div class="advert_display">
+                        <div class="advert_apply">
+                            <img src="../static/profile_pics/{{image_file}}" />
                             
-                            <p>
-                                Position: {{advert.position.upper()}} <br />Salary: {{advert.salary}} <br /> Location: {{advert.location}} <br/> Years Of Experience: {{advert.experience}} 
-                                
-                            </p>
+                            <h2>{{advert.position.upper()}}</h2>
                             
-                        </div>
-                        <div class="job_item">
-                           
-                            <input type="submit" value="More Information" class="information_link"/>
-                            <input name="advert_id" value="{{advert.advert_id}}" style="visibility:hidden"/>
+                            <div class="job_item_additional">
+                                <div class="job_item_additional">
+                                    <form action="/employer_information" method="post">
+                                        <input type="submit" value="Employer Information" class="information_link" />
+                                        <input name="advert_id" value="{{advert.advert_id}}" style="visibility:hidden" />
+                                    </form>
+
+                                    <form action="/candidate_apply" method="post">
+                                        <input type="submit" value="Apply" class="information_link" />
+                                        <input name="advert_id" value="{{advert.advert_id}}" style="visibility:hidden" />
+                                    </form>
+                                </div>
+                              
+</div>
+
+                            </div>
+                        <div class="advert">
+
                             
+                            <div class="description_wrapper">
+
+                                <p style='white-space:pre-line'>
+                                    {{advert.description}}
+                                </p>
+
+
+                            </div>
+
                         </div>
 
                     </div>
-                        </form>
-                    {% endfor %}
-
                     </div>
             </div>
             <div class="footer">
@@ -107,7 +118,7 @@
     </main>
 
     <script src="../static/script.js"></script>
-  
+
 
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" type="image/png" href="../static/favicon.png" />
     <link rel="stylesheet" href="../static/style.css" />
+    <link rel="shortcut icon" type="image/png" href="../static/favicon.png" />
     <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
-    <title>Login/Register</title>
+    <title>Search Results</title>
 </head>
 <body>
 
@@ -29,7 +29,13 @@
             </nav>
 
             <ul class="login">
+                {% if user.candidate %}
+                <li><a href="/login">Account</a></li>
+                {% elif user.employer %}
+                <li><a href="/login">Account</a></li>
+                {% else %}
                 <li><a href="/login">Login/Register</a></li>
+                {% endif %}
             </ul>
 
             <div class="navigator-small" id="navigate" onclick="navigation()">
@@ -47,31 +53,54 @@
                 <li><a href="/employers">Employers</a></li>
                 <li><a href="/choice">Why Us?</a></li>
                 <li><a href="/contact">Contact</a></li>
+                {% if user.candidate %}
+                <li><a href="/login">Account</a></li>
+                {% elif user.employer %}
+                <li><a href="/login">Account</a></li>
+                {% else %}
                 <li><a href="/login">Login/Register</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
+
     <main>
 
-        <div class="login_display">
-            <h2>Choose an account below</h2>
-            <div class="account_selection">
-                <a href="/candidate_registration">
-                    <div class="job_seeker_button">
-                    <p>Candidate</p>
+        <div class="info">
+            <div class="jobs_display">
+                <div class="advert_wrapper">
+                    <div class="advert_display">
+                        <div class="advert_apply">
+                            <img src="../static/profile_pics/{{image_file}}" />
+
+                            <h2>{{employer.company}}</h2>
+
+                            <div class="advert">
+
+                                <div class="description_wrapper">
+
+                                    <p style='white-space:pre-line'>
+                                        {{employer.profile}}
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                </a>
-                <a href="/employer_registration">
-                <div class="employer_button">
-                    <p>Employer</p>
                 </div>
-                </a>
+                <div class="footer">
+                    <div class="footer_content">
+                        <p>&copy; WorkNow 2021</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-         </main>
+    </main>
 
     <script src="../static/script.js"></script>
+
 
 </body>
 </html>
