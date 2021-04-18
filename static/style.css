@@ -429,7 +429,7 @@ video {
     background-size: cover;
     margin-left: 20px;
     width: 96vw;
-    min-height: 160vh;
+    min-height: 260vh;
     overflow: hidden;
 }
 
@@ -1992,7 +1992,6 @@ input[type=number] {
         position: absolute;
         background: #111111;
         background-size: cover;
-        position: absolute;
         margin-left: 20px;
         width: 96vw;
         height: 700vh;
