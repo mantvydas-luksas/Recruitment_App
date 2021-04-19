@@ -86,13 +86,13 @@ else:
         url = url.split('postgres://')[1]
         engine = create_engine('postgresql+psycopg2://{}'.format(url), 
                            convert_unicode=True, encoding='utf8')
-    except:
-        print('Something wrong with database url')
-    else:
         db = scoped_session(sessionmaker(autocommit=False,
                                 autoflush=False, bind=engine))
         Base = declarative_base()
         Base.query = db.query_property()
+    except:
+        print('Something wrong with database url')
+   
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
