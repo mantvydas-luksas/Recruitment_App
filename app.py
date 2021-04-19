@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session, logging, g
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import URLSafeTimedSerializer
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
 from sqlalchemy import Integer, ForeignKey, String, Column, Text
 from sqlalchemy.orm import relationship 
 from passlib.hash import sha256_crypt
@@ -22,7 +25,6 @@ from spacy.util import minibatch, compounding
 from pathlib import Path
 from functools import wraps
 
-
 nlp = en_core_web_sm.load()
 
 ner = nlp.get_pipe("ner")
@@ -32,7 +34,6 @@ TRAIN_RESUME_DATA = [
 'entities': [(0, 11, 'DATE')]
 })
 ]
-
 
 ner.add_label('skills')
 
@@ -54,6 +55,16 @@ with nlp.disable_pipes(*unaffected_pipes):
 ENV = 'dev'
    
 app= Flask(__name__)
+
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'worknowapp88@gmail.com'
+app.config['MAIL_PASSWORD'] = 'worknow4444'
+
+mail = Mail(app)
+
+e = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 if ENV == 'dev':
      app.debug = True
@@ -90,7 +101,8 @@ class Candidates(db.Model):
     profile = db.Column(db.Text, nullable=False, default='No profile description added yet.')
     resume = db.Column(db.String(20))
     image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
-    
+    confirm_email = db.Column(db.Boolean, default=False)
+
     submissions = relationship("Submissions", backref="candidates")
 
     def __init__(self, firstname, lastname, phone, email, password):
@@ -99,6 +111,22 @@ class Candidates(db.Model):
         self.phone = phone
         self.email = email
         self.password = password
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.candidate_id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        
+        s = Serializer(app.config['SECRET_KEY'])
+
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+
+        return Candidates.query.get(user_id)
 
 class Submissions(db.Model):
     __tablename__ = 'submissions'
@@ -157,7 +185,8 @@ class Employers(db.Model):
     password = db.Column(db.String(255))
     profile = db.Column(db.Text, nullable=False, default='No profile description added yet.')
     image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
-    
+    confirm_email = db.Column(db.Boolean, default=False)
+
     submissions = relationship("Submissions", backref="employers")
     adverts = relationship("Adverts", backref="employers")
 
@@ -166,6 +195,22 @@ class Employers(db.Model):
         self.company = company
         self.phone = phone
         self.password = password
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.employer_id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        
+        s = Serializer(app.config['SECRET_KEY'])
+
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+
+        return Employers.query.get(user_id)
  
 
 @app.route('/registration_landing')
@@ -188,6 +233,7 @@ def logout():
 
     session.pop('candidate', None)
     session.pop('employer', None)
+    session.pop('logged_in', None)
 
     session.clear()
 
@@ -224,8 +270,28 @@ def choice():
 
     return render_template('choice.html', user=session)
 
-@app.route('/contact')
+@app.route('/contact', methods=["POST", "GET"])
 def contact():
+
+    if request.method == "POST":
+
+        subject = request.form["subject"]
+        first_name = request.form["first"]
+        last_name = request.form["last"]
+        email = request.form["email"]
+        phone = request.form["phone"]
+        enquiry = request.form["message"]
+
+        message = Message(subject, sender=email, recipients=["worknowapp88@gmail.com"])
+
+        complete_message = "New Enquiry Received:\n\nName: \n" + first_name + " " + last_name + "\n\nEmail: \n" + email + "\n\nPhone: \n" + phone + "\n\nMessage: \n" + enquiry 
+
+        message.body = complete_message 
+
+        mail.send(message)
+
+        flash('Thank you, your message has been sent', 'form_feedback')
+        return redirect(url_for('contact'))
 
     return render_template('contact.html', user=session)
 @app.route('/employer_registration/')
@@ -238,10 +304,125 @@ def candidate_registration():
     
     return render_template('candidate_registration.html')
 
-@app.route('/email_request/')
+def send_reset_email_candidate(user):
+    token = user.get_reset_token()
+
+    message = Message('Password Reset for WorkNow', sender='mantvydas.luksas@mycit.ie', recipients=[user.email])
+
+    message.body = f'''To reset your password, visit the link below:
+{url_for('new_password_candidate', token=token, _external=True)}   
+
+If you did not make this request, simply ignore this email and no changes will be made.                  
+'''
+    mail.send(message)
+
+def send_reset_email_employer(user):
+    token = user.get_reset_token()
+
+    message = Message('Password Reset for WorkNow', sender='mantvydas.luksas@mycit.ie', recipients=[user.email])
+
+    message.body = f'''To reset your password, visit the link below:
+{url_for('new_password_employer', token=token, _external=True)}   
+
+If you did not make this request, simply ignore this email and no changes will be made.                  
+'''
+
+    mail.send(message)
+    
+
+@app.route('/email_request/', methods=["POST", "GET"])
 def email_request():
 
+    flag = 0
+
+    if 'logged_in' in session:
+        return redirect(url_for("search"))
+
+    if request.method == 'POST':
+        forgot_email = request.form['forgot_email']
+      
+        try:
+            
+            candidate = Candidates.query.filter_by(email=forgot_email).first()
+            send_reset_email_candidate(candidate)
+            flash('An email has been sent to reset password', 'success')
+            return redirect(url_for('login'))
+        except:
+            flag = 1
+        try: 
+            employer = Employers.query.filter_by(email=forgot_email).first()
+            send_reset_email_employer(employer)
+            flash('An email has been sent to reset password', 'success')
+            return redirect(url_for('login'))
+
+        except:
+            flag = 1
+
+    if flag == 1:
+
+        flash("Invalid Email", "fail")
+        return redirect(url_for('email_request'))
+
     return render_template('email_request.html')
+
+@app.route('/new_password_candidate/<token>', methods=["POST", "GET"])
+def new_password_candidate(token):
+
+    if 'logged_in' in session:
+        return redirect(url_for("search"))
+
+    candidate = Candidates.verify_reset_token(token)
+
+    if candidate is None: 
+        flash("Invalid or expired token", "fail")
+        return redirect(url_for('email_request'))
+
+    if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm']
+
+        if password == confirm_password:
+            candidate.password = sha256_crypt.encrypt(str(confirm_password))
+
+            db.session.commit()
+            flash('Your password has been updated', 'success')
+            return redirect(url_for('login'))
+
+        else:
+            flash('Passwords do not match', 'fail')
+            return render_template('new_password.html', token=token)
+    
+    return render_template('new_password.html', token=token)
+
+
+@app.route('/new_password_employer/<token>', methods=["POST", "GET"])
+def new_password_employer(token):
+
+    if 'logged_in' in session:
+        return redirect(url_for("search"))
+
+    employer = Employers.verify_reset_token(token)
+
+    if employer is None: 
+        flash("Invalid or expired token", "fail")
+        return redirect(url_for('email_request'))
+
+    if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm']
+
+        if password == confirm_password:
+            candidate.password = sha256_crypt.encrypt(str(confirm_password))
+
+            db.session.commit()
+            flash('Your password has been updated', 'success')
+            return redirect(url_for('login'))
+
+        else:
+            flash('Passwords do not match', 'fail')
+            return render_template('new_password.html', token=token)
+    
+    return render_template('new_password.html', token=token)
 
 @app.route('/login_submit', methods=['GET', 'POST'])
 def login_submit():
@@ -267,6 +448,22 @@ def login_submit():
 
                     phone = candidate.phone
 
+                    if candidate.confirm_email == False:
+                         
+                         s = Serializer(app.config['SECRET_KEY'], 1800)
+
+                         token = s.dumps({"email_id": email}).decode('utf-8')
+
+                         message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+
+                         message.body = f"""Please confirm your email by clicking on the link below:
+                        {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+                         """
+                         mail.send(message)
+
+                         flash("Please Confirm Email", "fail")
+                         return redirect(url_for('login'))
+
                     if sha256_crypt.verify(submitted_password, password):
                         
                         session.pop('candidate', None)
@@ -282,6 +479,8 @@ def login_submit():
                         session['email'] = email
 
                         session['phone'] = phone
+
+                        session['logged_in'] = True
 
                         return redirect(url_for('information'))
                     else:
@@ -305,6 +504,21 @@ def login_submit():
 
                    id = employer.employer_id
 
+                   if employer.confirm_email == False:
+
+                        s = Serializer(app.config['SECRET_KEY'], 1800)
+
+                        token = s.dumps({"email_id": email}).decode('utf-8')
+
+                        message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+
+                        message.body = f"""Please confirm your email by clicking on the link below:
+                {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+                """
+                        mail.send(message)
+                        flash("Please confirm your email")
+                        return redirect(url_for('login'))
+
                    if sha256_crypt.verify(submitted_password, password):
 
                        session.pop('employer', None)
@@ -318,6 +532,8 @@ def login_submit():
                        session['profile'] = profile 
 
                        session['id'] = id
+
+                       session['logged_in'] = True
 
                        return redirect(url_for('work_information'))
                         
@@ -370,21 +586,95 @@ def candidate_submit():
 
                 data = Candidates(first_name, last_name, phone, email, stored_password)
 
-                data.profile = "Testing"
+                data.profile = "Please add your own description in account settings"
+
+                s = Serializer(app.config['SECRET_KEY'], 1800)
+
+                token = s.dumps({"email_id": email}).decode('utf-8')
+
+                message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+
+                message.body = f"""Please confirm your email by clicking on the link below:
+                {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+                """
+
+                mail.send(message)
 
                 try:
                     db.session.add(data)
                     db.session.commit()
-                   
+                    mail.send(message)
                 except:
                     flash("User Already Exists", "fail")
                     return redirect(url_for('candidate_registration'))
 
-                flash("Thank you for registering", "success")
+                flash("Registered, email confirmation link sent", "success")
                 return redirect(url_for('login'))
             else:
                 flash("Error: Passwords don't match", "fail")
                 return redirect(url_for('candidate_registration'))
+
+@app.route('/confirm_email_candidate/<email>/<token>')
+def confirm_email_candidate(email, token):
+
+    s = Serializer(app.config['SECRET_KEY'], 1800)
+
+    try:
+        email_id = s.loads(token)['email_id']
+
+        candidate = Candidates.query.filter_by(email=email_id).first()
+
+        candidate.confirm_email = True
+
+        db.session.commit()
+
+        flash('Email confirmed', 'success')
+        return redirect(url_for('login'))
+
+    except:
+         token = s.dumps({"email_id": email}).decode('utf-8')
+
+         message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+
+         message.body = f"""Please confirm your email by clicking on the link below:
+         {url_for('confirm_email_candidate', token=token, _external=True)}
+                """
+         mail.send(message)
+
+         flash("Token is expired, check email for new one", "fail")
+         return redirect(url_for('login'))
+
+@app.route('/confirm_email_employer/<email>/<token>')
+def confirm_email_employer(email, token):
+
+    s = Serializer(app.config['SECRET_KEY'], 1800)
+
+    try:
+
+        email_id = s.loads(token)['email_id']
+
+        employer = Employers.query.filter_by(email=email_id).first()
+
+        employer.confirm_email = True
+
+        db.session.commit()
+
+        flash('Email confirmed', 'success')
+        return redirect(url_for('login'))
+
+    except:
+         token = s.dumps({"email_id": email}).decode('utf-8')
+
+         message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+
+         message.body = f"""Please confirm your email by clicking on the link below:
+         {url_for('confirm_email_candidate', token=token, _external=True)}
+                """
+         mail.send(message)
+
+         flash("Token is expired, check email for new one", "fail")
+         return redirect(url_for('login'))
+         
 
 @app.route('/candidate_result/')
 @is_logged_in_employer
@@ -803,9 +1093,18 @@ def employer_submit():
 
                 data = Employers(email, format_company, phone, stored_password)
 
+                token = e.dumps(email, salt='email-confirm')
+
+                message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+
+                message.body = f"""Please confirm your email by clicking on the link below:
+                {url_for('confirm_email_employer', token=token, _external=True)}
+                """
+
                 try:
                     db.session.add(data)
                     db.session.commit()
+                    mail.send(message)
                    
                 except:
                     flash("Employer Already Exists", "fail")
@@ -855,7 +1154,7 @@ def work_information():
 
 if __name__ == '__main__':
 
-    app.secret_key = 'super secret key'
+    app.config['SECRET_KEY'] = 'super secret key'
     app.run()
 
     
