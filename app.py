@@ -6,7 +6,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from flask_mail import Mail, Message
 from sqlalchemy import Integer, ForeignKey, String, Column, Text
-from sqlalchemy.orm import relationship 
+from sqlalchemy.orm import relationship
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.schema import Sequence
 from passlib.hash import sha256_crypt
 from werkzeug.utils import secure_filename
 from flask_wtf import FlaskForm
@@ -58,6 +62,8 @@ ENV = 'dev'
    
 app= Flask(__name__)
 
+os.environ['DATABASE_URL'] = "postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm"
+
 app.config['SECRET_KEY'] = 'super secret key'
 
 app.config['MAIL_SERVER'] = 'smtp-relay.sendinblue.com'
@@ -70,18 +76,26 @@ mail = Mail(app)
 
 e = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-
-
 if ENV == 'prod':
      app.debug = True
      app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:testing@localhost/postgres'
 else:
      app.debug = False
-     app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm"
+     try:
+        url = os.environ.get('DATABASE_URL')
+        url = url.split('postgres://')[1]
+        engine = create_engine('postgresql+psycopg2://{}'.format(url), 
+                           convert_unicode=True, encoding='utf8')
+    except:
+        print('Something wrong with database url')
+    else:
+        db = scoped_session(sessionmaker(autocommit=False,
+                                autoflush=False, bind=engine))
+        Base = declarative_base()
+        Base.query = db.query_property()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
 
 class ImageForm(FlaskForm):
     
@@ -96,7 +110,7 @@ class InterviewForm(FlaskForm):
     entryDate = DateField('Interview Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
     entryTime = TimeField('Interview Time', validators=(validators.DataRequired(),))
 
-class Candidates(db.Model):
+class Candidates(Base):
     __tablename__ = 'candidates'
     candidate_id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(255))
@@ -134,7 +148,7 @@ class Candidates(db.Model):
 
         return Candidates.query.get(user_id)
 
-class Submissions(db.Model):
+class Submissions(Base):
     __tablename__ = 'submissions'
     submission_id = db.Column(db.Integer, primary_key=True)
     result = db.Column(db.Integer)
@@ -147,7 +161,7 @@ class Submissions(db.Model):
         self.result = result
         self.resume_entities = resume_entities
      
-class Jobs(db.Model):
+class Jobs(Base):
     __tablename__ = 'jobs'
     job_id = db.Column(db.Integer, primary_key=True)
     description_entities= db.Column(db.Text)
@@ -157,7 +171,7 @@ class Jobs(db.Model):
     def __init__(self, description_entities):
         self.description_entities = description_entities
 
-class Adverts(db.Model):
+class Adverts(Base):
     __tablename__ = 'adverts'
     advert_id = db.Column(db.Integer, primary_key=True)
     salary = db.Column(db.Integer)
@@ -182,7 +196,7 @@ class Adverts(db.Model):
         self.time = time
         self.employer_id = employer_id
 
-class Employers(db.Model):
+class Employers(Base):
     __tablename__ = 'employers'
     employer_id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True)
@@ -1159,7 +1173,7 @@ def work_information():
     return render_template('work_information.html', user=session, image_file = image_file)
 
 if __name__ == '__main__':
-
+    Base.metadata.create_all(bind=engine)
     app.run()
 
     
