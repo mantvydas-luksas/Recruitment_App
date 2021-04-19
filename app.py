@@ -56,17 +56,17 @@ ENV = 'dev'
    
 app= Flask(__name__)
 
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_SERVER'] = 'smtp-relay.sendinblue.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'worknowapp88@gmail.com'
-app.config['MAIL_PASSWORD'] = 'worknow4444'
+app.config['MAIL_USERNAME'] = 'mantvydas.luksas@gmail.com'
+app.config['MAIL_PASSWORD'] = 'URG02hNB5pq4Zt7b'
 
 mail = Mail(app)
 
 e = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-if ENV == 'dev':
+if ENV == 'prod':
      app.debug = True
      app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:testing@localhost/postgres'
 else:
