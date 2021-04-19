@@ -991,6 +991,7 @@ a {
     position: absolute;
     display: flex;
     align-content: center; 
+    background: url('talent.jpg');
     background-size: cover;
     width: 100vw;
     height: auto;
