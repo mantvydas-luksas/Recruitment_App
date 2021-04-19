@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="settings_display">
-                    
+
                     <form action="/candidate_settings/" class="resume_upload" method="post" enctype="multipart/form-data">
                         <div class="settings_items">
                             <img src="{{image_file}}" />
@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="settings_display">
-                    
+
                     <form action="/upload_description/" method="post">
 
                         <div class="settings_items">
@@ -110,14 +110,25 @@
                 </div>
 
                 <div class="settings_display">
-                    <h2>Upload Resume</h2>
                     <form action="/candidate_settings/" method="post" enctype="multipart/form-data">
-                        
+
                         <div class="settings_items">
-                            
+
                             {{ resumeForm.csrf_token }}
                             {{resumeForm.resume(class="select_image")}}
                             <input type="submit" class="settings_button" value="Change Resume" />
+
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="settings_display">
+                    <form action="/delete_candidate/" method="post" enctype="multipart/form-data">
+
+                        <div class="settings_items">
+    
+                            <input type="submit" class="settings_button" value="Delete Account" />
 
                         </div>
                     </form>

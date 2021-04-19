@@ -701,7 +701,62 @@ def confirm_email_employer(email, token):
 
          flash("Token is expired, check email for new one", "fail")
          return redirect(url_for('login'))
-         
+
+@app.route('/delete_candidate/', methods=["POST", "GET"])
+@is_logged_in_candidate
+def delete_candidate():
+
+    if request.method == 'POST':
+
+        return redirect(url_for("confirm_delete_candidate"))
+    return redirect(url_for('candidate_settings'))
+
+
+@app.route('/confirm_delete_candidate/', methods=["POST", "GET"])
+@is_logged_in_candidate
+def confirm_delete_candidate():
+
+    if request.method == 'POST':
+
+        if request.form['confirm'] == 'Yes':
+            candidate = Candidates.query.filter_by(email=session['email'])
+            
+            db.delete(candidate)
+            db.commit()
+
+            flash("Account has been deleted", "success")
+            return redirect(url_for('login'))
+        else:
+            return redirect(url_for("candidate_settings"))
+    return render_template('delete_landing_candidate.html')
+
+@app.route('/delete_employer/', methods=["POST", "GET"])
+@is_logged_in_employer
+def delete_employer():
+
+    if request.method == 'POST':
+
+        return redirect(url_for("confirm_delete_employer"))
+    return redirect(url_for('candidate_settings'))
+
+
+@app.route('/confirm_delete_employer/', methods=["POST", "GET"])
+@is_logged_in_employer
+def confirm_delete_employer():
+
+    if request.method == 'POST':
+
+        if request.form['confirm'] == 'Yes':
+            employer = Employers.query.filter_by(email=session['email'])
+            
+            db.delete(employer)
+            db.commit()
+
+            flash("Account has been deleted", "success")
+            return redirect(url_for('login'))
+        else:
+            return redirect(url_for("employer_settings"))
+    return render_template('delete_landing_employer.html')
 
 @app.route('/candidate_result/')
 @is_logged_in_employer
