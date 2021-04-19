@@ -82,7 +82,7 @@ if ENV == 'prod':
 else:
      app.debug = False
      try:
-        url = os.environ.get('DATABASE_URL')
+        url = os.environ('DATABASE_URL')
         url = url.split('postgres://')[1]
         engine = create_engine('postgresql+psycopg2://{}'.format(url), 
                            convert_unicode=True, encoding='utf8')
