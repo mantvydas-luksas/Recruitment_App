@@ -536,7 +536,7 @@ def login_submit():
                 {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
                 """
                         mail.send(message)
-                        flash("Please confirm your email")
+                        flash("Please confirm your email", "fail")
                         return redirect(url_for('login'))
 
                    if sha256_crypt.verify(submitted_password, password):
@@ -635,9 +635,12 @@ def candidate_submit():
 @app.route('/confirm_email_candidate/<email>/<token>')
 def confirm_email_candidate(email, token):
 
-    s = Serializer(app.config['SECRET_KEY'], 1800)
+    
 
     try:
+
+        s = Serializer(app.config['SECRET_KEY'], 1800)
+
         email_id = s.loads(token)['email_id']
 
         candidate = Candidates.query.filter_by(email=email_id).first()
@@ -650,12 +653,15 @@ def confirm_email_candidate(email, token):
         return redirect(url_for('login'))
 
     except:
-         token = s.dumps({"email_id": email}).decode('utf-8')
+
+         s = Serializer(app.config['SECRET_KEY'], 1800)
+
+         new_token = s.dumps({"email_id": email}).decode('utf-8')
 
          message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
 
          message.body = f"""Please confirm your email by clicking on the link below:
-         {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+         {url_for('confirm_email_candidate', email=email, token=new_token, _external=True)}
                 """
          mail.send(message)
 
@@ -665,9 +671,9 @@ def confirm_email_candidate(email, token):
 @app.route('/confirm_email_employer/<email>/<token>')
 def confirm_email_employer(email, token):
 
-    s = Serializer(app.config['SECRET_KEY'], 1800)
-
     try:
+
+        s = Serializer(app.config['SECRET_KEY'], 1800)
 
         email_id = s.loads(token)['email_id']
 
@@ -681,12 +687,15 @@ def confirm_email_employer(email, token):
         return redirect(url_for('login'))
 
     except:
-         token = s.dumps({"email_id": email}).decode('utf-8')
+        
+         s = Serializer(app.config['SECRET_KEY'], 1800)
+
+         new_token = s.dumps({"email_id": email}).decode('utf-8')
 
          message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
 
          message.body = f"""Please confirm your email by clicking on the link below:
-         {url_for('confirm_email_candidate', token=token, _external=True)}
+         {url_for('confirm_email_candidate', token=new_token, _external=True)}
                 """
          mail.send(message)
 
