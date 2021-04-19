@@ -404,7 +404,7 @@ def new_password_candidate(token):
         if password == confirm_password:
             candidate.password = sha256_crypt.encrypt(str(confirm_password))
 
-            db.session.commit()
+            db.commit()
             flash('Your password has been updated', 'success')
             return redirect(url_for('login'))
 
@@ -434,7 +434,7 @@ def new_password_employer(token):
         if password == confirm_password:
             candidate.password = sha256_crypt.encrypt(str(confirm_password))
 
-            db.session.commit()
+            db.commit()
             flash('Your password has been updated', 'success')
             return redirect(url_for('login'))
 
@@ -621,8 +621,8 @@ def candidate_submit():
                 mail.send(message)
 
                 try:
-                    db.session.add(data)
-                    db.session.commit()
+                    db.add(data)
+                    db.commit()
                     mail.send(message)
                 except:
                     flash("User Already Exists", "fail")
@@ -646,7 +646,7 @@ def confirm_email_candidate(email, token):
 
         candidate.confirm_email = True
 
-        db.session.commit()
+        db.commit()
 
         flash('Email confirmed', 'success')
         return redirect(url_for('login'))
@@ -677,7 +677,7 @@ def confirm_email_employer(email, token):
 
         employer.confirm_email = True
 
-        db.session.commit()
+        db.commit()
 
         flash('Email confirmed', 'success')
         return redirect(url_for('login'))
@@ -763,7 +763,7 @@ def employer_settings():
 
           employer.image_file = picture_file
 
-          db.session.commit()
+          db.commit()
 
           session.pop("picture", None)
 
@@ -788,7 +788,7 @@ def upload_password():
 
             candidate.password = sha256_crypt.encrypt(str(password))
 
-            db.session.commit()
+            db.commit()
 
             flash("Successfully changed password", "success")
             return redirect(url_for('candidate_settings'))
@@ -805,7 +805,7 @@ def upload_password():
 
             employer.password = sha256_crypt.encrypt(str(password))
 
-            db.session.commit()
+            db.commit()
 
             flash("Successfully changed password", "success")
             return redirect(url_for('employer_settings'))
@@ -829,7 +829,7 @@ def upload_description():
 
             candidate.profile = new_description
 
-            db.session.commit()
+            db.commit()
 
             session.pop('profile', None)
 
@@ -850,7 +850,7 @@ def upload_description():
 
             employer.profile = new_description
 
-            db.session.commit()
+            db.commit()
 
             session['profile'] = new_description 
 
@@ -891,9 +891,9 @@ def post_job():
 
         advert = Adverts(salary, job, experience, location, description, candidatesNumber, interview_date, interview_time, id)
 
-        db.session.add(advert)
+        db.add(advert)
 
-        db.session.commit()
+        db.commit()
 
         experience_years = str(experience) + " years"
 
@@ -901,9 +901,9 @@ def post_job():
 
         job = Jobs(text_to_be_analyzed)
 
-        db.session.add(job)
+        db.add(job)
 
-        db.session.commit()
+        db.commit()
 
         flash("Advert successfully added to your current adverts", "success")
         return redirect(url_for('post_job'))
@@ -1001,7 +1001,7 @@ def candidate_settings():
 
           candidate.image_file = picture_file
 
-          db.session.commit()
+          db.commit()
 
           flash('Picture updated', 'success')
           return redirect(url_for('candidate_settings'))
@@ -1015,7 +1015,7 @@ def candidate_settings():
 
           candidate.resume = resume_file
 
-          db.session.commit()
+          db.commit()
 
           flash('Resume updated', 'success')
 
@@ -1040,7 +1040,7 @@ def upload_resume():
 
           candidate.resume_file = resume_file
 
-          db.session.commit()
+          db.commit()
 
           flash('Resume updated', 'success')
           return redirect(url_for('candidate_settings'))
@@ -1122,8 +1122,8 @@ def employer_submit():
                 """
 
                 try:
-                    db.session.add(data)
-                    db.session.commit()
+                    db.add(data)
+                    db.commit()
                     mail.send(message)
                    
                 except:
