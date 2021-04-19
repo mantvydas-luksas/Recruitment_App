@@ -655,7 +655,7 @@ def confirm_email_candidate(email, token):
          message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
 
          message.body = f"""Please confirm your email by clicking on the link below:
-         {url_for('confirm_email_candidate', token=token, _external=True)}
+         {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
                 """
          mail.send(message)
 
@@ -1116,7 +1116,7 @@ def employer_submit():
                 message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
 
                 message.body = f"""Please confirm your email by clicking on the link below:
-                {url_for('confirm_email_employer', token=token, _external=True)}
+                {url_for('confirm_email_employer', email=email, token=token, _external=True)}
                 """
 
                 try:
