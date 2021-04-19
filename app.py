@@ -70,17 +70,18 @@ mail = Mail(app)
 
 e = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
+db = None
+
 if ENV == 'prod':
      app.debug = True
      app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:testing@localhost/postgres'
 else:
      app.debug = False
-     DATABASE_URL = 'postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm'
-     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+     engine = "postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm"
+     db = scoped_session(sessionmaker(bind=engine))
+     db.commit()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
 
 class ImageForm(FlaskForm):
     
