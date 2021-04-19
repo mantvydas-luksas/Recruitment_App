@@ -17,6 +17,7 @@ passlib = "*"
 flask-wtf = "*"
 wtforms-components = "*"
 itsdangerous = "*"
+flask-mail = "*"
 
 [dev-packages]
 
