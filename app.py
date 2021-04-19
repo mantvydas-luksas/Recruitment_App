@@ -618,8 +618,6 @@ def candidate_submit():
                 {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
                 """
 
-                mail.send(message)
-
                 try:
                     db.add(data)
                     db.commit()
