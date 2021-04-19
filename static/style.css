@@ -822,6 +822,23 @@ input:focus:-ms-input-placeholder {
         color: #111111;
     }
 
+.job_seeker_button2 input {
+    text-align: center;
+    width: 200px;
+    font-weight: bold;
+    height: 60px;
+    border-radius: 48px;
+    background-color: rgba(0,0,0,0.6);
+    border: 2px solid #AAAAAA;
+    margin-right: 12px;
+    opacity: 1;
+    font-size: 14px;
+    font-family: sans-serif;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+
 .employer_button {
     text-align: center;
     width: 200px;
@@ -838,6 +855,21 @@ input:focus:-ms-input-placeholder {
 .employer_button p {
     margin-top: 16px;
 }
+
+.employer_button2 input {
+        text-align: center;
+        width: 200px;
+        font-weight: bold;
+        height: 60px;
+        font-size: 14px;
+        border-radius: 48px;
+        background-color: rgba(0,0,0,0.6);
+        border: 2px solid #AAAAAA;
+        opacity: 1;
+        font-family: sans-serif;
+        color: #FFFFFF;
+        cursor: pointer;
+    }
 
     .employer_button:hover {
         transition-duration: 0.8s;
