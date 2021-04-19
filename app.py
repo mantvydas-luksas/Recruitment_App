@@ -7,7 +7,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from flask_mail import Mail, Message
 from sqlalchemy import Integer, ForeignKey, String, Column, Text
 from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import Sequence
@@ -82,7 +82,7 @@ if ENV == 'prod':
 else:
      app.debug = False
      try:
-        url = os.environ('DATABASE_URL')
+        url = 'postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm'
         url = url.split('postgres://')[1]
         engine = create_engine('postgresql+psycopg2://{}'.format(url), 
                            convert_unicode=True, encoding='utf8')
@@ -112,16 +112,16 @@ class InterviewForm(FlaskForm):
 
 class Candidates(Base):
     __tablename__ = 'candidates'
-    candidate_id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(255))
-    lastname = db.Column(db.String(255))
-    phone = db.Column(db.String(255))
-    email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(255))
-    profile = db.Column(db.Text, nullable=False, default='No profile description added yet.')
-    resume = db.Column(db.String(20))
-    image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
-    confirm_email = db.Column(db.Boolean, default=False)
+    candidate_id = Column(Integer, primary_key=True)
+    firstname = Column(String(255))
+    lastname = Column(String(255))
+    phone = Column(String(255))
+    email = Column(String(255), unique=True)
+    password = Column(String(255))
+    profile = Column(Text, nullable=False, default='No profile description added yet.')
+    resume = Column(String(20))
+    image_file = Column(String(20), nullable=False, default='profile_default.png')
+    confirm_email = Column(Boolean, default=False)
 
     submissions = relationship("Submissions", backref="candidates")
 
@@ -150,12 +150,12 @@ class Candidates(Base):
 
 class Submissions(Base):
     __tablename__ = 'submissions'
-    submission_id = db.Column(db.Integer, primary_key=True)
-    result = db.Column(db.Integer)
-    resume_entities= db.Column(db.Text)
-    candidate_id = db.Column(db.Integer, ForeignKey("candidates.candidate_id"))
-    job_id = db.Column(db.Integer, ForeignKey("jobs.job_id"))
-    employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
+    submission_id = Column(Integer, primary_key=True)
+    result = Column(Integer)
+    resume_entities= Column(Text)
+    candidate_id = Column(Integer, ForeignKey("candidates.candidate_id"))
+    job_id = Column(Integer, ForeignKey("jobs.job_id"))
+    employer_id = Column(Integer, ForeignKey("employers.employer_id"))
   
     def __init__(self, resume_entities, candidate_id, job_id, employer_id):
         self.result = result
@@ -163,8 +163,8 @@ class Submissions(Base):
      
 class Jobs(Base):
     __tablename__ = 'jobs'
-    job_id = db.Column(db.Integer, primary_key=True)
-    description_entities= db.Column(db.Text)
+    job_id = Column(Integer, primary_key=True)
+    description_entities= Column(Text)
 
     submissions = relationship("Submissions", backref="jobs")
 
@@ -173,16 +173,16 @@ class Jobs(Base):
 
 class Adverts(Base):
     __tablename__ = 'adverts'
-    advert_id = db.Column(db.Integer, primary_key=True)
-    salary = db.Column(db.Integer)
-    position = db.Column(db.String(255))
-    experience = db.Column(db.Integer)
-    location = db.Column(db.String(255))
-    description = db.Column(db.Text)
-    candidates_number = db.Column(db.Integer)
-    date = db.Column(db.Text)
-    time = db.Column(db.Text)
-    employer_id = db.Column(db.Integer, ForeignKey("employers.employer_id"))
+    advert_id = Column(Integer, primary_key=True)
+    salary = Column(Integer)
+    position = Column(String(255))
+    experience = Column(Integer)
+    location = Column(String(255))
+    description = Column(Text)
+    candidates_number = Column(Integer)
+    date = Column(Text)
+    time = Column(Text)
+    employer_id = Column(Integer, ForeignKey("employers.employer_id"))
     
 
     def __init__(self, salary, position, experience, location, description, candidate_number, date, time, employer_id):
@@ -198,14 +198,14 @@ class Adverts(Base):
 
 class Employers(Base):
     __tablename__ = 'employers'
-    employer_id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True)
-    company = db.Column(db.String(255))
-    phone = db.Column(db.String(255))
-    password = db.Column(db.String(255))
-    profile = db.Column(db.Text, nullable=False, default='No profile description added yet.')
-    image_file = db.Column(db.String(20), nullable=False, default='profile_default.png')
-    confirm_email = db.Column(db.Boolean, default=False)
+    employer_id = Column(Integer, primary_key=True)
+    email = Column(String(255), unique=True)
+    company = Column(String(255))
+    phone = Column(String(255))
+    password = Column(String(255))
+    profile = Column(Text, nullable=False, default='No profile description added yet.')
+    image_file = Column(String(20), nullable=False, default='profile_default.png')
+    confirm_email = Column(Boolean, default=False)
 
     submissions = relationship("Submissions", backref="employers")
     adverts = relationship("Adverts", backref="employers")
