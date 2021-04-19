@@ -18,6 +18,7 @@ flask-wtf = "*"
 wtforms-components = "*"
 itsdangerous = "*"
 flask-mail = "*"
+sqlalchemy = "*"
 
 [dev-packages]
 

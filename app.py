@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, flash, redirect, url_for, ses
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import URLSafeTimedSerializer
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
 from flask_mail import Mail, Message
 from sqlalchemy import Integer, ForeignKey, String, Column, Text
 from sqlalchemy.orm import relationship 
@@ -56,6 +58,8 @@ ENV = 'dev'
    
 app= Flask(__name__)
 
+app.config['SECRET_KEY'] = 'super secret key'
+
 app.config['MAIL_SERVER'] = 'smtp-relay.sendinblue.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -71,7 +75,8 @@ if ENV == 'prod':
      app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:testing@localhost/postgres'
 else:
      app.debug = False
-     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm'
+     DATABASE_URL = 'postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm'
+     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -1154,7 +1159,6 @@ def work_information():
 
 if __name__ == '__main__':
 
-    app.config['SECRET_KEY'] = 'super secret key'
     app.run()
 
     
