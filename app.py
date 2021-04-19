@@ -70,7 +70,7 @@ mail = Mail(app)
 
 e = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-db = None
+
 
 if ENV == 'prod':
      app.debug = True
@@ -80,6 +80,8 @@ else:
      app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://kdtfxcdxnpszrq:c8dccd8f82d7b2f33d7da031caaf9e791ded57472c9ef082c7870b5527cc7a6e@ec2-34-252-251-16.eu-west-1.compute.amazonaws.com:5432/da7ukihqat8bgm"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 
 class ImageForm(FlaskForm):
     
