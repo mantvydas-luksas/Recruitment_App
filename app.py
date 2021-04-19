@@ -90,7 +90,7 @@ else:
                                 autoflush=False, bind=engine))
         Base = declarative_base()
         Base.query = db.query_property()
-    except:
+     except:
         print('Something wrong with database url')
    
 
