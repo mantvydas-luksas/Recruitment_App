@@ -123,7 +123,7 @@ class Candidates(Base):
     image_file = Column(String(20), nullable=False, default='profile_default.png')
     confirm_email = Column(Boolean, default=False)
 
-    submissions = relationship("Submissions", backref="candidates",  passive_deletes=True)
+    submissions = relationship("Submissions", backref="candidates",  cascade="all, delete-orphan")
 
     def __init__(self, firstname, lastname, phone, email, password):
         self.firstname = firstname
@@ -166,7 +166,7 @@ class Jobs(Base):
     job_id = Column(Integer, primary_key=True)
     description_entities= Column(Text)
 
-    submissions = relationship("Submissions", backref="jobs",  passive_deletes=True)
+    submissions = relationship("Submissions", backref="jobs",  cascade="all, delete-orphan")
 
     def __init__(self, description_entities):
         self.description_entities = description_entities
@@ -207,8 +207,8 @@ class Employers(Base):
     image_file = Column(String(20), nullable=False, default='profile_default.png')
     confirm_email = Column(Boolean, default=False)
 
-    submissions = relationship("Submissions", backref="employers",  passive_deletes=True)
-    adverts = relationship("Adverts", backref="employers",  passive_deletes=True)
+    submissions = relationship("Submissions", backref="employers",  cascade="all, delete-orphan")
+    adverts = relationship("Adverts", backref="employers",  cascade="all, delete-orphan")
 
     def __init__(self, email, company, phone, password):
         self.email = email
