@@ -21,6 +21,7 @@ import json
 import random
 import en_core_web_sm
 import models
+import forms
 from spacy.tokens import Doc
 from spacy.training import Example
 from spacy.util import minibatch, compounding
@@ -840,7 +841,7 @@ def employer_settings():
 
     employer = models.Employers.query.filter_by(email=session["email"]).first()
 
-    form = ImageForm()
+    form = forms.ImageForm()
 
     if form.validate_on_submit():
        if form.picture.data:
@@ -1076,9 +1077,9 @@ def candidate_settings():
 
     candidate = models.Candidates.query.filter_by(email=session["email"]).first()
 
-    form = ImageForm()
+    form = forms.ImageForm()
 
-    resumeForm = ResumeForm()
+    resumeForm = forms.ResumeForm()
 
     if form.validate_on_submit():
        if form.picture.data:
@@ -1117,7 +1118,7 @@ def candidate_settings():
 @is_logged_in_candidate
 def upload_resume():
 
-    form = ResumeForm()
+    form = forms.ResumeForm()
 
     if form.validate_on_submit():
        if form.resume.data:
