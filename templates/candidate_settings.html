@@ -117,7 +117,9 @@
                             {{ resumeForm.csrf_token }}
                             {{resumeForm.resume(class="select_resume")}}
                             <input type="submit" class="settings_button" value="Change Resume" />
-                            <input type="submit" class="settings_button" value="Delete Account" />
+                            <form action="/delete_candidate/" method="post">
+                                <input type="submit" class="settings_button" value="Delete Account" />
+                            </form>
 
                         </div>
                     </form>

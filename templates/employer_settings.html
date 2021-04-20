@@ -97,8 +97,9 @@
                         <div class="settings_items">
                             <input type="password" name="password" class="password_field" placeholder="New Password" required></input>
                             <input type="submit" class="password_button" value="Change Password" />
-                            <input type="submit" class="password_button" value="Delete Account" />
-
+                            <form action="/delete_employer/" method="post">
+                                <input type="submit" class="password_button" value="Delete Account" />
+                            </form>
                         </div>
                     </form>
                 </div>
