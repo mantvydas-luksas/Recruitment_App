@@ -110,19 +110,20 @@
                 </div>
 
                 <div class="settings_display">
-                    <form action="/candidate_settings/" method="post" enctype="multipart/form-data">
+                   
 
                         <div class="settings_items">
-
-                            {{ resumeForm.csrf_token }}
-                            {{resumeForm.resume(class="select_resume")}}
-                            <input type="submit" class="settings_button" value="Change Resume" />
+                            <form action="/candidate_settings/" method="post" enctype="multipart/form-data">
+                                {{ resumeForm.csrf_token }}
+                                {{resumeForm.resume(class="select_resume")}}
+                                <input type="submit" class="settings_button" value="Change Resume" />
+                            </form>
                             <form action="/delete_candidate/" method="post">
                                 <input type="submit" class="settings_button" value="Delete Account" />
                             </form>
 
                         </div>
-                    </form>
+                    
 
                 </div>
 
