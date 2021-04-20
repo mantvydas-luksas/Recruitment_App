@@ -472,7 +472,7 @@ def login_submit():
 
                          message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-                         link =  {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+                         link =  url_for('confirm_email_candidate', email=email, token=token, _external=True)
 
                          message.html = render_template('confirm_email.html', link=link)
 
@@ -529,7 +529,7 @@ def login_submit():
 
                         message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-                        link =  {url_for('confirm_email_employer', email=email, token=token, _external=True)}
+                        link =  url_for('confirm_email_employer', email=email, token=token, _external=True)
 
                         message.html = render_template('confirm_email.html', link=link)
 
@@ -612,7 +612,7 @@ def candidate_submit():
 
                 message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-                link =  {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+                link =  url_for('confirm_email_candidate', email=email, token=token, _external=True)
 
                 message.html = render_template('confirm_email.html', link=link)
 
@@ -657,7 +657,7 @@ def confirm_email_candidate(email, token):
          new_token = s.dumps({"email_id": email}).decode('utf-8')
          message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-         link =  {url_for('confirm_email_candidate', email=email, token=new_token, _external=True)}
+         link =  url_for('confirm_email_candidate', email=email, token=new_token, _external=True)
 
          message.html = render_template('confirm_email.html', link=link)
          
@@ -692,7 +692,7 @@ def confirm_email_employer(email, token):
 
          message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-         link =  {url_for('confirm_email_employer', email=email, token=new_token, _external=True)}
+         link =  url_for('confirm_email_employer', email=email, token=new_token, _external=True)
 
          message.html = render_template('confirm_email.html', link=link)
                 
