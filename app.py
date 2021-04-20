@@ -306,7 +306,7 @@ def contact():
 
         complete_message = "New Enquiry Received:\n\nName: \n" + first_name + " " + last_name + "\n\nEmail: \n" + email + "\n\nPhone: \n" + phone + "\n\nMessage: \n" + enquiry 
 
-        message.body = complete_message 
+        message.html = render_template('email.html')
 
         mail.send(message)
 
