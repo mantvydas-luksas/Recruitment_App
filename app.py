@@ -1187,7 +1187,7 @@ def employer_submit():
                 try:
                     db.add(data)
                     db.commit()
-                    mail.send(message)
+                    
                    
                 except:
                     flash("Employer Already Exists", "fail")
