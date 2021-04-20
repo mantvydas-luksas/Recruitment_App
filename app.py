@@ -474,7 +474,7 @@ def login_submit():
 
                          link =  {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
 
-                         message.html = render_template('forgot_email.html', link=link)
+                         message.html = render_template('confirm_email.html', link=link)
 
                          mail.send(message)
 
@@ -531,7 +531,7 @@ def login_submit():
 
                         link =  {url_for('confirm_email_employer', email=email, token=token, _external=True)}
 
-                        message.html = render_template('forgot_email.html', link=link)
+                        message.html = render_template('confirm_email.html', link=link)
 
                         mail.send(message)
                         flash("Please confirm your email", "fail")
@@ -614,7 +614,7 @@ def candidate_submit():
 
                 link =  {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
 
-                message.html = render_template('forgot_email.html', link=link)
+                message.html = render_template('confirm_email.html', link=link)
 
                 try:
                     db.add(data)
@@ -659,7 +659,7 @@ def confirm_email_candidate(email, token):
 
          link =  {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
 
-         message.html = render_template('forgot_email.html', link=link)
+         message.html = render_template('confirm_email.html', link=link)
          
          mail.send(message)
 
@@ -694,7 +694,7 @@ def confirm_email_employer(email, token):
 
          link =  {url_for('confirm_email_employer', email=email, token=token, _external=True)}
 
-         message.html = render_template('forgot_email.html', link=link)
+         message.html = render_template('confirm_email.html', link=link)
                 
          mail.send(message)
 
@@ -1181,7 +1181,7 @@ def employer_submit():
 
                 link =  {url_for('confirm_email_employer', email=email, token=token, _external=True)}
 
-                message.html = render_template('forgot_email.html', link=link)
+                message.html = render_template('confirm_email.html', link=link)
 
                 try:
                     db.add(data)
