@@ -306,7 +306,7 @@ def contact():
 
         complete_message = "New Enquiry Received:\n\nName: \n" + first_name + " " + last_name + "\n\nEmail: \n" + email + "\n\nPhone: \n" + phone + "\n\nMessage: \n" + enquiry 
 
-        message.html = render_template('email.html')
+        message.html = complete_message
 
         mail.send(message)
 
@@ -329,11 +329,9 @@ def send_reset_email_candidate(user):
 
     message = Message('Password Reset for WorkNow', sender='mantvydas.luksas@mycit.ie', recipients=[user.email])
 
-    message.body = f'''To reset your password, visit the link below:
-{url_for('new_password_candidate', token=token, _external=True)}   
+    link = url_for('new_password_candidate', token=token, _external=True)
 
-If you did not make this request, simply ignore this email and no changes will be made.                  
-'''
+    message.html = render_template('forgot_email.html', link=link)
     mail.send(message)
 
 def send_reset_email_employer(user):
@@ -341,13 +339,12 @@ def send_reset_email_employer(user):
 
     message = Message('Password Reset for WorkNow', sender='mantvydas.luksas@mycit.ie', recipients=[user.email])
 
-    message.body = f'''To reset your password, visit the link below:
-{url_for('new_password_employer', token=token, _external=True)}   
+    link = url_for('new_password_employer', token=token, _external=True)
 
-If you did not make this request, simply ignore this email and no changes will be made.                  
-'''
-
+    message.html = render_template('forgot_email.html', link=link)
     mail.send(message)
+    
+    
     
 
 @app.route('/email_request/', methods=["POST", "GET"])
