@@ -832,10 +832,17 @@ input:focus:-ms-input-placeholder {
     border: 2px solid #AAAAAA;
     margin-right: 12px;
     opacity: 1;
-    font-size: 14px;
+    font-size: 14px;    
     font-family: sans-serif;
     color: #FFFFFF;
     cursor: pointer;
+}
+
+.job_seeker_button2 input:hover {
+    transition-duration: 0.8s;
+    background-color: #AAAAAA;
+    opacity: 0.4;
+    color: #111111;
 }
 
 
@@ -870,6 +877,13 @@ input:focus:-ms-input-placeholder {
         color: #FFFFFF;
         cursor: pointer;
     }
+
+.employer_button2 input:hover {
+    transition-duration: 0.8s;
+    background-color: #AAAAAA;
+    opacity: 0.4;
+    color: #111111;
+}
 
     .employer_button:hover {
         transition-duration: 0.8s;
