@@ -721,8 +721,10 @@ def confirm_delete_candidate():
         if request.form['confirm'] == 'Yes':
             candidate = Candidates.query.filter_by(email=session['email']).first()
             
+            
             db.delete(candidate)
             db.commit()
+            session.clear()
 
             flash("Account has been deleted", "success")
             return redirect(url_for('login'))
@@ -751,6 +753,7 @@ def confirm_delete_employer():
             
             db.delete(employer)
             db.commit()
+            session.clear()
 
             flash("Account has been deleted", "success")
             return redirect(url_for('login'))
