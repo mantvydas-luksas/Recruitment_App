@@ -42,7 +42,7 @@ pipe_exceptions = ["ner"]
 unaffected_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptions]
 
 with nlp.disable_pipes(*unaffected_pipes):
-    for iteration in range(400):
+    for iteration in range(4):
         random.shuffle(TRAIN_RESUME_DATA)
         for raw_text,entity_offsets in TRAIN_RESUME_DATA:
             resume=nlp.make_doc(raw_text)

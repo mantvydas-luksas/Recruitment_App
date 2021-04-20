@@ -1,3 +1,5 @@
+#coding: utf-8
+
 from sqlalchemy import Integer, ForeignKey, String, Column, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text
