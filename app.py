@@ -240,8 +240,8 @@ else:
                            convert_unicode=True, encoding='utf8')
         db = scoped_session(sessionmaker(autocommit=False,
                                 autoflush=False, bind=engine))
-        Base = declarative_base()
-        Base.query = db.query_property()
+        
+        models.Base.query = db.query_property()
      except:
         print('Something wrong with database url')
    
