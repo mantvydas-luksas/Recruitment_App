@@ -533,7 +533,7 @@ def login_submit():
                         message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
 
                         message.body = f"""Please confirm your email by clicking on the link below:
-                {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+                {url_for('confirm_email_employer', email=email, token=token, _external=True)}
                 """
                         mail.send(message)
                         flash("Please confirm your email", "fail")
@@ -1187,7 +1187,7 @@ def employer_submit():
                 try:
                     db.add(data)
                     db.commit()
-                    
+                    mail.send(message)
                    
                 except:
                     flash("Employer Already Exists", "fail")
