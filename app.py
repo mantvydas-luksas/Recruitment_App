@@ -123,7 +123,7 @@ class Candidates(Base):
     image_file = Column(String(20), nullable=False, default='profile_default.png')
     confirm_email = Column(Boolean, default=False)
 
-    submissions = relationship("Submissions", backref="candidates")
+    submissions = relationship("Submissions", backref="candidates",  passive_deletes=True)
 
     def __init__(self, firstname, lastname, phone, email, password):
         self.firstname = firstname
@@ -153,9 +153,9 @@ class Submissions(Base):
     submission_id = Column(Integer, primary_key=True)
     result = Column(Integer)
     resume_entities= Column(Text)
-    candidate_id = Column(Integer, ForeignKey("candidates.candidate_id"))
-    job_id = Column(Integer, ForeignKey("jobs.job_id"))
-    employer_id = Column(Integer, ForeignKey("employers.employer_id"))
+    candidate_id = Column(Integer, ForeignKey("candidates.candidate_id", ondelete='CASCADE'))
+    job_id = Column(Integer, ForeignKey("jobs.job_id", ondelete='CASCADE'))
+    employer_id = Column(Integer, ForeignKey("employers.employer_id", ondelete='CASCADE'))
   
     def __init__(self, resume_entities, candidate_id, job_id, employer_id):
         self.result = result
@@ -166,7 +166,7 @@ class Jobs(Base):
     job_id = Column(Integer, primary_key=True)
     description_entities= Column(Text)
 
-    submissions = relationship("Submissions", backref="jobs")
+    submissions = relationship("Submissions", backref="jobs",  passive_deletes=True)
 
     def __init__(self, description_entities):
         self.description_entities = description_entities
@@ -182,7 +182,7 @@ class Adverts(Base):
     candidates_number = Column(Integer)
     date = Column(Text)
     time = Column(Text)
-    employer_id = Column(Integer, ForeignKey("employers.employer_id"))
+    employer_id = Column(Integer, ForeignKey("employers.employer_id", ondelete='CASCADE'))
     
 
     def __init__(self, salary, position, experience, location, description, candidate_number, date, time, employer_id):
@@ -207,8 +207,8 @@ class Employers(Base):
     image_file = Column(String(20), nullable=False, default='profile_default.png')
     confirm_email = Column(Boolean, default=False)
 
-    submissions = relationship("Submissions", backref="employers")
-    adverts = relationship("Adverts", backref="employers")
+    submissions = relationship("Submissions", backref="employers",  passive_deletes=True)
+    adverts = relationship("Adverts", backref="employers",  passive_deletes=True)
 
     def __init__(self, email, company, phone, password):
         self.email = email
@@ -753,7 +753,6 @@ def confirm_delete_employer():
         if request.form['confirm'] == 'Yes':
             Employers.query.filter_by(email=session['email']).delete()
             
-           
             db.commit()
             
             session.pop('candidate', None)
