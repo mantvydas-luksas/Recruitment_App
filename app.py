@@ -718,8 +718,9 @@ def confirm_delete_candidate():
     if request.method == 'POST':
 
         if request.form['confirm'] == 'Yes':
-            Candidates.query.filter_by(email=session['email']).delete()
+            candidate = Candidates.query.filter(email=session['email']).first()
             
+            db.delete(candidate)
             db.commit()
             session.pop('candidate', None)
             session.pop('employer', None)
@@ -751,8 +752,9 @@ def confirm_delete_employer():
     if request.method == 'POST':
 
         if request.form['confirm'] == 'Yes':
-            Employers.query.filter_by(email=session['email']).delete()
+            employer = Employers.query.filter(email=session['email']).first()
             
+            db.delete(employer)
             db.commit()
             
             session.pop('candidate', None)
