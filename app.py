@@ -1203,7 +1203,7 @@ def employer_submit():
                     flash("Employer Already Exists", "fail")
                     return redirect(url_for('employer_registration'))
 
-                flash("Thank you for registering", "success")
+                flash("Registered, email confirmation link sent", "success")
                 return redirect(url_for('login'))
             else:
                 flash("Error: Passwords don't match", "fail")
