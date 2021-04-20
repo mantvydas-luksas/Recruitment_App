@@ -2,9 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\static",
-    "\\static\\profile_pics",
+    "\\static\\resumes",
     "\\templates"
   ],
-  "SelectedNode": "\\static\\candidates.jpg",
+  "SelectedNode": "\\app.py",
   "PreviewInSolutionExplorer": false
 }

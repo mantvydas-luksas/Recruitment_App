@@ -721,7 +721,12 @@ def confirm_delete_candidate():
             Candidates.query.filter_by(email=session['email']).delete()
             
             db.commit()
+            session.pop('candidate', None)
+            session.pop('employer', None)
+            session.pop('logged_in', None)
+
             session.clear()
+
 
             flash("Account has been deleted", "success")
             return redirect(url_for('login'))
@@ -750,6 +755,11 @@ def confirm_delete_employer():
             
            
             db.commit()
+            
+            session.pop('candidate', None)
+            session.pop('employer', None)
+            session.pop('logged_in', None)
+
             session.clear()
 
             flash("Account has been deleted", "success")
