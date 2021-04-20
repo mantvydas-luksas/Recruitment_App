@@ -327,7 +327,7 @@ def candidate_registration():
 def send_reset_email_candidate(user):
     token = user.get_reset_token()
 
-    message = Message('Password Reset for WorkNow', sender='mantvydas.luksas@mycit.ie', recipients=[user.email])
+    message = Message('Password Reset for WorkNow', sender="noreply@work-now.herokuapp.com", recipients=[user.email])
 
     link = url_for('new_password_candidate', token=token, _external=True)
 
@@ -337,16 +337,15 @@ def send_reset_email_candidate(user):
 def send_reset_email_employer(user):
     token = user.get_reset_token()
 
-    message = Message('Password Reset for WorkNow', sender='mantvydas.luksas@mycit.ie', recipients=[user.email])
+    message = Message('Password Reset for WorkNow', sender="noreply@work-now.herokuapp.com", recipients=[user.email])
 
     link = url_for('new_password_employer', token=token, _external=True)
 
     message.html = render_template('forgot_email.html', link=link)
+
     mail.send(message)
     
     
-    
-
 @app.route('/email_request/', methods=["POST", "GET"])
 def email_request():
 
@@ -471,11 +470,12 @@ def login_submit():
 
                          token = s.dumps({"email_id": email}).decode('utf-8')
 
-                         message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+                         message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-                         message.body = f"""Please confirm your email by clicking on the link below:
-                        {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
-                         """
+                         link =  {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+
+                         message.html = render_template('forgot_email.html', link=link)
+
                          mail.send(message)
 
                          flash("Please Confirm Email", "fail")
@@ -527,11 +527,12 @@ def login_submit():
 
                         token = s.dumps({"email_id": email}).decode('utf-8')
 
-                        message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+                        message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-                        message.body = f"""Please confirm your email by clicking on the link below:
-                {url_for('confirm_email_employer', email=email, token=token, _external=True)}
-                """
+                        link =  {url_for('confirm_email_employer', email=email, token=token, _external=True)}
+
+                        message.html = render_template('forgot_email.html', link=link)
+
                         mail.send(message)
                         flash("Please confirm your email", "fail")
                         return redirect(url_for('login'))
@@ -609,11 +610,11 @@ def candidate_submit():
 
                 token = s.dumps({"email_id": email}).decode('utf-8')
 
-                message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+                message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-                message.body = f"""Please confirm your email by clicking on the link below:
-                {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
-                """
+                link =  {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
+
+                message.html = render_template('forgot_email.html', link=link)
 
                 try:
                     db.add(data)
@@ -654,12 +655,12 @@ def confirm_email_candidate(email, token):
          s = Serializer(app.config['SECRET_KEY'], 1800)
 
          new_token = s.dumps({"email_id": email}).decode('utf-8')
+         message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-         message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+         link =  {url_for('confirm_email_candidate', email=email, token=token, _external=True)}
 
-         message.body = f"""Please confirm your email by clicking on the link below:
-         {url_for('confirm_email_candidate', email=email, token=new_token, _external=True)}
-                """
+         message.html = render_template('forgot_email.html', link=link)
+         
          mail.send(message)
 
          flash("Token is expired, check email for new one", "fail")
@@ -689,11 +690,12 @@ def confirm_email_employer(email, token):
 
          new_token = s.dumps({"email_id": email}).decode('utf-8')
 
-         message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+         message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-         message.body = f"""Please confirm your email by clicking on the link below:
-         {url_for('confirm_email_employer', email=email, token=new_token, _external=True)}
-                """
+         link =  {url_for('confirm_email_employer', email=email, token=token, _external=True)}
+
+         message.html = render_template('forgot_email.html', link=link)
+                
          mail.send(message)
 
          flash("Token is expired, check email for new one", "fail")
@@ -1175,11 +1177,11 @@ def employer_submit():
 
                 token = e.dumps(email, salt='email-confirm')
 
-                message = Message("Confirm Email for WorkNow", sender="mantvydas.luksas@mycit.ie", recipients=[email])
+                message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-                message.body = f"""Please confirm your email by clicking on the link below:
-                {url_for('confirm_email_employer', email=email, token=token, _external=True)}
-                """
+                link =  {url_for('confirm_email_employer', email=email, token=token, _external=True)}
+
+                message.html = render_template('forgot_email.html', link=link)
 
                 try:
                     db.add(data)
