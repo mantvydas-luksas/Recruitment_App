@@ -1625,12 +1625,11 @@ input[type=number] {
     font-size: 14px;
     font-weight: bold;
     color: #FFFFFF;
-    width: 40%;
+    width: 20%;
     margin-top: 40px;
     text-align: center;
-    border: none;
+    border: 2px solid #AAAAAA;
     background-color: transparent;
-    border-bottom: 2px solid #AAAAAA;
     outline: none;
 
 }
