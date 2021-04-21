@@ -14,204 +14,24 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import Sequence
 from passlib.hash import sha256_crypt
 from werkzeug.utils import secure_filename
-import secrets
-import os
+from tqdm import tqdm
 import spacy
-import json
-import random
 import en_core_web_sm
-import models
-import forms
 from spacy.tokens import Doc
 from spacy.training import Example
 from spacy.util import minibatch, compounding
+from spacy.training import Example
+from spacy.scorer import Scorer
+from spacy.tokens import DocBin
+import secrets
+import os
+import json
+import time
+import random
+import models
+import forms
 from pathlib import Path
 from functools import wraps
-
-nlp = en_core_web_sm.load()
-
-ner = nlp.get_pipe("ner")
-
-TRAIN_RESUME_DATA =[("Name: Abiral Pandey\nEmail: abiral.pandey88@gmail.com\nPhone: 940-242-3303\nCurrent Location: Woonsocket, Rhode Island\nVisa Status: US Citizen\n\nSUMMARY:\n•\tDynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business applications using OOP and Java/J2EE technologies.\n•\tExposure to all phases of Software Development Life Cycle(SDLC) using Agile, RUP, Waterfall.\n•\tDesigned and developed web UI screen using Angular-JS.\n•\tDeveloped AngularJS Controllers, Services, filters and directives for various modules in the application.\n•\tKnowledge on ETL tools like Kettle Pentaho and Microsoft SSIS tools.\n•\tCreated custom directives, decorators and services using AngularJS to interface with both RESTful and legacy network services also DOM applications.\n•\tExperience with MVC frameworks like Struts, SPRING and ORM tools like Hibernate.\n•\tExperienced in working with batch jobs using Spring-Batch, Autosys and Quartz.\n•\tWorked extensively with XML related technologies like XML/XSLT to process, validate, parse and extract data from XML using DOM and SAX parsers for DTD and SCHEMAand also worked with JAX-B.\n•\tStrong experience in J2EE technologies like Java Beans, Servlets, JSP (including custom tags), JSTL, JDBC, Struts, Spring, JMS, JNDI and Multithreading.\n•\tExpertise in web development technologies like HTML, DHTML, XHTML, CSS, Java Script, JQuery, JSF, AJAX, Bootstrap JS, Node JS and Angular JS.\n•\tExperienced in RESTful web services using JAX-RS, Jersey framework and SOAP using JAX-WS, Axis-2 framework.\n•\tExpert knowledge over J2EE Design Patterns like MVC, Adapter, Front End Controller, Value object, Singleton, Session Facade, Business Delegate, Factory DAO in designing the architecture of large applications.\n•\tExperience in using Maven and Ant build scripts for the project build automation.\n•\tExperience in using version control and configuration management tools like SVN, Clear Case and CVS.\n•\tExpertise in working with various Application Servers such as IBM WebSphere, JBoss, Glassfish, Oracle WebLogic and Apache Tomcat server.\n•\tGood knowledge in using ’s such as Eclipse, NetBeans, JBuilder, RAD and STS.\n•\tExpertise in working with Relational databases such as Oracle, PostgreSQL, DB2, MySQL and NoSQL database MongoDB.\n•\tExperience in database design using PL/SQL to write Stored Procedures, Functions, Triggers, views and good at writing complex queries for Oracle 10g/11g.\n•\tGood experience in developing test cases with JUnit for Unit testing, Load testing and logging using Log4J.\n•\tExperienced in using Operating Systems like Windows 98 / 2000 / NT / XP, AIX, Sun Solaris.\n•\tProficient in software documentation and technical report writing.\n•\tInvolved in Performance analysis and improvements of the application using tools like Jmeter and using commands on Unix box to resolve deadlocks and improve performance.\n\nTECHNICAL SKILLS:\nProgramming Languages: Java/J2EE, PL/SQL, Unix Shell Scripts\nJava/J2EE Technologies: JavaBeans, collections, Servlets, JSP, JDBC, JNDI, RMI, EJB\nFrameworks: Struts 1.x/2.x, Spring 2.5/3.0, Web Framework, JSF, Hibernate, iBatis, JPA, Axis-2, Jersey\nMethodologies/Design Patterns: OOAD, OOP, UML, MVC, Singleton, DTO Pattern, DAO Pattern, Service Fa ade, Factory Pattern\nBuild Automation: Jenkins, Maven, Ant\nApplication/Web Servers: IBM Web Sphere 6.x/5.x, BEA Web Logic 8.1/9.1, Apache Tomcat 5.x/6.x, JBOSS 4.x/3.x\nXML processing: DTD, Schema, JAX-P (DOM, SAX), JAX-B\nWeb Services: RESTful, SOAP\nWeb Development: HTML, DHTML, XHTML, CSS, Java Script, JQuery, AJAX, LADP, JSF, Bootstrap JS, Node JS, Angular JS\nVersion Control Tools: CVS, Harvest, IBM Clear case, SVN and GIT\nDatabases: Oracle 9i/10g/11g, IBM DB2, SQL Server 2005/2008, PostgreSQL, MySQL, MangoDB\nMessaging Techologies: JMS, IBM MQ\nIDE s: Eclipse, NetBeans, RAD, WSAD\nTesting and Logging Frameworks: Junit, Log4j, Mockito, Finesse Tests\nReporting Tools: Crystal Reports 11, Jasper Reports\nTools: Rational Rose, MS Visio, XML Spy, TOAD\nOperating Systems: Windows 98/2000/NT/XP, AIX, Sun Solaris, HP-UX\nPROFESSIONAL EXPERIENCE:\n\nCVS, Woonsocket, Rhode Island                                 Full Stack Java Developer\nApril 2016 – Present\nResponsibilities:\n•\tInvolved in various stages of Software Development Life Cycle (SDLC) deliverables of the project using the Agile methodology.\n•\tUsed AWS Cloud platform and its features which include EBS, AMI, SNS, RDS, EBS, Cloud Watch, Cloud Trail, Cloud Formation, Cloud Front, S3, and Route53. \n•\tExpertise in building rich, interactive user interfaces using HTML, CSS, JavaScript, jQuery, Node.Js and Angular.Js.\n•\tGathered and clarified requirements with business analyst to feed into high-level customization design, development and installation phases.\n•\tUsed Spring Framework for dependency injection for Action classes using Application Context XML file. \n•\tInvolved in implementation of MVC pattern using JSP and Spring Controller.\n•\tDeveloped business objects using Spring IOC, Spring MVC and Spring AOP. Implemented MVC architecture using JSP Spring, Hibernate and used Spring Framework to initialize managed beans and services.\n•\tImplemented SOA architecture with Web Services using SOAP, JAX-WS, WSDL, UDDI and XML.\n•\tUsed Collections for Model classes in the DAO layer (Data Access Object) Involved in modifying some changes in DAO layer using Hibernate.\n•\tCreated mappings among the relations and written SQL queries using Hibernate.\n•\tImplemented Concurrency, Exception Handling and Collections whenever necessary.\n•\tUsed Entity Beans to persist the data into IBM DB2 database like database access components, Creating Schemas and Tables.\n•\tUsed SQL to perform data mapping and backend testing, also documented all the SQL queries for future testing purpose.\n•\tCreated process flow for deploying application in Web Sphere application server.\n•\tManaged build, reporting and documentation from the project information using Jenkins, Maven Tool and SVN for version control.\n•\tUsed Jenkins for Continuous Integration.\n•\tUsed JUnit for testing and used JIRA for tracking bugs.\n•\tResponsible for the dealing with the problem, bug fixing and troubleshooting.\n Environment: Java, J2EE, HTML, CSS, JavaScript, jQuery, Ajax, Spring, Spring IOC, Spring AOP, Spring MVC, Hibernate, REST, SOAP, XML, Eclipse, PL/SQL, JUnit, Maven Build Tool, DB2, JIRA, Jenkins, SVN and IBM Web Sphere, AngularJS, EBS, AMI, SNS, RDS, Cloud Watch, Cloud Trail, Cloud Formation, Auto scaling\n\nToll Brothers, Horsham Township, Pennsylvania                  Software Engineer\nDecember 2015 -  March 2016\nResponsibilities:\n•\tDeveloped JSP and extensively used tag libraries. \n•\tDesigned the system with OOAD methodology using various design patterns like factory method, Singleton, Adaptor, Template etc. \n•\tImplementing and planning the server-side architecture using Spring and Hibernate \n•\tConfigured the spring framework for entire business logic layer with XML bean configuration files. \n•\tPreparation of Low Level Designing and High Level Designing and relevant documentation. \n•\tExtensively used Spring IOC for Dependency Injection and worked on Custom MVC Frameworks loosely based on Struts \n•\texperienced in build tools like Micro services, Ant, Maven and Gradle tools.\n•\tWrote Controller classes in Spring MVC framework in the web layer. \n•\tProduced the shopping cart on the client Front-end using jQuery, JavaScript, HTML5, CSS3. \n•\tExtensively used Eclipse based STS IDE for building, developing and integrating the application. \n•\tUsed Table per hierarchy inheritance of hibernates and mapped polymorphic associations. \n•\tDeveloped one-much, many-one, one-one annotation based mappings in Hibernate. \n•\tWrote queries Using Cassandra CQL to create, alter, insert and delete elements. \n•\tDeveloped DAO service methods to populate the domain model objects using hibernate. \n•\tUsed java collections API extensively such as Lists, Sets and Maps.  \n•\tWrote DAO classes using spring and Hibernate to interact with database for persistence. \n•\tDeveloped components of web services (JAX-WS, JAX-RPC) end to end, using different JAX-WS standards with clear understanding on WSDL, SOAP using various message patterns  \n•\tPerformed on e-Commerce by using JSF framework and JavaScript, jQuery, HTML5 pages\n•\tWrote and tested Java Beans to retrieve trading data and subscriber's information from MySQL database server,\n•\t Extensive experience in Angular.JS for application implementation, proficient in creating modules, controllers, route-Providers, factory services, ng-repeat, customizable filter, http get/post methods and directives to realize functionalities like REST service with Ajax call , input validations, searchable and sortable contents.  \n•\tImplemented Unit and Integration test cases with JUnit Framework based on Functional Flow. \n•\tUsed tools like My Eclipse IDE, configured and deployed the applications onto Web Logic application server \n•\tConfigured Log4j for logging and debugging \n Environment: Eclipse, Java J2EE, HTML, JSP, JAX RPC, JAXB, CSS3, JavaScript, and jQuery, Spring MVC, Hibernate, RESTful web services, Apache Tomcat7.0, Cucumber, Cassandra, Junit, Jenkins, Maven, GitHub, XML, Log4j, EJB, MySQL, Ajax.\n\nDairy Farmers of America, Kansas City, Missouri                      Java Developer\nNovember 2014 – December 2015\nResponsibilities:\n•\tResponsible for developing use cases, class and sequence diagram for the modules using UML and Rational Rose.\n•\tIdentifying and design of common interfaces across multiple systems or modules of social insurance.\n•\tDeveloped the application using Spring Framework that leverages classical Model View Layer (MVC) architecture. UML diagrams like use cases, class diagrams, interaction diagrams (sequence and collaboration) and activity diagrams were used.\n•\tDeveloped J2EE modules using XMI and CORE JAVA.\n•\tInteraction with Business users for user and system acceptance testing.\n•\tValidated the data against the business rules.\n•\tData access layer is implemented using Hibernate.\n•\tUsed Apache POI to generate Excel documents\n•\tImplemented Struts action classes.\n•\tUsed Spring Security for Authentication and authorization extensively.\n•\tUtilized Eclipse to create JSPs/Servlets/Hibernate that pulled information from a Oracle database and sent to a front end GUI for end users.\n•\tUsed JDBC for Oracle database connection and written number of stored procedures for retrieving the data.\n•\tDeveloped modules for validating the data according to business rules and used Castor to convert data into array of XML strings and XSLT for transformation.\n•\tUsed Hibernate for data persistence.\n•\tDeveloped SOAP based HTTP requests for communicating with Web Services.\n•\tWas involved in the design of multi-tier architecture using EJB, Servlets and JSP.\n•\tUsed Spring Dependency Injection properties to provide loose-coupling between layers.\n•\tCollaborated with Web designers to create the JSP pages, applying HTML, JavaScript, JQuery and Struts Tags.\n•\tExtensively worked on debugging using Logging Frameworks such as Apache Log4j.\n•\tCreated test plans for unit testing to validate component functionality.\nEnvironment: Java 1.4.2, J2EE, Servlets, MVC, Web services, Struts, Spring - Core, MVC, Security, Eclipse, Hibernate, XML, XSLT, EJB, JSP, JDBC, JAX-B, JQuery, JavaScript, HTML, Log4j, Oracle 10g, Apache POI, Caster, XMI.\n\nBank of Utah, Ogden, Utah                                                           J2EE Developer\nMay 2013 – October 2014\n\nResponsibilities:\n•\tDesigned and developed Servlets and JSP, which presents the end user with form to submit the details of the problem.\n•\tCreated SQL statements and triggers for the effective retrieval and storage of data from the database.\n•\tPerformed JUnit testing, proposed and implemented performance enhancements, worked with Oracle databases, running SQL scripts and stored procedures.\n•\tDeveloped Restful based Web Services.\n•\tWas involved in the design of multi-tier architecture using EJB, Servlets and JSP.\n•\tDeveloped Servlets used to store user information in the database, which makes a JDBC-ODBC connection to the database and inserts the details into to the database.\n•\tDesigned and developed a Servlet, which presents the engineer a form to submit solution to particular problem.\n•\tSetting up test environments and configuring various components of the application using JDBC API to establish a connection with oracle database and configuring.\n•\tDesigned and developed a Servlet, which allows the end user to query on the problem, makes a JDBC-ODBC connection to the database and retrieve the details regarding the call number and the status of the submitted problem.\nEnvironment: Java, J2EE, Servlets, JSP, EJB, Custom tags, JDBC, JUNIT, Restful, Data Source, DAO, VO Patterns, Tomcat 5.0, SQL, Oracle 9i, Linux.\n\n\nEpsilon, Irving, Texas                                                         Junior Java Developer\nJanuary 2012 – April 2013\nResponsibilities:\n•\tDesigned the user interfaces using JSP.\n•\tDeveloped Custom tags, JSTL to support custom User Interfaces.\n•\tDeveloped the application using Struts (MVC) Framework.\n•\tImplemented Business processes such as user authentication, Account Transfer using Session EJBs.\n•\tUsed Eclipse to writing the code for JSP, Servlets, Struts and EJBs.\n•\tDeployed the applications on Web Logic Application Server.\n•\tUsed Java Messaging Services (JMS) and Backend messaging for reliable and asynchronous exchange of important information such as payment status report.\n•\tDeveloped the Ant scripts for preparing WAR files used to deploy J2EE components.\n•\tUsed JDBC for database connectivity to Oracle.\n•\tWorked with Oracle Database to create tables, procedures, functions and select statements.\n•\tUsed JUnit Testing, debugging and bug fixing.\n•\tUsed Log4J to capture the log that includes runtime exceptions and developed WAR framework to alert the client and production support in case of application failures.\n•\tWorked in Rational Unified Process (RUP) Methodology.\nEnvironment: Java, J2EE, JSP, JSTL, JDBC, Struts, EJB, JMS, Oracle, HTML, XML, Web Logic, Ant, CVS, Log4J, JUnit, JMS, PL/SQL, JavaScript, Eclipse IDE, UNIX Shell Scripting, Rational Unified Process (RUP).\nEducation: \nBachelor of Computer Science – University of North Texas, Denton, Texas", {'entities': [(176, 218, 'YEARS'), (222, 382, 'RESPONSIBILITIES'), (386, 477, 'RESPONSIBILITIES'), (481, 534, 'RESPONSIBILITIES'), (538, 642, 'RESPONSIBILITIES'), (674, 688, 'SKILLS'), (693, 713, 'SKILLS'), (848, 864, 'SKILLS'), (884, 898, 'SKILLS'), (912, 918, 'SKILLS'), (923, 932, 'SKILLS'), (996, 1008, 'SKILLS'), (1010, 1017, 'SKILLS'), (1022, 1028, 'SKILLS'), (1056, 1080, 'SKILLS'), (1318, 1322, 'SKILLS'), (1431, 1436, 'SKILLS'), (1438, 1443, 'SKILLS'), (1450, 1461, 'SKILLS'), (1476, 1480, 'SKILLS'), (1496, 1503, 'SKILLS'), (1508, 1518, 'SKILLS'), (1482, 1494, 'SKILLS'), (1776, 1787, 'SKILLS'), (1873, 1876, 'SKILLS'), (1967, 1997, 'SKILLS'), (2213, 2221, 'SKILLS'), (2223, 2231, 'SKILLS'), (2233, 2236, 'SKILLS'), (2241, 2244, 'SKILLS'), (2311, 2321, 'SKILLS'), (2338, 2343, 'SKILLS'), (2353, 2360, 'SKILLS'), (2576, 2588, 'SKILLS'), (2590, 2602, 'SKILLS'), (2651, 2668, 'SKILLS'), (2737, 2759, 'SKILLS'), (2764, 2788, 'SKILLS'), (3601, 3606, 'SKILLS'), (3608, 3613, 'SKILLS'), (3620, 3631, 'SKILLS'), (3641, 3645, 'SKILLS'), (3672, 3679, 'SKILLS'), (3681, 3691, 'SKILLS'), (3658, 3670, 'SKILLS'), (3384, 3387, 'SKILLS'), (3066, 3075, 'SKILLS'), (3818, 3828, 'SKILLS'), (3880, 3883, 'SKILLS'), (3896, 3904, 'SKILLS'), (3906, 3909, 'SKILLS'), (4083, 4100, 'SKILLS'), (4304, 4428, 'RESPONSIBILITIES'), (4432, 4583, 'RESPONSIBILITIES'), (4588, 4685, 'RESPONSIBILITIES'), (4707, 4846, 'RESPONSIBILITIES'), (4850, 4950, 'RESPONSIBILITIES'), (4955, 5028, 'RESPONSIBILITIES'), (5032, 5102, 'RESPONSIBILITIES'), (5104, 5227, 'RESPONSIBILITIES'), (5231, 5316, 'RESPONSIBILITIES'), (5320, 5456, 'RESPONSIBILITIES'), (5460, 5536, 'RESPONSIBILITIES'), (5540, 5618, 'RESPONSIBILITIES'), (5622, 5742, 'RESPONSIBILITIES'), (5746, 5862, 'RESPONSIBILITIES'), (5866, 5945, 'RESPONSIBILITIES'), (5949, 6074, 'RESPONSIBILITIES'), (6078, 6117, 'RESPONSIBILITIES'), (6121, 6175, 'RESPONSIBILITIES'), (6179, 6255, 'RESPONSIBILITIES'), (6748, 6873, 'RESPONSIBILITIES'), (6878, 6959, 'RESPONSIBILITIES'), (6963, 7060, 'RESPONSIBILITIES'), (7065, 7151, 'RESPONSIBILITIES'), (7320, 7323, 'SKILLS'), (7549, 7552, 'SKILLS'), (7545, 7548, 'SKILLS'), (7869, 7951, 'RESPONSIBILITIES'), (7956, 8022, 'RESPONSIBILITIES'), (8028, 8114, 'RESPONSIBILITIES'), (8119, 8288, 'RESPONSIBILITIES'), (8293, 8375, 'RESPONSIBILITIES'), (8378, 8486, 'RESPONSIBILITIES'), (8491, 8522, 'RESPONSIBILITIES'), (8523, 8820, 'RESPONSIBILITIES'), (8947, 8950, 'SKILLS'), (9460, 9552, 'RESPONSIBILITIES'), (9556, 9654, 'RESPONSIBILITIES'), (9899, 9945, 'RESPONSIBILITIES'), (9949, 10019, 'RESPONSIBILITIES'), (10023, 10068, 'RESPONSIBILITIES'), (10072, 10120, 'RESPONSIBILITIES'), (10124, 10167, 'RESPONSIBILITIES'), (10170, 10203, 'RESPONSIBILITIES'), (10207, 10276, 'RESPONSIBILITIES'), (10280, 10419, 'RESPONSIBILITIES'), (10423, 10527, 'RESPONSIBILITIES'), (10531, 10686, 'RESPONSIBILITIES'), (10690, 10725, 'RESPONSIBILITIES'), (10729, 10799, 'RESPONSIBILITIES'), (10803, 10884, 'RESPONSIBILITIES'), (10888, 10972, 'RESPONSIBILITIES'), (10976, 11082, 'RESPONSIBILITIES'), (11086, 11163, 'RESPONSIBILITIES'), (11167, 11238, 'RESPONSIBILITIES'), (12022, 12103, 'RESPONSIBILITIES'), (12107, 12269, 'RESPONSIBILITIES'), (12273, 12382, 'RESPONSIBILITIES'), (12386, 12546, 'RESPONSIBILITIES'), (13067, 13105, 'RESPONSIBILITIES'), (13132, 13136, 'SKILLS'), (13232, 13327, 'RESPONSIBILITIES'), (13402, 13459, 'RESPONSIBILITIES'), (13463, 13613, 'RESPONSIBILITIES'), (13631, 13634, 'SKILLS'), (13891, 14056, 'RESPONSIBILITIES'), (14144, 14148, 'SKILLS'), (14204, 14207, 'SKILLS'), (14261, 14264, 'SKILLS'), (14320, 14360, 'EDUCATION')]})]
-
-ner.add_label('SKILLS')
-ner.add_label('YEARS')
-ner.add_label('RESPONSIBILITIES')
-ner.add_label('EDUCATION')
-
-pipe_exceptions = ["ner"]
-unaffected_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptions]
-
-with nlp.disable_pipes(*unaffected_pipes):
-    for iteration in range(4):
-        random.shuffle(TRAIN_RESUME_DATA)
-        for raw_text,entity_offsets in TRAIN_RESUME_DATA:
-            resume=nlp.make_doc(raw_text)
-            nlp.update([Example.from_dict(resume,entity_offsets)])
-
-resume = nlp("""Anudeep
-Sr Java Programmer
-anudeepreddynallamada@gmail.com
-
-
-PROFESSIONAL SUMMARY:
-•	IT professional with 8+ years of IT experience in designing and developing N-tier applications based on OOPS (Object Oriented Programming), Internet and Intranet, Client-Server Architecture using Java/J2EE and supporting technologies.
-•	 Strong Experience in developing user interfaces with HTML, DHTML, XML and CSS. 
-•	Experienced in processing, validating, parsing and extracting data from .xml file. 
-•	 Worked with scripting languages like JavaScript, JQuery. 
-•	 Well versed in MVC (Model View Controller) architecture using Spring, JSF and implementing JSTL (JSP Standard Tag Library), custom tag development and tiles. 
-•	 Experience in JSP, Java Beans and Servlets for developing applications using MVC architecture. 
-•	 Good exposure in implementing web services-WSDL using SOAP protocol. 
-•	 Experienced in Persistence Framework like Hibernate ORM (Object Relational Mapping) in a typical n-tier architecture. 
-•	Experienced in build tools like ANT and Maven. 
-•	Experienced in using testing Frameworks like JUnit and JMockit. 
-•	Experienced in using logging tools like Intellij and Log4j. 
-•	Hands on experience on Web/Application servers such as Apache Tomcat, JBoss, WebLogic and Web Sphere. 
-•	Experienced in developing various UML designs like class diagrams, cases and sequence diagrams using Rational Rose. 
-•	Worked on different platforms like Windows 2003 Server, Windows 2000 Professional, Windows XP, Windows […] UNIX and LINUX. 
-•	Experience in using UML like Rational Rose and MS Visio 
-•	Well versed in using version control tools like SVN, Clear Case and CVS. 
-•	Strong experience in using IDEs like Eclipse, NetBeans and RAD
-•	Developed projects and products using Agile Methodology, SDLC (Software development life cycle), from initiation, planning, designing, execution, implementation and Maintenance.
-EDUCATION:
-Bachelor of Engineering in Computer Science and Engineering        JNTU, Hyderabad, India.     2009
-TECHNICAL SKILLS:
-
-Languages	C, C++, JAVA/J2EE, PL/SQL, Shell script, UNIX commands.
-Java Technologies	Core Java, J2EE, JSP, Servlet, JDBC, JMS, JavaBeans, JNDI, Java Mail, Java1.8.
-Web Technologies	AngularJS, jQuery, JavaScript, HTML, DHTML, XML, 
-Cascading Style Sheets (CSS), XSLT.
-XML Technologies	XML Schema, DTD, JAXP, SAX and DOM parsers.
-IDEs / Tools
-	Eclipse, NetBeans, Red Hat Developer Studio, RAD, WSAD. / TOAD, Maven, XmlSpy, Ant, PL/SQ L Developer, JUnit, iReport.
-Operating Systems	Windows 95/98/NT/2000/XP, Sun Solaris 9/10, Red Hat Linux 9.
-Design Patterns	MVC, DAO, DTO, Front Controller, Session Façade, Business Delegate, Observer, Singleton, View Helper, Decorator, Factory Pattern, POM, object pool
-Databases and Tools	Oracle8 / 9i /10g,11g, HSQL, Sybase, MySQL, MSSQL, MongoDB, SQL Server, IBM DB2, Toad for SQL Server.
-Frameworks	Struts, Spring (Dependency Injection, Spring Core, Spring MVC, Spring AOP, Spring DAO, Spring IOC, Spring JDBC, Spring with Hibernate), Hibernate, DWR, Log4j.
-Web service specifications and Implementations	JAX-RPC, JAX-WS, JAX-RS, ESB, Axis, JWSDP, RESTful webservices.
-Methodologies	Agile, Scrum, Test Driven Development.
-Scripting/GUI Tools	HTML5, DHTML, DOJO, JSON, JavaScript, CSS3, Shell Script, Dreamweaver, MS FrontPage, VBScript, JSTL, JSP, NodeJS
-Additional Skills	Elasticsearch, Logstash, Kibana, Graphana, Git, Bitbucket, Maven, Jenkins.
-
-PROFESSIONAL EXPERIENCE:
-
-WIND STREAM COMMUNICATION, DALLAS, TX                                                                SEP-2016 -TILL DATE
-Role: Sr Java Programmer
-Responsibilities:
-• Involved in the application development using Java platform. Model View Control (MVC) structure implementation. 
-• Responsible for providing the client-side JavaScript validations and usage of HTML, JavaScript, XML, JSP, CSS as per the requirements to enhance the Portal UI. 
-• Used Spring Core for Dependency Injection. 
-• Mapping of ORM objects to tables using the Hibernate as the persistence framework. 
-• Involved in different service classes, used across the framework. 
-• Implementation of Web Services using Axis for the integration of different systems 
-• Developed applications using J2EE technologies like Spring Boot, Spring MVC on the business layer and the persistent layer using Hibernate as ORM tool. 
-• Testing of Web Services using the Postman. 
-• Used HTML, CSS, Spring MVC, JSP, and jQuery, JavaScript, Angular.js in the development and the designing the     UI. 
-• Gradient effects through the development of the CSS style sheets. Developed navigation, icons and layouts. 
-• Code review and configuration build management for the application using Maven. 
-• Implementation of business logic, validation Frame Work using Spring Web flow and Spring MVC. 
-• Implemented Web tier of the application through the usage of Spring MVC framework. 
-• Implementation of clean separation of layers through the usage of different design patterns like Factory pattern, Singleton and DAO pattern. 
-• Serialization in the flattening of the objects. 
-• Used core java concepts like Collections while developing server-side services. 
-• Data storage using DB2 and used PL/SQL for queries. 
-• Worked with IBM Web Sphere Application Server Developer Tools for Eclipse by using lightweight set of tools to assemble, develop and deploy Java EE, Web 2.0, and mobile applications. 
-• Involved with GUI using JSP, Java Script and HTML. 
-• Involved in using continuous integration tool (CI/CD) Jenkins. Created builds using Maven and pulled the project code from GitHub repositories. 
-• Experience with Garbage collection and multithreading. 
-• Experience with Concurrency, Exception Handling, File handling
-Environment: HTML, CSS, XML, SOAP, Hibernate, Java,J2EE,Java Script,MySQL DB, Spring Boot, PL/SQL, Log4j, JQuery, Angular JS, Eclipse, IBM Web Sphere Application server.
- 
-IBM DALLAS,TEXASSEP 2015–AUG 2016
-Role: Sr Java Programmer
-Responsibilities:
-•	Involved in SDLC Requirements gathering, Analysis, Design, Development and Testing of application using AGILE methodology (SCRUM).
-•	Designed APIs and analytics using IBM Cloud. Built mobile backend services, powerful app management, and insights into app usage using IBM mobile first.
-•	Designed DOM based interactive to reprogram selected links and adopted WCAG 2.0 standards for HTML and XHTML and W3C standards for CSS as well.
-•	Have achieved proficiency in Unit Test, Mock, Test Driven Development etc.
-•	Implemented client-side Interface using React JS. Worked on Redux.
-•	Design, develop and test HTML, CSS, jQuery and React.JS that meets accessibility and web browser standards for car dealerships websites. 
-•	Installed, configured and Administered WebSphere Commerce Server 6.0 on Windows and Linux platform.
-•	Involved in Stopping/Starting & Monitoring the logs for Application Server Instances.
-•	Implemented Horizontal and Vertical Clustering, Performance tuning and troubleshooting of IBM WebSphere Application Server 6.0/6.1.
-•	Installed EARs, WARs and configured application specific JVM settings, Web container parameters using the Admin Console and WSCP/WSadmin scripts.
-•	Migrated existing applications from WebSphere V6.0 to V7.0.
-•	Involved in issues like Application not responding. Application Deployment Errors, Wrong Database host name, Server Hung due to out of memory or thread hanging, Owner ship issue.
-•	Created sites to organize client contracts and to summarize monthly financial data using React.js, Ember.js, D3.js and MySql.
-•	Created web services and desktop applications to access and display data needed by support teams using, Ajax, JavaScript, jQuery, React.js, Angular.js, Node.js, Java, CSS and HTML.
-•	Built data visualizations to monitor file server load, Web server speed, Data Processing using D3.js, jQuery and MySql.
-•	Prepared exhaustive test cases to comprehensively test functionality and code.
-•	Creating Java code and modifying the existing code to match with the front JavaScript files.
-•	Created an on -the-fly configuration changes set up, with application saved in Node.js.
-
-Environment: Java, JSP, Spring (MVC and Core), JSON, Servlets, Webservices(RESTful), Web Logic Application server, WebSphere Application Server 6.0/6.1/7.0, Websphere Portal Server 6.0/6.1, Websphere Commerce Server 6.0, Apache 2.0.47, IHS 6.0/6.1
-
-ACADEMIC BANK KANSAS CITY,MO                                              AUG 2014 – AUG 2015
-Role: Java Programmer
-Responsibilities:
-•	JSF Portal Framework at Presentation Tier and Faces Servlet acts as the Front Controller.
-•	Actively participated and mentoring in requirements gathering, analysis, design, and development and testing phases.
-•	Worked one-on-one with client to develop layout, color scheme for his website and implemented it into a final interface design with the HTML5/CSS3 & JavaScript using Dreamweaver. 
-•	Developed CSS3 style sheets to give gradient effects. Developed page layouts, navigation and icons. Applied industry best practices and standards when project requirements were lagging.
-•	Created Images, Logos and Icons that are used across the web pages using Adobe Flash and Photoshop.
-•	Designed Frontend with in object oriented JavaScript framework like Angular.JS, Node.js and Ext.JS.
-•	Used EXTJS for building rich internet applications, backbone JS & Require JS to optimize in-browser use and to load the module and to improve the Speed.
-•	Working on all the latest technologies like HTML5, CSS3, etc. Tackled various issues related browser compatibility to accommodate these advanced and fast technologies
-•	Troubleshoot Admin Server start-up issues, Java code defects after deployment, and class path issues by checking the JVM logs, plug-in logs and the Webserver logs
-•	Worked closely with developers to define and configured application Servers, Virtual Hosts, Web Applications, Web resources, Servlets, JDBC drivers and Servlet Engines-as well as deployment of EJBs across multiple instances of WebSphere.
-•	Maintained security, tuning and clustering on Web Sphere Application Server using IBM Web seal Tivoli Access Manager.
-•	Monitored the logs for Application Server Instances.
-•	Updated application code from JDK 1.3 to 1.4 using WSAD, RAD and redeployed in a clustered environment.
-•	Design and develop solutions using C, C++, Multi-Threaded, Shell Scripting.
-•	Debugged the application using Firebug to traverse the documents and manipulated the Nodes using DOM and DOM Functions using Firefox and IE Developer Tool bar for IE. 
-•	Used JavaScript and XML to update a portion of a web page thus reducing bandwidth usage and load time and add modal dialog in web pages to get user input and requests.
-•	Used Soap over Http and Soap over JMS for communication between components.
-•	Worked with the team of architects and back-end Developers to gather requirements and enhance the application functionality and add new features. 
-Environment:HTML5, CSS3, JavaScript, jQuery, DOM, DML, DHTML, EXT JS, Angular.js, Node.js, Backbone.js, Require.js, Adobe Flash, Photoshop, Dreamweaver, XML, Apache, SOAP, Internet Explorer, Firefox, Chrome, Oracle, Windows, C, C++, Agile Methodology.
-VALUE LABS, HYDERABAD, INDIA                                                                                      JUNE 2012 – JULY2014
-Role: Java Programmer
-
-
-Responsibilities:
-•	Utilized the base UML methodologies and Use cases modeled by architects to develop the front-end interface. The class, sequence and state diagrams were developed using Microsoft Visio.
-•	Created User Interface (UI) to gather data and communicate with Business Layer by using Swing, HTML, JSP, JSP Tags Lib, JSTL and Java Script.
-•	Utilized AJAX to increase web page’s interactivity, speed and functionality.
-•	Implemented MVC architecture using Spring 2.5 MVC framework and enhanced the design using Stateless Session Beans for the Middle Tier Development
-•	Utilized WSDL and SOAP to implement Web Services to optimize performance by using remote model applications.
-•	Used JSF framework for implementing the Web tier of the application.
-•	Designed and implemented complex multi-application flow through integration implemented using XML, XSL and JMS configurations.
-•	Implemented Object-relation mapping in the persistence layer using hibernate frame work in conjunction with Spring Aspect Oriented Programming (AOP) functionality.
-•	Used CVS as a documentation repository and version controlling tool.
-•	Used ANT scripts for build creation and to push onto various environments.
-•	Used JUnit 4.2 for extensive functional and unit testing code.
-•	Used Log4j for logging and debugging.
-
-Environment: Core Java, JDK 1.5, J2EE 5, HTML, CSS 2.1, JSP 2.1, JSF 1.2, JNDI, AJAX, Swing, Spring 2.5, Hibernate 3.0, JMS 1.1, SOAP UI, WSDL, UML, XML, XSLT, Windows XP, ANT, UNIX, Log4J, MVC Design Pattern, DAO, Eclipse IDE.
-
-AJR INFOTECH, HYDERABAD, INDIA                                                                              AUG-2009 – JUNE-2012
-Role: Java Developer 
-
-Responsibilities: 
-
-•	Worked on writing Java code for extracting backend data from the main frames.
-•	Instantiated business objects with IOC pattern using spring framework and for Dependency Injection.
-•	Implemented Object-relation mapping in the persistence layer using Hibernate frame work in conjunction with spring functionality.
-•	Agile process is used for tracking and developing the application.
-•	Development and Integration of the Application using Eclipse IDE and used StarTeam as Version Control Tool.
-•	Implemented the integration with the back-end system with web services using Axis and SOAP
-•	Utilized JUnit test cases for all the developed modules. 
-•	Extensive experience in different IDEs like RAD, Eclipse, NetBeans.	
-
-Environment: Java, J2EE, Spring Framework, HTML, JavaScript, Hibernate, Eclipse IDE, Star Team, Axis, SOAP, JUnit, RAD, Eclipse, NetBeans.
-.
-
-
-
-
-""")
-
-for ent in resume.ents:
-   print(ent.label_, ent.text)
 
 ENV = 'dev'
    
@@ -228,6 +48,205 @@ app.config['MAIL_PASSWORD'] = 'URG02hNB5pq4Zt7b'
 mail = Mail(app)
 
 e = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+software_resumes = en_core_web_sm.load()
+
+ner = software_resumes.get_pipe("ner")
+
+TRAIN_SOFTWARE_RESUME_DATA = [("Name: Abiral Pandey\nEmail: abiral.pandey88@gmail.com\nPhone: 940-242-3303\nCurrent Location: Woonsocket, Rhode Island\nVisa Status: US Citizen\n\nSUMMARY:\n•\tDynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business applications using OOP and Java/J2EE technologies.\n•\tExposure to all phases of Software Development Life Cycle(SDLC) using Agile, RUP, Waterfall.\n•\tDesigned and developed web UI screen using Angular-JS.\n•\tDeveloped AngularJS Controllers, Services, filters and directives for various modules in the application.\n•\tKnowledge on ETL tools like Kettle Pentaho and Microsoft SSIS tools.\n•\tCreated custom directives, decorators and services using AngularJS to interface with both RESTful and legacy network services also DOM applications.\n•\tExperience with MVC frameworks like Struts, SPRING and ORM tools like Hibernate.\n•\tExperienced in working with batch jobs using Spring-Batch, Autosys and Quartz.\n•\tWorked extensively with XML related technologies like XML/XSLT to process, validate, parse and extract data from XML using DOM and SAX parsers for DTD and SCHEMAand also worked with JAX-B.\n•\tStrong experience in J2EE technologies like Java Beans, Servlets, JSP (including custom tags), JSTL, JDBC, Struts, Spring, JMS, JNDI and Multithreading.\n•\tExpertise in web development technologies like HTML, DHTML, XHTML, CSS, Java Script, JQuery, JSF, AJAX, Bootstrap JS, Node JS and Angular JS.\n•\tExperienced in RESTful web services using JAX-RS, Jersey framework and SOAP using JAX-WS, Axis-2 framework.\n•\tExpert knowledge over J2EE Design Patterns like MVC, Adapter, Front End Controller, Value object, Singleton, Session Facade, Business Delegate, Factory DAO in designing the architecture of large applications.\n•\tExperience in using Maven and Ant build scripts for the project build automation.\n•\tExperience in using version control and configuration management tools like SVN, Clear Case and CVS.\n•\tExpertise in working with various Application Servers such as IBM WebSphere, JBoss, Glassfish, Oracle WebLogic and Apache Tomcat server.\n•\tGood knowledge in using ’s such as Eclipse, NetBeans, JBuilder, RAD and STS.\n•\tExpertise in working with Relational databases such as Oracle, PostgreSQL, DB2, MySQL and NoSQL database MongoDB.\n•\tExperience in database design using PL/SQL to write Stored Procedures, Functions, Triggers, views and good at writing complex queries for Oracle 10g/11g.\n•\tGood experience in developing test cases with JUnit for Unit testing, Load testing and logging using Log4J.\n•\tExperienced in using Operating Systems like Windows 98 / 2000 / NT / XP, AIX, Sun Solaris.\n•\tProficient in software documentation and technical report writing.\n•\tInvolved in Performance analysis and improvements of the application using tools like Jmeter and using commands on Unix box to resolve deadlocks and improve performance.\n\nTECHNICAL SKILLS:\nProgramming Languages: Java/J2EE, PL/SQL, Unix Shell Scripts\nJava/J2EE Technologies: JavaBeans, collections, Servlets, JSP, JDBC, JNDI, RMI, EJB\nFrameworks: Struts 1.x/2.x, Spring 2.5/3.0, Web Framework, JSF, Hibernate, iBatis, JPA, Axis-2, Jersey\nMethodologies/Design Patterns: OOAD, OOP, UML, MVC, Singleton, DTO Pattern, DAO Pattern, Service Fa ade, Factory Pattern\nBuild Automation: Jenkins, Maven, Ant\nApplication/Web Servers: IBM Web Sphere 6.x/5.x, BEA Web Logic 8.1/9.1, Apache Tomcat 5.x/6.x, JBOSS 4.x/3.x\nXML processing: DTD, Schema, JAX-P (DOM, SAX), JAX-B\nWeb Services: RESTful, SOAP\nWeb Development: HTML, DHTML, XHTML, CSS, Java Script, JQuery, AJAX, LADP, JSF, Bootstrap JS, Node JS, Angular JS\nVersion Control Tools: CVS, Harvest, IBM Clear case, SVN and GIT\nDatabases: Oracle 9i/10g/11g, IBM DB2, SQL Server 2005/2008, PostgreSQL, MySQL, MangoDB\nMessaging Techologies: JMS, IBM MQ\nIDE s: Eclipse, NetBeans, RAD, WSAD\nTesting and Logging Frameworks: Junit, Log4j, Mockito, Finesse Tests\nReporting Tools: Crystal Reports 11, Jasper Reports\nTools: Rational Rose, MS Visio, XML Spy, TOAD\nOperating Systems: Windows 98/2000/NT/XP, AIX, Sun Solaris, HP-UX\nPROFESSIONAL EXPERIENCE:\n\nCVS, Woonsocket, Rhode Island                                 Full Stack Java Developer\nApril 2016 – Present\nResponsibilities:\n•\tInvolved in various stages of Software Development Life Cycle (SDLC) deliverables of the project using the Agile methodology.\n•\tUsed AWS Cloud platform and its features which include EBS, AMI, SNS, RDS, EBS, Cloud Watch, Cloud Trail, Cloud Formation, Cloud Front, S3, and Route53. \n•\tExpertise in building rich, interactive user interfaces using HTML, CSS, JavaScript, jQuery, Node.Js and Angular.Js.\n•\tGathered and clarified requirements with business analyst to feed into high-level customization design, development and installation phases.\n•\tUsed Spring Framework for dependency injection for Action classes using Application Context XML file. \n•\tInvolved in implementation of MVC pattern using JSP and Spring Controller.\n•\tDeveloped business objects using Spring IOC, Spring MVC and Spring AOP. Implemented MVC architecture using JSP Spring, Hibernate and used Spring Framework to initialize managed beans and services.\n•\tImplemented SOA architecture with Web Services using SOAP, JAX-WS, WSDL, UDDI and XML.\n•\tUsed Collections for Model classes in the DAO layer (Data Access Object) Involved in modifying some changes in DAO layer using Hibernate.\n•\tCreated mappings among the relations and written SQL queries using Hibernate.\n•\tImplemented Concurrency, Exception Handling and Collections whenever necessary.\n•\tUsed Entity Beans to persist the data into IBM DB2 database like database access components, Creating Schemas and Tables.\n•\tUsed SQL to perform data mapping and backend testing, also documented all the SQL queries for future testing purpose.\n•\tCreated process flow for deploying application in Web Sphere application server.\n•\tManaged build, reporting and documentation from the project information using Jenkins, Maven Tool and SVN for version control.\n•\tUsed Jenkins for Continuous Integration.\n•\tUsed JUnit for testing and used JIRA for tracking bugs.\n•\tResponsible for the dealing with the problem, bug fixing and troubleshooting.\n Environment: Java, J2EE, HTML, CSS, JavaScript, jQuery, Ajax, Spring, Spring IOC, Spring AOP, Spring MVC, Hibernate, REST, SOAP, XML, Eclipse, PL/SQL, JUnit, Maven Build Tool, DB2, JIRA, Jenkins, SVN and IBM Web Sphere, AngularJS, EBS, AMI, SNS, RDS, Cloud Watch, Cloud Trail, Cloud Formation, Auto scaling\n\nToll Brothers, Horsham Township, Pennsylvania                  Software Engineer\nDecember 2015 -  March 2016\nResponsibilities:\n•\tDeveloped JSP and extensively used tag libraries. \n•\tDesigned the system with OOAD methodology using various design patterns like factory method, Singleton, Adaptor, Template etc. \n•\tImplementing and planning the server-side architecture using Spring and Hibernate \n•\tConfigured the spring framework for entire business logic layer with XML bean configuration files. \n•\tPreparation of Low Level Designing and High Level Designing and relevant documentation. \n•\tExtensively used Spring IOC for Dependency Injection and worked on Custom MVC Frameworks loosely based on Struts \n•\texperienced in build tools like Micro services, Ant, Maven and Gradle tools.\n•\tWrote Controller classes in Spring MVC framework in the web layer. \n•\tProduced the shopping cart on the client Front-end using jQuery, JavaScript, HTML5, CSS3. \n•\tExtensively used Eclipse based STS IDE for building, developing and integrating the application. \n•\tUsed Table per hierarchy inheritance of hibernates and mapped polymorphic associations. \n•\tDeveloped one-much, many-one, one-one annotation based mappings in Hibernate. \n•\tWrote queries Using Cassandra CQL to create, alter, insert and delete elements. \n•\tDeveloped DAO service methods to populate the domain model objects using hibernate. \n•\tUsed java collections API extensively such as Lists, Sets and Maps.  \n•\tWrote DAO classes using spring and Hibernate to interact with database for persistence. \n•\tDeveloped components of web services (JAX-WS, JAX-RPC) end to end, using different JAX-WS standards with clear understanding on WSDL, SOAP using various message patterns  \n•\tPerformed on e-Commerce by using JSF framework and JavaScript, jQuery, HTML5 pages\n•\tWrote and tested Java Beans to retrieve trading data and subscriber's information from MySQL database server,\n•\t Extensive experience in Angular.JS for application implementation, proficient in creating modules, controllers, route-Providers, factory services, ng-repeat, customizable filter, http get/post methods and directives to realize functionalities like REST service with Ajax call , input validations, searchable and sortable contents.  \n•\tImplemented Unit and Integration test cases with JUnit Framework based on Functional Flow. \n•\tUsed tools like My Eclipse IDE, configured and deployed the applications onto Web Logic application server \n•\tConfigured Log4j for logging and debugging \n Environment: Eclipse, Java J2EE, HTML, JSP, JAX RPC, JAXB, CSS3, JavaScript, and jQuery, Spring MVC, Hibernate, RESTful web services, Apache Tomcat7.0, Cucumber, Cassandra, Junit, Jenkins, Maven, GitHub, XML, Log4j, EJB, MySQL, Ajax.\n\nDairy Farmers of America, Kansas City, Missouri                      Java Developer\nNovember 2014 – December 2015\nResponsibilities:\n•\tResponsible for developing use cases, class and sequence diagram for the modules using UML and Rational Rose.\n•\tIdentifying and design of common interfaces across multiple systems or modules of social insurance.\n•\tDeveloped the application using Spring Framework that leverages classical Model View Layer (MVC) architecture. UML diagrams like use cases, class diagrams, interaction diagrams (sequence and collaboration) and activity diagrams were used.\n•\tDeveloped J2EE modules using XMI and CORE JAVA.\n•\tInteraction with Business users for user and system acceptance testing.\n•\tValidated the data against the business rules.\n•\tData access layer is implemented using Hibernate.\n•\tUsed Apache POI to generate Excel documents\n•\tImplemented Struts action classes.\n•\tUsed Spring Security for Authentication and authorization extensively.\n•\tUtilized Eclipse to create JSPs/Servlets/Hibernate that pulled information from a Oracle database and sent to a front end GUI for end users.\n•\tUsed JDBC for Oracle database connection and written number of stored procedures for retrieving the data.\n•\tDeveloped modules for validating the data according to business rules and used Castor to convert data into array of XML strings and XSLT for transformation.\n•\tUsed Hibernate for data persistence.\n•\tDeveloped SOAP based HTTP requests for communicating with Web Services.\n•\tWas involved in the design of multi-tier architecture using EJB, Servlets and JSP.\n•\tUsed Spring Dependency Injection properties to provide loose-coupling between layers.\n•\tCollaborated with Web designers to create the JSP pages, applying HTML, JavaScript, JQuery and Struts Tags.\n•\tExtensively worked on debugging using Logging Frameworks such as Apache Log4j.\n•\tCreated test plans for unit testing to validate component functionality.\nEnvironment: Java 1.4.2, J2EE, Servlets, MVC, Web services, Struts, Spring - Core, MVC, Security, Eclipse, Hibernate, XML, XSLT, EJB, JSP, JDBC, JAX-B, JQuery, JavaScript, HTML, Log4j, Oracle 10g, Apache POI, Caster, XMI.\n\nBank of Utah, Ogden, Utah                                                           J2EE Developer\nMay 2013 – October 2014\n\nResponsibilities:\n•\tDesigned and developed Servlets and JSP, which presents the end user with form to submit the details of the problem.\n•\tCreated SQL statements and triggers for the effective retrieval and storage of data from the database.\n•\tPerformed JUnit testing, proposed and implemented performance enhancements, worked with Oracle databases, running SQL scripts and stored procedures.\n•\tDeveloped Restful based Web Services.\n•\tWas involved in the design of multi-tier architecture using EJB, Servlets and JSP.\n•\tDeveloped Servlets used to store user information in the database, which makes a JDBC-ODBC connection to the database and inserts the details into to the database.\n•\tDesigned and developed a Servlet, which presents the engineer a form to submit solution to particular problem.\n•\tSetting up test environments and configuring various components of the application using JDBC API to establish a connection with oracle database and configuring.\n•\tDesigned and developed a Servlet, which allows the end user to query on the problem, makes a JDBC-ODBC connection to the database and retrieve the details regarding the call number and the status of the submitted problem.\nEnvironment: Java, J2EE, Servlets, JSP, EJB, Custom tags, JDBC, JUNIT, Restful, Data Source, DAO, VO Patterns, Tomcat 5.0, SQL, Oracle 9i, Linux.\n\n\nEpsilon, Irving, Texas                                                         Junior Java Developer\nJanuary 2012 – April 2013\nResponsibilities:\n•\tDesigned the user interfaces using JSP.\n•\tDeveloped Custom tags, JSTL to support custom User Interfaces.\n•\tDeveloped the application using Struts (MVC) Framework.\n•\tImplemented Business processes such as user authentication, Account Transfer using Session EJBs.\n•\tUsed Eclipse to writing the code for JSP, Servlets, Struts and EJBs.\n•\tDeployed the applications on Web Logic Application Server.\n•\tUsed Java Messaging Services (JMS) and Backend messaging for reliable and asynchronous exchange of important information such as payment status report.\n•\tDeveloped the Ant scripts for preparing WAR files used to deploy J2EE components.\n•\tUsed JDBC for database connectivity to Oracle.\n•\tWorked with Oracle Database to create tables, procedures, functions and select statements.\n•\tUsed JUnit Testing, debugging and bug fixing.\n•\tUsed Log4J to capture the log that includes runtime exceptions and developed WAR framework to alert the client and production support in case of application failures.\n•\tWorked in Rational Unified Process (RUP) Methodology.\nEnvironment: Java, J2EE, JSP, JSTL, JDBC, Struts, EJB, JMS, Oracle, HTML, XML, Web Logic, Ant, CVS, Log4J, JUnit, JMS, PL/SQL, JavaScript, Eclipse IDE, UNIX Shell Scripting, Rational Unified Process (RUP).\nEducation: \nBachelor of Computer Science – University of North Texas, Denton, Texas", {'entities': [(176, 218, 'YEARS'), (222, 382, 'RESPONSIBILITIES'), (386, 477, 'RESPONSIBILITIES'), (481, 534, 'RESPONSIBILITIES'), (538, 642, 'RESPONSIBILITIES'), (674, 688, 'SKILLS'), (693, 713, 'SKILLS'), (848, 864, 'SKILLS'), (884, 898, 'SKILLS'), (912, 918, 'SKILLS'), (923, 932, 'SKILLS'), (996, 1008, 'SKILLS'), (1010, 1017, 'SKILLS'), (1022, 1028, 'SKILLS'), (1056, 1080, 'SKILLS'), (1318, 1322, 'SKILLS'), (1431, 1436, 'SKILLS'), (1438, 1443, 'SKILLS'), (1450, 1461, 'SKILLS'), (1476, 1480, 'SKILLS'), (1496, 1503, 'SKILLS'), (1508, 1518, 'SKILLS'), (1482, 1494, 'SKILLS'), (1776, 1787, 'SKILLS'), (1873, 1876, 'SKILLS'), (1967, 1997, 'SKILLS'), (2213, 2221, 'SKILLS'), (2223, 2231, 'SKILLS'), (2233, 2236, 'SKILLS'), (2241, 2244, 'SKILLS'), (2311, 2321, 'SKILLS'), (2338, 2343, 'SKILLS'), (2353, 2360, 'SKILLS'), (2576, 2588, 'SKILLS'), (2590, 2602, 'SKILLS'), (2651, 2668, 'SKILLS'), (2737, 2759, 'SKILLS'), (2764, 2788, 'SKILLS'), (3601, 3606, 'SKILLS'), (3608, 3613, 'SKILLS'), (3620, 3631, 'SKILLS'), (3641, 3645, 'SKILLS'), (3672, 3679, 'SKILLS'), (3681, 3691, 'SKILLS'), (3658, 3670, 'SKILLS'), (3384, 3387, 'SKILLS'), (3066, 3075, 'SKILLS'), (3818, 3828, 'SKILLS'), (3880, 3883, 'SKILLS'), (3896, 3904, 'SKILLS'), (3906, 3909, 'SKILLS'), (4083, 4100, 'SKILLS'), (4304, 4428, 'RESPONSIBILITIES'), (4432, 4583, 'RESPONSIBILITIES'), (4588, 4685, 'RESPONSIBILITIES'), (4707, 4846, 'RESPONSIBILITIES'), (4850, 4950, 'RESPONSIBILITIES'), (4955, 5028, 'RESPONSIBILITIES'), (5032, 5102, 'RESPONSIBILITIES'), (5104, 5227, 'RESPONSIBILITIES'), (5231, 5316, 'RESPONSIBILITIES'), (5320, 5456, 'RESPONSIBILITIES'), (5460, 5536, 'RESPONSIBILITIES'), (5540, 5618, 'RESPONSIBILITIES'), (5622, 5742, 'RESPONSIBILITIES'), (5746, 5862, 'RESPONSIBILITIES'), (5866, 5945, 'RESPONSIBILITIES'), (5949, 6074, 'RESPONSIBILITIES'), (6078, 6117, 'RESPONSIBILITIES'), (6121, 6175, 'RESPONSIBILITIES'), (6179, 6255, 'RESPONSIBILITIES'), (6748, 6873, 'RESPONSIBILITIES'), (6878, 6959, 'RESPONSIBILITIES'), (6963, 7060, 'RESPONSIBILITIES'), (7065, 7151, 'RESPONSIBILITIES'), (7320, 7323, 'SKILLS'), (7549, 7552, 'SKILLS'), (7545, 7548, 'SKILLS'), (7869, 7951, 'RESPONSIBILITIES'), (7956, 8022, 'RESPONSIBILITIES'), (8028, 8114, 'RESPONSIBILITIES'), (8119, 8288, 'RESPONSIBILITIES'), (8293, 8375, 'RESPONSIBILITIES'), (8378, 8486, 'RESPONSIBILITIES'), (8491, 8522, 'RESPONSIBILITIES'), (8523, 8820, 'RESPONSIBILITIES'), (8947, 8950, 'SKILLS'), (9460, 9552, 'RESPONSIBILITIES'), (9556, 9654, 'RESPONSIBILITIES'), (9899, 9945, 'RESPONSIBILITIES'), (9949, 10019, 'RESPONSIBILITIES'), (10023, 10068, 'RESPONSIBILITIES'), (10072, 10120, 'RESPONSIBILITIES'), (10124, 10167, 'RESPONSIBILITIES'), (10170, 10203, 'RESPONSIBILITIES'), (10207, 10276, 'RESPONSIBILITIES'), (10280, 10419, 'RESPONSIBILITIES'), (10423, 10527, 'RESPONSIBILITIES'), (10531, 10686, 'RESPONSIBILITIES'), (10690, 10725, 'RESPONSIBILITIES'), (10729, 10799, 'RESPONSIBILITIES'), (10803, 10884, 'RESPONSIBILITIES'), (10888, 10972, 'RESPONSIBILITIES'), (10976, 11082, 'RESPONSIBILITIES'), (11086, 11163, 'RESPONSIBILITIES'), (11167, 11238, 'RESPONSIBILITIES'), (12022, 12103, 'RESPONSIBILITIES'), (12107, 12269, 'RESPONSIBILITIES'), (12273, 12382, 'RESPONSIBILITIES'), (12386, 12546, 'RESPONSIBILITIES'), (13067, 13105, 'RESPONSIBILITIES'), (13132, 13136, 'SKILLS'), (13232, 13327, 'RESPONSIBILITIES'), (13402, 13459, 'RESPONSIBILITIES'), (13463, 13613, 'RESPONSIBILITIES'), (13631, 13634, 'SKILLS'), (13891, 14056, 'RESPONSIBILITIES'), (14144, 14148, 'SKILLS'), (14204, 14207, 'SKILLS'), (14261, 14264, 'SKILLS'), (14320, 14360, 'EDUCATION')]})]
+
+TEST_SOFTWARE_RESUME_DATA = [("Name: Abiral Pandey\nEmail: abiral.pandey88@gmail.com\nPhone: 940-242-3303\nCurrent Location: Woonsocket, Rhode Island\nVisa Status: US Citizen\n\nSUMMARY:\n•\tDynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business applications using OOP and Java/J2EE technologies.\n•\tExposure to all phases of Software Development Life Cycle(SDLC) using Agile, RUP, Waterfall.\n•\tDesigned and developed web UI screen using Angular-JS.\n•\tDeveloped AngularJS Controllers, Services, filters and directives for various modules in the application.\n•\tKnowledge on ETL tools like Kettle Pentaho and Microsoft SSIS tools.\n•\tCreated custom directives, decorators and services using AngularJS to interface with both RESTful and legacy network services also DOM applications.\n•\tExperience with MVC frameworks like Struts, SPRING and ORM tools like Hibernate.\n•\tExperienced in working with batch jobs using Spring-Batch, Autosys and Quartz.\n•\tWorked extensively with XML related technologies like XML/XSLT to process, validate, parse and extract data from XML using DOM and SAX parsers for DTD and SCHEMAand also worked with JAX-B.\n•\tStrong experience in J2EE technologies like Java Beans, Servlets, JSP (including custom tags), JSTL, JDBC, Struts, Spring, JMS, JNDI and Multithreading.\n•\tExpertise in web development technologies like HTML, DHTML, XHTML, CSS, Java Script, JQuery, JSF, AJAX, Bootstrap JS, Node JS and Angular JS.\n•\tExperienced in RESTful web services using JAX-RS, Jersey framework and SOAP using JAX-WS, Axis-2 framework.\n•\tExpert knowledge over J2EE Design Patterns like MVC, Adapter, Front End Controller, Value object, Singleton, Session Facade, Business Delegate, Factory DAO in designing the architecture of large applications.\n•\tExperience in using Maven and Ant build scripts for the project build automation.\n•\tExperience in using version control and configuration management tools like SVN, Clear Case and CVS.\n•\tExpertise in working with various Application Servers such as IBM WebSphere, JBoss, Glassfish, Oracle WebLogic and Apache Tomcat server.\n•\tGood knowledge in using ’s such as Eclipse, NetBeans, JBuilder, RAD and STS.\n•\tExpertise in working with Relational databases such as Oracle, PostgreSQL, DB2, MySQL and NoSQL database MongoDB.\n•\tExperience in database design using PL/SQL to write Stored Procedures, Functions, Triggers, views and good at writing complex queries for Oracle 10g/11g.\n•\tGood experience in developing test cases with JUnit for Unit testing, Load testing and logging using Log4J.\n•\tExperienced in using Operating Systems like Windows 98 / 2000 / NT / XP, AIX, Sun Solaris.\n•\tProficient in software documentation and technical report writing.\n•\tInvolved in Performance analysis and improvements of the application using tools like Jmeter and using commands on Unix box to resolve deadlocks and improve performance.\n\nTECHNICAL SKILLS:\nProgramming Languages: Java/J2EE, PL/SQL, Unix Shell Scripts\nJava/J2EE Technologies: JavaBeans, collections, Servlets, JSP, JDBC, JNDI, RMI, EJB\nFrameworks: Struts 1.x/2.x, Spring 2.5/3.0, Web Framework, JSF, Hibernate, iBatis, JPA, Axis-2, Jersey\nMethodologies/Design Patterns: OOAD, OOP, UML, MVC, Singleton, DTO Pattern, DAO Pattern, Service Fa ade, Factory Pattern\nBuild Automation: Jenkins, Maven, Ant\nApplication/Web Servers: IBM Web Sphere 6.x/5.x, BEA Web Logic 8.1/9.1, Apache Tomcat 5.x/6.x, JBOSS 4.x/3.x\nXML processing: DTD, Schema, JAX-P (DOM, SAX), JAX-B\nWeb Services: RESTful, SOAP\nWeb Development: HTML, DHTML, XHTML, CSS, Java Script, JQuery, AJAX, LADP, JSF, Bootstrap JS, Node JS, Angular JS\nVersion Control Tools: CVS, Harvest, IBM Clear case, SVN and GIT\nDatabases: Oracle 9i/10g/11g, IBM DB2, SQL Server 2005/2008, PostgreSQL, MySQL, MangoDB\nMessaging Techologies: JMS, IBM MQ\nIDE s: Eclipse, NetBeans, RAD, WSAD\nTesting and Logging Frameworks: Junit, Log4j, Mockito, Finesse Tests\nReporting Tools: Crystal Reports 11, Jasper Reports\nTools: Rational Rose, MS Visio, XML Spy, TOAD\nOperating Systems: Windows 98/2000/NT/XP, AIX, Sun Solaris, HP-UX\nPROFESSIONAL EXPERIENCE:\n\nCVS, Woonsocket, Rhode Island                                 Full Stack Java Developer\nApril 2016 – Present\nResponsibilities:\n•\tInvolved in various stages of Software Development Life Cycle (SDLC) deliverables of the project using the Agile methodology.\n•\tUsed AWS Cloud platform and its features which include EBS, AMI, SNS, RDS, EBS, Cloud Watch, Cloud Trail, Cloud Formation, Cloud Front, S3, and Route53. \n•\tExpertise in building rich, interactive user interfaces using HTML, CSS, JavaScript, jQuery, Node.Js and Angular.Js.\n•\tGathered and clarified requirements with business analyst to feed into high-level customization design, development and installation phases.\n•\tUsed Spring Framework for dependency injection for Action classes using Application Context XML file. \n•\tInvolved in implementation of MVC pattern using JSP and Spring Controller.\n•\tDeveloped business objects using Spring IOC, Spring MVC and Spring AOP. Implemented MVC architecture using JSP Spring, Hibernate and used Spring Framework to initialize managed beans and services.\n•\tImplemented SOA architecture with Web Services using SOAP, JAX-WS, WSDL, UDDI and XML.\n•\tUsed Collections for Model classes in the DAO layer (Data Access Object) Involved in modifying some changes in DAO layer using Hibernate.\n•\tCreated mappings among the relations and written SQL queries using Hibernate.\n•\tImplemented Concurrency, Exception Handling and Collections whenever necessary.\n•\tUsed Entity Beans to persist the data into IBM DB2 database like database access components, Creating Schemas and Tables.\n•\tUsed SQL to perform data mapping and backend testing, also documented all the SQL queries for future testing purpose.\n•\tCreated process flow for deploying application in Web Sphere application server.\n•\tManaged build, reporting and documentation from the project information using Jenkins, Maven Tool and SVN for version control.\n•\tUsed Jenkins for Continuous Integration.\n•\tUsed JUnit for testing and used JIRA for tracking bugs.\n•\tResponsible for the dealing with the problem, bug fixing and troubleshooting.\n Environment: Java, J2EE, HTML, CSS, JavaScript, jQuery, Ajax, Spring, Spring IOC, Spring AOP, Spring MVC, Hibernate, REST, SOAP, XML, Eclipse, PL/SQL, JUnit, Maven Build Tool, DB2, JIRA, Jenkins, SVN and IBM Web Sphere, AngularJS, EBS, AMI, SNS, RDS, Cloud Watch, Cloud Trail, Cloud Formation, Auto scaling\n\nToll Brothers, Horsham Township, Pennsylvania                  Software Engineer\nDecember 2015 -  March 2016\nResponsibilities:\n•\tDeveloped JSP and extensively used tag libraries. \n•\tDesigned the system with OOAD methodology using various design patterns like factory method, Singleton, Adaptor, Template etc. \n•\tImplementing and planning the server-side architecture using Spring and Hibernate \n•\tConfigured the spring framework for entire business logic layer with XML bean configuration files. \n•\tPreparation of Low Level Designing and High Level Designing and relevant documentation. \n•\tExtensively used Spring IOC for Dependency Injection and worked on Custom MVC Frameworks loosely based on Struts \n•\texperienced in build tools like Micro services, Ant, Maven and Gradle tools.\n•\tWrote Controller classes in Spring MVC framework in the web layer. \n•\tProduced the shopping cart on the client Front-end using jQuery, JavaScript, HTML5, CSS3. \n•\tExtensively used Eclipse based STS IDE for building, developing and integrating the application. \n•\tUsed Table per hierarchy inheritance of hibernates and mapped polymorphic associations. \n•\tDeveloped one-much, many-one, one-one annotation based mappings in Hibernate. \n•\tWrote queries Using Cassandra CQL to create, alter, insert and delete elements. \n•\tDeveloped DAO service methods to populate the domain model objects using hibernate. \n•\tUsed java collections API extensively such as Lists, Sets and Maps.  \n•\tWrote DAO classes using spring and Hibernate to interact with database for persistence. \n•\tDeveloped components of web services (JAX-WS, JAX-RPC) end to end, using different JAX-WS standards with clear understanding on WSDL, SOAP using various message patterns  \n•\tPerformed on e-Commerce by using JSF framework and JavaScript, jQuery, HTML5 pages\n•\tWrote and tested Java Beans to retrieve trading data and subscriber's information from MySQL database server,\n•\t Extensive experience in Angular.JS for application implementation, proficient in creating modules, controllers, route-Providers, factory services, ng-repeat, customizable filter, http get/post methods and directives to realize functionalities like REST service with Ajax call , input validations, searchable and sortable contents.  \n•\tImplemented Unit and Integration test cases with JUnit Framework based on Functional Flow. \n•\tUsed tools like My Eclipse IDE, configured and deployed the applications onto Web Logic application server \n•\tConfigured Log4j for logging and debugging \n Environment: Eclipse, Java J2EE, HTML, JSP, JAX RPC, JAXB, CSS3, JavaScript, and jQuery, Spring MVC, Hibernate, RESTful web services, Apache Tomcat7.0, Cucumber, Cassandra, Junit, Jenkins, Maven, GitHub, XML, Log4j, EJB, MySQL, Ajax.\n\nDairy Farmers of America, Kansas City, Missouri                      Java Developer\nNovember 2014 – December 2015\nResponsibilities:\n•\tResponsible for developing use cases, class and sequence diagram for the modules using UML and Rational Rose.\n•\tIdentifying and design of common interfaces across multiple systems or modules of social insurance.\n•\tDeveloped the application using Spring Framework that leverages classical Model View Layer (MVC) architecture. UML diagrams like use cases, class diagrams, interaction diagrams (sequence and collaboration) and activity diagrams were used.\n•\tDeveloped J2EE modules using XMI and CORE JAVA.\n•\tInteraction with Business users for user and system acceptance testing.\n•\tValidated the data against the business rules.\n•\tData access layer is implemented using Hibernate.\n•\tUsed Apache POI to generate Excel documents\n•\tImplemented Struts action classes.\n•\tUsed Spring Security for Authentication and authorization extensively.\n•\tUtilized Eclipse to create JSPs/Servlets/Hibernate that pulled information from a Oracle database and sent to a front end GUI for end users.\n•\tUsed JDBC for Oracle database connection and written number of stored procedures for retrieving the data.\n•\tDeveloped modules for validating the data according to business rules and used Castor to convert data into array of XML strings and XSLT for transformation.\n•\tUsed Hibernate for data persistence.\n•\tDeveloped SOAP based HTTP requests for communicating with Web Services.\n•\tWas involved in the design of multi-tier architecture using EJB, Servlets and JSP.\n•\tUsed Spring Dependency Injection properties to provide loose-coupling between layers.\n•\tCollaborated with Web designers to create the JSP pages, applying HTML, JavaScript, JQuery and Struts Tags.\n•\tExtensively worked on debugging using Logging Frameworks such as Apache Log4j.\n•\tCreated test plans for unit testing to validate component functionality.\nEnvironment: Java 1.4.2, J2EE, Servlets, MVC, Web services, Struts, Spring - Core, MVC, Security, Eclipse, Hibernate, XML, XSLT, EJB, JSP, JDBC, JAX-B, JQuery, JavaScript, HTML, Log4j, Oracle 10g, Apache POI, Caster, XMI.\n\nBank of Utah, Ogden, Utah                                                           J2EE Developer\nMay 2013 – October 2014\n\nResponsibilities:\n•\tDesigned and developed Servlets and JSP, which presents the end user with form to submit the details of the problem.\n•\tCreated SQL statements and triggers for the effective retrieval and storage of data from the database.\n•\tPerformed JUnit testing, proposed and implemented performance enhancements, worked with Oracle databases, running SQL scripts and stored procedures.\n•\tDeveloped Restful based Web Services.\n•\tWas involved in the design of multi-tier architecture using EJB, Servlets and JSP.\n•\tDeveloped Servlets used to store user information in the database, which makes a JDBC-ODBC connection to the database and inserts the details into to the database.\n•\tDesigned and developed a Servlet, which presents the engineer a form to submit solution to particular problem.\n•\tSetting up test environments and configuring various components of the application using JDBC API to establish a connection with oracle database and configuring.\n•\tDesigned and developed a Servlet, which allows the end user to query on the problem, makes a JDBC-ODBC connection to the database and retrieve the details regarding the call number and the status of the submitted problem.\nEnvironment: Java, J2EE, Servlets, JSP, EJB, Custom tags, JDBC, JUNIT, Restful, Data Source, DAO, VO Patterns, Tomcat 5.0, SQL, Oracle 9i, Linux.\n\n\nEpsilon, Irving, Texas                                                         Junior Java Developer\nJanuary 2012 – April 2013\nResponsibilities:\n•\tDesigned the user interfaces using JSP.\n•\tDeveloped Custom tags, JSTL to support custom User Interfaces.\n•\tDeveloped the application using Struts (MVC) Framework.\n•\tImplemented Business processes such as user authentication, Account Transfer using Session EJBs.\n•\tUsed Eclipse to writing the code for JSP, Servlets, Struts and EJBs.\n•\tDeployed the applications on Web Logic Application Server.\n•\tUsed Java Messaging Services (JMS) and Backend messaging for reliable and asynchronous exchange of important information such as payment status report.\n•\tDeveloped the Ant scripts for preparing WAR files used to deploy J2EE components.\n•\tUsed JDBC for database connectivity to Oracle.\n•\tWorked with Oracle Database to create tables, procedures, functions and select statements.\n•\tUsed JUnit Testing, debugging and bug fixing.\n•\tUsed Log4J to capture the log that includes runtime exceptions and developed WAR framework to alert the client and production support in case of application failures.\n•\tWorked in Rational Unified Process (RUP) Methodology.\nEnvironment: Java, J2EE, JSP, JSTL, JDBC, Struts, EJB, JMS, Oracle, HTML, XML, Web Logic, Ant, CVS, Log4J, JUnit, JMS, PL/SQL, JavaScript, Eclipse IDE, UNIX Shell Scripting, Rational Unified Process (RUP).\nEducation: \nBachelor of Computer Science – University of North Texas, Denton, Texas", {'entities': [(176, 218, 'YEARS'), (222, 382, 'RESPONSIBILITIES'), (386, 477, 'RESPONSIBILITIES'), (481, 534, 'RESPONSIBILITIES'), (538, 642, 'RESPONSIBILITIES'), (674, 688, 'SKILLS'), (693, 713, 'SKILLS'), (848, 864, 'SKILLS'), (884, 898, 'SKILLS'), (912, 918, 'SKILLS'), (923, 932, 'SKILLS'), (996, 1008, 'SKILLS'), (1010, 1017, 'SKILLS'), (1022, 1028, 'SKILLS'), (1056, 1080, 'SKILLS'), (1318, 1322, 'SKILLS'), (1431, 1436, 'SKILLS'), (1438, 1443, 'SKILLS'), (1450, 1461, 'SKILLS'), (1476, 1480, 'SKILLS'), (1496, 1503, 'SKILLS'), (1508, 1518, 'SKILLS'), (1482, 1494, 'SKILLS'), (1776, 1787, 'SKILLS'), (1873, 1876, 'SKILLS'), (1967, 1997, 'SKILLS'), (2213, 2221, 'SKILLS'), (2223, 2231, 'SKILLS'), (2233, 2236, 'SKILLS'), (2241, 2244, 'SKILLS'), (2311, 2321, 'SKILLS'), (2338, 2343, 'SKILLS'), (2353, 2360, 'SKILLS'), (2576, 2588, 'SKILLS'), (2590, 2602, 'SKILLS'), (2651, 2668, 'SKILLS'), (2737, 2759, 'SKILLS'), (2764, 2788, 'SKILLS'), (3601, 3606, 'SKILLS'), (3608, 3613, 'SKILLS'), (3620, 3631, 'SKILLS'), (3641, 3645, 'SKILLS'), (3672, 3679, 'SKILLS'), (3681, 3691, 'SKILLS'), (3658, 3670, 'SKILLS'), (3384, 3387, 'SKILLS'), (3066, 3075, 'SKILLS'), (3818, 3828, 'SKILLS'), (3880, 3883, 'SKILLS'), (3896, 3904, 'SKILLS'), (3906, 3909, 'SKILLS'), (4083, 4100, 'SKILLS'), (4304, 4428, 'RESPONSIBILITIES'), (4432, 4583, 'RESPONSIBILITIES'), (4588, 4685, 'RESPONSIBILITIES'), (4707, 4846, 'RESPONSIBILITIES'), (4850, 4950, 'RESPONSIBILITIES'), (4955, 5028, 'RESPONSIBILITIES'), (5032, 5102, 'RESPONSIBILITIES'), (5104, 5227, 'RESPONSIBILITIES'), (5231, 5316, 'RESPONSIBILITIES'), (5320, 5456, 'RESPONSIBILITIES'), (5460, 5536, 'RESPONSIBILITIES'), (5540, 5618, 'RESPONSIBILITIES'), (5622, 5742, 'RESPONSIBILITIES'), (5746, 5862, 'RESPONSIBILITIES'), (5866, 5945, 'RESPONSIBILITIES'), (5949, 6074, 'RESPONSIBILITIES'), (6078, 6117, 'RESPONSIBILITIES'), (6121, 6175, 'RESPONSIBILITIES'), (6179, 6255, 'RESPONSIBILITIES'), (6748, 6873, 'RESPONSIBILITIES'), (6878, 6959, 'RESPONSIBILITIES'), (6963, 7060, 'RESPONSIBILITIES'), (7065, 7151, 'RESPONSIBILITIES'), (7320, 7323, 'SKILLS'), (7549, 7552, 'SKILLS'), (7545, 7548, 'SKILLS'), (7869, 7951, 'RESPONSIBILITIES'), (7956, 8022, 'RESPONSIBILITIES'), (8028, 8114, 'RESPONSIBILITIES'), (8119, 8288, 'RESPONSIBILITIES'), (8293, 8375, 'RESPONSIBILITIES'), (8378, 8486, 'RESPONSIBILITIES'), (8491, 8522, 'RESPONSIBILITIES'), (8523, 8820, 'RESPONSIBILITIES'), (8947, 8950, 'SKILLS'), (9460, 9552, 'RESPONSIBILITIES'), (9556, 9654, 'RESPONSIBILITIES'), (9899, 9945, 'RESPONSIBILITIES'), (9949, 10019, 'RESPONSIBILITIES'), (10023, 10068, 'RESPONSIBILITIES'), (10072, 10120, 'RESPONSIBILITIES'), (10124, 10167, 'RESPONSIBILITIES'), (10170, 10203, 'RESPONSIBILITIES'), (10207, 10276, 'RESPONSIBILITIES'), (10280, 10419, 'RESPONSIBILITIES'), (10423, 10527, 'RESPONSIBILITIES'), (10531, 10686, 'RESPONSIBILITIES'), (10690, 10725, 'RESPONSIBILITIES'), (10729, 10799, 'RESPONSIBILITIES'), (10803, 10884, 'RESPONSIBILITIES'), (10888, 10972, 'RESPONSIBILITIES'), (10976, 11082, 'RESPONSIBILITIES'), (11086, 11163, 'RESPONSIBILITIES'), (11167, 11238, 'RESPONSIBILITIES'), (12022, 12103, 'RESPONSIBILITIES'), (12107, 12269, 'RESPONSIBILITIES'), (12273, 12382, 'RESPONSIBILITIES'), (12386, 12546, 'RESPONSIBILITIES'), (13067, 13105, 'RESPONSIBILITIES'), (13132, 13136, 'SKILLS'), (13232, 13327, 'RESPONSIBILITIES'), (13402, 13459, 'RESPONSIBILITIES'), (13463, 13613, 'RESPONSIBILITIES'), (13631, 13634, 'SKILLS'), (13891, 14056, 'RESPONSIBILITIES'), (14144, 14148, 'SKILLS'), (14204, 14207, 'SKILLS'), (14261, 14264, 'SKILLS'), (14320, 14360, 'EDUCATION')]})]
+
+ner.add_label('SKILLS')
+ner.add_label('YEARS')
+ner.add_label('RESPONSIBILITIES')
+ner.add_label('EDUCATION')
+
+pipe_exceptions = ["ner"]
+
+unaffected_pipes = [pipe for pipe in software_resumes.pipe_names if pipe not in pipe_exceptions]
+
+def evaluate(ner_model, examples):
+        scorer = Scorer()
+        Examples = []
+        for input_, annot in examples:
+            pred_value = ner_model(input_)
+            example = Example.from_dict(pred_value, annot)
+            Examples.append(example)    
+
+        scores = scorer.score(Examples)
+        return scores
+
+with software_resumes.disable_pipes(*unaffected_pipes):
+        for iteration in range(400):
+            random.shuffle(TRAIN_SOFTWARE_RESUME_DATA)
+            for raw_text,entity_offsets in TRAIN_SOFTWARE_RESUME_DATA:
+                resume= software_resumes.make_doc(raw_text)
+                example = Example.from_dict(resume, entity_offsets)
+                software_resumes.update([example])
+       
+software_accuracy = evaluate(software_resumes, TEST_SOFTWARE_RESUME_DATA)
+
+print(software_accuracy)
+
+resume = software_resumes("""Amrinder Pelia	                                                                                              Employer Details
+Mail: amirindersingh1234@gmail.com                           Mail: Praveen@indiquesolutions.com 
+	                                                                  Phone: 703-743-0795
+
+Senior Business Analyst
+
+Summary:
+
+•	Around 10 years of experience in Business process analysis, Business modeling and Business requirements gathering.
+•	Extensive experience with Banking and Mortgage clients.
+•	Expert in creating diagrams (Use case diagrams, flow charts, activity diagrams, sequence diagrams), use case document, test plans and test case documents.
+•	Worked closely with project Stakeholders, SMEs, staff to understand requirements and specifications for new applications along with re-engineering the existing application.
+•	Experience in interacting across the hierarchy from architects, to data modelers, underwriters and risk analyst.
+•	Experience in iterative agile project management methodology with Scrum to manage the software development life cycle (SDLC).
+•	Used MS Project to manage schedules, meet deadlines and plan resources in line with triple constraint. Followed up with weekly Project Status and organized Task Review meetings. Conducted status meetings, managed deadlines, and facilitated prioritization discussions.
+•	Writing skills in preparing business requirements documents (BRD), system requirements specifications (SRS) and technical design document (TDD) and defining project plans then translating business requirements/user expectations into detailed specifications employing UML.
+•	Performing GAP analysis to check the compatibility of the existing system infrastructure with the new business requirements, 
+•	Conducting User Acceptance Testing (UAT) verifying performance, reliability and fault tolerance issues. Also familiar with testing tools (QC) to design as well as develop test plans and test scripts. 
+•	Authored business and system requirements analyses and functional specifications with supporting business process flows (data modeling), Traceability matrices, risk analysis and concept of operations for systems utilizing company standards, processes, and procedures.
+•	Expertise at using MS Visio, MS Project, MS Excel, PowerPoint, and SharePoint.
+•	Good understanding of software development methodologies such as RUP, JAD, and RAD and hands on experience in formulating JAD sessions. 
+•	
+Skill Set:  
+
+SDLC Methodologies	Waterfall, Agile - RUP, Scrum
+Operating System	Windows 2008/XP/2007/2003
+Project Management Tool	MS Office suite, SharePoint & Project, Rational Rose, Requisite Pro
+Defect Tracking	Test Director/Quality Center, HP Quality Center
+Database	Microsoft SQL Server, Oracle, MS Access.
+Application environments	.NET Framework, ASP.NET
+Education:Bachelors in Applied Sciences and Engineering, Michigan State University, GPA– 3.56
+
+Professional Experience:
+
+Fifth Third Bank, Cincinnati, OH                                                                      Mar 2015 to Present
+Senior Business Analyst/QA Lead
+
+Fifth Third Bank is one of the nation’s largest diversified financial services organizations providing retail and banking; residential mortgage banking. 
+
+Worked on implementing the IDS Rapport Solution to provide a front-end workflow processsing system integrating with the existing IDS Infolease solution. This solution was used to create contract documents and eliminated the need for several Access database and Excel spreadsheet solutions that existed. This solution aslo integrated with iLien solution for UCC filing. The product increased the efficiency of transactional submittals and documentation and booking functions.
+
+Responsibilities:
+
+•	Implemented Traceability Matrix and User Requirement Specification Document (URS) to verify the functionality coverage. 
+•	Extensive use of MS Project, MS SharePoint (used as the library for Project documentation and the communication of Project information).
+•	Created Mortgage Service Platform (MSP) diagram in MS Visio to understand the big picture of the project.
+•	Facilitated and managed meeting sessions with committee of SME from various business areas including Mortgage Servicing, Loan Monitoring and Asset Management.
+•	Responsible for working with product management to translate business objectives into functional requirements, and great user experiences for our customers.
+•	Created detailed Test plans to check the functionality of Application.
+•	Participated in QA team and Bug tracking or Defect Review meetings.
+•	Designed and Developed front end and Back end Test scenarios and Test cases
+•	Performed manual testing on different Modules of the Application by executing the Test Cases.
+•	Coordinate with all project team members to ensure project needs are clearly understood and supportable.
+•	Identify and remove or mitigate obstacles and risks to projects.
+•	Conducted peer review meetings periodically to keep track of the project’s milestones.
+•	Assisted the Project Manager with creating detailed project plans and also in developing, scheduling and tracking project timelines.
+•	Conducted GAP Analysis of current state (As-Is) and proposed state (To-Be) situations and represented in MS Visio. 
+•	Facilitated JAD sessions with the business team and technology team.
+•	Responsible for leading all aspects of projects from start to finish, including project team definition, resource allocation decisions.
+•	Developed high level design of new processes and graphically presented along with text based requirements.
+•	Experience in creating wireframes.
+•	Created Activity Diagrams, and Sequence Diagrams using UML in MS Visio.
+•	Conducted Previews and User Acceptance Test (UAT) sessions.
+
+Environment: MS Visio, DOORS
+
+Mississippi State Division of Medicaid, Jackson, MS            May 2013- Feb 2015
+Sr. Business Analyst 
+Mississippi Division of Medicaid’s Management Information System (MMIS) had to comply with the CMS mandated Health Insurance Portability and Accountability Act (HIPAA) requirements. Project was to analyse system impact and perform GAP between current HIPAA 4010 and compliance HIPAA 5010 for state Medicaid Management Information System.
+
+Responsibilities:
+•	Actively worked on Business requirement gathering, analysis and Data analysis
+•	Facilitated JAD sessions to collect User Requirements, Business Requirements and Functional Requirements.
+•	Created Business/User/Functional document using MS Project, MS Word and MS Visio that provided appropriate scope of work for technical team to develop prototype of the overall system.
+•	Gathered requirements from the administrative staff and business rules for determining member eligibility and successfully converted them into functional requirements for the developments team.
+•	Created Use Cases, various UML Diagrams and Data Flow Diagrams to determine the data flow via various systems
+•	Developed and maintained the Requirement Traceability Matrix (RTM) for the project deliverables.
+•	Proposed the change and reengineering of the ‘AS IS’ Business processes into the ‘TO BE’ process flow
+•	Involved in the day-to-day implementation of the agile methodology of application development with its various work flows, Artefacts and activities.
+•	Created Business Rule Comparison (BRC) documents using 4010 / 5010 implementation guides for X12 transactions 
+•	Extensively involved in HIPAA 5010 User Acceptance Testing (UAT). Defined and maintained Test Cases for EDI transactions.
+•	Thoroughly studied the inherent systems to have a clear understanding of the business processes and associated system workflow.
+•	Used HP Quality Centre for error reporting and communicating between developers, product support and test team members
+•	Recommended corrective actions, if necessary, along with the progress against Development/Action Plan routinely to the Project Manager.
+•	Used MS Share point for sharing documents, calendars and other data between users in different locations.
+•	Wrote test cases and test plans for the related and assigned scripts according to the test strategies defined in the project and testing team guidelines in Quality centre.
+•	Assisted in regression testing and did UAT to improve overall quality of the Application.
+•	
+Environment: UML, Windows, Agile, Mainframe, SQL, ETL, Data warehouse, Microsoft Office, Test Director, MMIS, MS Access, HTML, XML, Java Script, Java, ASP, DB2.
+Dept of Health, Austin TX						May 2012 - April 2013
+Sr. Business Analyst
+I worked as a business analyst in the project intended to make the existing application comply with HIPAA 5010 standards. I was involved in the analysis of EDI transactions 834 and 837I, 837Pbased on HIPAA 4010 and mapping them in order to make the application comply with HIPAA 5010 standards. The module that I worked on allowed the agents to track and manage the status of health benefit claims. My daily responsibilities included performing typical BA duties and additionally included doing QA work such as coordinating the testing process during the testing and UAT phase of the application. I was also responsible in maintaining the application during the “warranty period” and making sure all the issues were solved.  
+
+Responsibilities:
+•	Coordinated with the developers, testers and users on verifying, documenting and addressing any issues with the newly implemented HIPAA 4010 to 5010 conversion at the time.
+•	Created and maintained data mapping document(s) in reference to the HIPAA mandated transactions834 and 837I, 837P.
+•	Independently studied the changes being made and helped them implement in the application.
+•	Conducted and participated in meetings for requirement elicitation and documentation. 
+•	Worked with end users, SMEs, and stakeholders to fully understand issues with the older application and the requirements of the new application being built.
+•	Interviewed business users to gather requirements and analyzed the feasibility of their needs by coordinating with the project manager and the technical lead.
+•	Conducted and participated in JAD sessions with the system architect, Subject Matter Experts (SMEs) & the project sponsor for fast & effective system requirement development.
+•	Used Customer Relationship Management (CRM) in order to meet customer expectation.
+•	Identified and gathered the data requirements and wrote SQL queries using tools such as My SQL Workbench and Aqua Data Studio.
+•	Wrote very detailed BRDs and FRDs based on the requirements gathered.
+•	Used MS Visio to create flow charts, use case diagrams, activity diagrams to illustrate business rules and process flows required for the BRDs and FRDs. 
+•	Wrote test cases for testing the migration of EDI 4010 to 5010 and the processing of EDI transactions 820, 834,837I and 837P.
+•	Helped coordinate the testing process by helping the QA team prepare for the testing requirements such as environment, writing instructions, organizing walkthroughs, selecting the test groups, etc.  
+•	Used Waterfall methodology throughout the development process and was extensively involved with developers on every stage of the application development.
+
+Environment: Waterfall, SQL, MS Word, MS Excel, MS Project, MS Visio, BRDs, FRDs, Quality Assurance, UAT
+Prime Therapeutics, Eagan, MN					Jan 2011 - Apr 2012
+Business System Analyst
+Prime therapeutics is leading Pharmacy benefit Management Company. I worked with member marketing/customer experience team where I was required to work on all the correspondence materials sent out to the existing members for various reasons. I as primarily focus on Prime mail, Guided health and Specialty.
+
+Responsibilities:
+•	Worked as a liaison between technology and the business clients to improve business processes and support critical business strategies.
+•	Utilized industry knowledge to provide executive management with the development and implementation of interactive business tools and strategic analysis.
+•	Setup and manage inter-departmental status meetings, often including off-shore development and QA teams.  
+•	Scheduled review presentation meetings with developers, System Analysts (SA) and business owners for project completion and approval using Adobe Connect.
+•	Understood the Business Logic, User Requirements & developed Design & User Interface Specifications
+•	Worked with the stakeholders to understand the features they wanted to be implemented in the new version such as new notification options, account features, better sorting of the transaction list, preferred UI changes, etc.
+•	Worked with SMEs, business users and technical leads in understanding and documenting issues with the older version of the application.
+•	Wrote SQL queries for database inquiries whenever needed. Worked with System Admin for any database related task such as creating production scrubs, database access for team members, any issues, etc. 
+•	Used Agile methodology throughout the project and extensively involved in all stages of development.
+•	Helped update Product Backlog whenever needed and also created Sprint logs by working with the team lead.
+•	Conducted multiple meetings in the middle of the sprint to solve any issues encountered during the sprint.
+•	Logged issues and presented them during the sprint reviews for discussion.
+•	Designed and finalized mockups using Axure. This helped the team in better understanding proposed changes.
+•	Helped in coordinating UAT phase for every sprint.
+•	Involved in logging post-deployment issues and making sure they were addressed as per their urgency and priority.
+•	Successfully completed the project within time and budget despite having a very tight schedule. 
+	
+Environment: Agile, SCRUM, MS Visio, MS Project, Axure, SQL, My SQL Workbench. HEDIS, Lotus notes
+
+PNC Bank, Norristown, PA                                                                              Oct 2008 to Dec 2010
+Business Analyst
+
+The project was aimed at successfully implementing a system that provides an integrated, shared view of the customer across the enterprise that enforces and encourages consistent customer data. The goal was to increase efficiency and customer service through the development of a user-friendly, web-based banking information system, which will allow for maintenance of a centralized database for the managers of Bank. 
+
+Responsibilities:
+
+•	Conducted GAP Analysis to identify key areas of concern and addressed them with the Business team. Documented the AS-IS and TO-BE processes.
+•	Actively engaged client and third party integration partners in requirements gathering and validation. 
+•	Developed business Use Cases using UML for new product functionality after conducting requirements elaboration sessions with client teams.
+•	Used Rational Unified Process for the Software Development Life Cycle of this project. 
+•	Documented business and functional requirements
+•	Provided assistance in reviewing, analyzing and evaluating business requirements, user needs and functions with the objective of improving business processes and procedures.
+•	Generated process flow diagrams
+•	Maintained an issue log and driven issues to closure
+•	Worked closely with the development team to make sure all the requirements were covered.
+•	Maintained versioning in requirements
+Environment: MS Visio, Rational Requisite Pro, Quality Center
+""")
+
+for ent in resume.ents:
+       print(ent.label_, ent.text)
+
+
 
 if ENV == 'prod':
      app.debug = True
@@ -246,7 +265,6 @@ else:
      except:
         print('Something wrong with database url')
    
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 @app.route('/registration_landing')
@@ -648,8 +666,6 @@ def candidate_submit():
 
 @app.route('/confirm_email_candidate/<email>/<token>')
 def confirm_email_candidate(email, token):
-
-    
 
     try:
 
