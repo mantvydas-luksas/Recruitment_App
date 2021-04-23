@@ -77,178 +77,179 @@ def evaluate(ner_model, examples):
         scores = scorer.score(Examples)
         return scores
 
-with software_resumes.disable_pipes(*unaffected_pipes):
-        for iteration in range(200):
-            random.shuffle(TRAIN_SOFTWARE_RESUME_DATA)
-            for raw_text,entity_offsets in TRAIN_SOFTWARE_RESUME_DATA:
-                resume= software_resumes.make_doc(raw_text)
-                example = Example.from_dict(resume, entity_offsets)
-                software_resumes.update([example])
 
-software_resumes.to_disk("./software")
+
+analyzer = spacy.load("./software")
+
+resumes = analyzer("""Name: Abiral Pandey
+Email: abiral.pandey88@gmail.com
+Phone: 940-242-3303
+Current Location: Woonsocket, Rhode Island
+Visa Status: US Citizen
+
+SUMMARY:
+•	Dynamic individual with 6 years of software development experience in design, development, deployment, maintenance, production and support of web - based and Client-Server business applications using OOP and Java/J2EE technologies.
+•	Exposure to all phases of Software Development Life Cycle(SDLC) using Agile, RUP, Waterfall.
+•	Designed and developed web UI screen using Angular-JS.
+•	Developed AngularJS Controllers, Services, filters and directives for various modules in the application.
+•	Knowledge on ETL tools like Kettle Pentaho and Microsoft SSIS tools.
+•	Created custom directives, decorators and services using AngularJS to interface with both RESTful and legacy network services also DOM applications.
+•	Experience with MVC frameworks like Struts, SPRING and ORM tools like Hibernate.
+•	Experienced in working with batch jobs using Spring-Batch, Autosys and Quartz.
+•	Worked extensively with XML related technologies like XML/XSLT to process, validate, parse and extract data from XML using DOM and SAX parsers for DTD and SCHEMAand also worked with JAX-B.
+•	Strong experience in J2EE technologies like Java Beans, Servlets, JSP (including custom tags), JSTL, JDBC, Struts, Spring, JMS, JNDI and Multithreading.
+•	Expertise in web development technologies like HTML, DHTML, XHTML, CSS, Java Script, JQuery, JSF, AJAX, Bootstrap JS, Node JS and Angular JS.
+•	Experienced in RESTful web services using JAX-RS, Jersey framework and SOAP using JAX-WS, Axis-2 framework.
+•	Expert knowledge over J2EE Design Patterns like MVC, Adapter, Front End Controller, Value object, Singleton, Session Facade, Business Delegate, Factory DAO in designing the architecture of large applications.
+•	Experience in using Maven and Ant build scripts for the project build automation.
+•	Experience in using version control and configuration management tools like SVN, Clear Case and CVS.
+•	Expertise in working with various Application Servers such as IBM WebSphere, JBoss, Glassfish, Oracle WebLogic and Apache Tomcat server.
+•	Good knowledge in using IDE’s such as Eclipse, NetBeans, JBuilder, RAD and STS.
+•	Expertise in working with Relational databases such as Oracle, PostgreSQL, DB2, MySQL and NoSQL database MongoDB.
+•	Experience in database design using PL/SQL to write Stored Procedures, Functions, Triggers, views and good at writing complex queries for Oracle 10g/11g.
+•	Good experience in developing test cases with JUnit for Unit testing, Load testing and logging using Log4J.
+•	Experienced in using Operating Systems like Windows 98 / 2000 / NT / XP, AIX, Sun Solaris.
+•	Proficient in software documentation and technical report writing.
+•	Involved in Performance analysis and improvements of the application using tools like Jmeter and using commands on Unix box to resolve deadlocks and improve performance.
+
+TECHNICAL SKILLS:
+Programming Languages: Java/J2EE, PL/SQL, Unix Shell Scripts
+Java/J2EE Technologies: JavaBeans, collections, Servlets, JSP, JDBC, JNDI, RMI, EJB
+Frameworks: Struts 1.x/2.x, Spring 2.5/3.0, Web Framework, JSF, Hibernate, iBatis, JPA, Axis-2, Jersey
+Methodologies/Design Patterns: OOAD, OOP, UML, MVC, Singleton, DTO Pattern, DAO Pattern, Service Fa ade, Factory Pattern
+Build Automation: Jenkins, Maven, Ant
+Application/Web Servers: IBM Web Sphere 6.x/5.x, BEA Web Logic 8.1/9.1, Apache Tomcat 5.x/6.x, JBOSS 4.x/3.x
+XML processing: DTD, Schema, JAX-P (DOM, SAX), JAX-B
+Web Services: RESTful, SOAP
+Web Development: HTML, DHTML, XHTML, CSS, Java Script, JQuery, AJAX, LADP, JSF, Bootstrap JS, Node JS, Angular JS
+Version Control Tools: CVS, Harvest, IBM Clear case, SVN and GIT
+Databases: Oracle 9i/10g/11g, IBM DB2, SQL Server 2005/2008, PostgreSQL, MySQL, MangoDB
+Messaging Techologies: JMS, IBM MQ
+IDE s: Eclipse, NetBeans, RAD, WSAD
+Testing and Logging Frameworks: Junit, Log4j, Mockito, Finesse Tests
+Reporting Tools: Crystal Reports 11, Jasper Reports
+Tools: Rational Rose, MS Visio, XML Spy, TOAD
+Operating Systems: Windows 98/2000/NT/XP, AIX, Sun Solaris, HP-UX
+PROFESSIONAL EXPERIENCE:
+
+CVS, Woonsocket, Rhode Island                                 Full Stack Java Developer
+April 2016 – Present
+Responsibilities:
+•	Involved in various stages of Software Development Life Cycle (SDLC) deliverables of the project using the Agile methodology.
+•	Used AWS Cloud platform and its features which include EBS, AMI, SNS, RDS, EBS, Cloud Watch, Cloud Trail, Cloud Formation, Cloud Front, S3, and Route53. 
+•	Expertise in building rich, interactive user interfaces using HTML, CSS, JavaScript, jQuery, Node.Js and Angular.Js.
+•	Gathered and clarified requirements with business analyst to feed into high-level customization design, development and installation phases.
+•	Used Spring Framework for dependency injection for Action classes using Application Context XML file. 
+•	Involved in implementation of MVC pattern using JSP and Spring Controller.
+•	Developed business objects using Spring IOC, Spring MVC and Spring AOP. Implemented MVC architecture using JSP Spring, Hibernate and used Spring Framework to initialize managed beans and services.
+•	Implemented SOA architecture with Web Services using SOAP, JAX-WS, WSDL, UDDI and XML.
+•	Used Collections for Model classes in the DAO layer (Data Access Object) Involved in modifying some changes in DAO layer using Hibernate.
+•	Created mappings among the relations and written SQL queries using Hibernate.
+•	Implemented Concurrency, Exception Handling and Collections whenever necessary.
+•	Used Entity Beans to persist the data into IBM DB2 database like database access components, Creating Schemas and Tables.
+•	Used SQL to perform data mapping and backend testing, also documented all the SQL queries for future testing purpose.
+•	Created process flow for deploying application in Web Sphere application server.
+•	Managed build, reporting and documentation from the project information using Jenkins, Maven Tool and SVN for version control.
+•	Used Jenkins for Continuous Integration.
+•	Used JUnit for testing and used JIRA for tracking bugs.
+•	Responsible for the dealing with the problem, bug fixing and troubleshooting.
+ Environment: Java, J2EE, HTML, CSS, JavaScript, jQuery, Ajax, Spring, Spring IOC, Spring AOP, Spring MVC, Hibernate, REST, SOAP, XML, Eclipse, PL/SQL, JUnit, Maven Build Tool, DB2, JIRA, Jenkins, SVN and IBM Web Sphere, AngularJS, EBS, AMI, SNS, RDS, Cloud Watch, Cloud Trail, Cloud Formation, Auto scaling
+
+Toll Brothers, Horsham Township, Pennsylvania                  Software Engineer
+December 2015 -  March 2016
+Responsibilities:
+•	Developed JSP and extensively used tag libraries. 
+•	Designed the system with OOAD methodology using various design patterns like factory method, Singleton, Adaptor, Template etc. 
+•	Implementing and planning the server-side architecture using Spring and Hibernate 
+•	Configured the spring framework for entire business logic layer with XML bean configuration files. 
+•	Preparation of Low Level Designing and High Level Designing and relevant documentation. 
+•	Extensively used Spring IOC for Dependency Injection and worked on Custom MVC Frameworks loosely based on Struts 
+•	experienced in build tools like Micro services, Ant, Maven and Gradle tools.
+•	Wrote Controller classes in Spring MVC framework in the web layer. 
+•	Produced the shopping cart on the client Front-end using jQuery, JavaScript, HTML5, CSS3. 
+•	Extensively used Eclipse based STS IDE for building, developing and integrating the application. 
+•	Used Table per hierarchy inheritance of hibernates and mapped polymorphic associations. 
+•	Developed one-much, many-one, one-one annotation based mappings in Hibernate. 
+•	Wrote queries Using Cassandra CQL to create, alter, insert and delete elements. 
+•	Developed DAO service methods to populate the domain model objects using hibernate. 
+•	Used java collections API extensively such as Lists, Sets and Maps.  
+•	Wrote DAO classes using spring and Hibernate to interact with database for persistence. 
+•	Developed components of web services (JAX-WS, JAX-RPC) end to end, using different JAX-WS standards with clear understanding on WSDL, SOAP using various message patterns  
+•	Performed on e-Commerce by using JSF framework and JavaScript, jQuery, HTML5 pages
+•	Wrote and tested Java Beans to retrieve trading data and subscriber's information from MySQL database server,
+•	 Extensive experience in Angular.JS for application implementation, proficient in creating modules, controllers, route-Providers, factory services, ng-repeat, customizable filter, http get/post methods and directives to realize functionalities like REST service with Ajax call , input validations, searchable and sortable contents.  
+•	Implemented Unit and Integration test cases with JUnit Framework based on Functional Flow. 
+•	Used tools like My Eclipse IDE, configured and deployed the applications onto Web Logic application server 
+•	Configured Log4j for logging and debugging 
+ Environment: Eclipse, Java J2EE, HTML, JSP, JAX RPC, JAXB, CSS3, JavaScript, and jQuery, Spring MVC, Hibernate, RESTful web services, Apache Tomcat7.0, Cucumber, Cassandra, Junit, Jenkins, Maven, GitHub, XML, Log4j, EJB, MySQL, Ajax.
+
+Dairy Farmers of America, Kansas City, Missouri                      Java Developer
+November 2014 – December 2015
+Responsibilities:
+•	Responsible for developing use cases, class and sequence diagram for the modules using UML and Rational Rose.
+•	Identifying and design of common interfaces across multiple systems or modules of social insurance.
+•	Developed the application using Spring Framework that leverages classical Model View Layer (MVC) architecture. UML diagrams like use cases, class diagrams, interaction diagrams (sequence and collaboration) and activity diagrams were used.
+•	Developed J2EE modules using XMI and CORE JAVA.
+•	Interaction with Business users for user and system acceptance testing.
+•	Validated the data against the business rules.
+•	Data access layer is implemented using Hibernate.
+•	Used Apache POI to generate Excel documents
+•	Implemented Struts action classes.
+•	Used Spring Security for Authentication and authorization extensively.
+•	Utilized Eclipse to create JSPs/Servlets/Hibernate that pulled information from a Oracle database and sent to a front end GUI for end users.
+•	Used JDBC for Oracle database connection and written number of stored procedures for retrieving the data.
+•	Developed modules for validating the data according to business rules and used Castor to convert data into array of XML strings and XSLT for transformation.
+•	Used Hibernate for data persistence.
+•	Developed SOAP based HTTP requests for communicating with Web Services.
+•	Was involved in the design of multi-tier architecture using EJB, Servlets and JSP.
+•	Used Spring Dependency Injection properties to provide loose-coupling between layers.
+•	Collaborated with Web designers to create the JSP pages, applying HTML, JavaScript, JQuery and Struts Tags.
+•	Extensively worked on debugging using Logging Frameworks such as Apache Log4j.
+•	Created test plans for unit testing to validate component functionality.
+Environment: Java 1.4.2, J2EE, Servlets, MVC, Web services, Struts, Spring - Core, MVC, Security, Eclipse, Hibernate, XML, XSLT, EJB, JSP, JDBC, JAX-B, JQuery, JavaScript, HTML, Log4j, Oracle 10g, Apache POI, Caster, XMI.
+
+Bank of Utah, Ogden, Utah                                                           J2EE Developer
+May 2013 – October 2014
+
+Responsibilities:
+•	Designed and developed Servlets and JSP, which presents the end user with form to submit the details of the problem.
+•	Created SQL statements and triggers for the effective retrieval and storage of data from the database.
+•	Performed JUnit testing, proposed and implemented performance enhancements, worked with Oracle databases, running SQL scripts and stored procedures.
+•	Developed Restful based Web Services.
+•	Was involved in the design of multi-tier architecture using EJB, Servlets and JSP.
+•	Developed Servlets used to store user information in the database, which makes a JDBC-ODBC connection to the database and inserts the details into to the database.
+•	Designed and developed a Servlet, which presents the engineer a form to submit solution to particular problem.
+•	Setting up test environments and configuring various components of the application using JDBC API to establish a connection with oracle database and configuring.
+•	Designed and developed a Servlet, which allows the end user to query on the problem, makes a JDBC-ODBC connection to the database and retrieve the details regarding the call number and the status of the submitted problem.
+Environment: Java, J2EE, Servlets, JSP, EJB, Custom tags, JDBC, JUNIT, Restful, Data Source, DAO, VO Patterns, Tomcat 5.0, SQL, Oracle 9i, Linux.
+
+
+Epsilon, Irving, Texas                                                         Junior Java Developer
+January 2012 – April 2013
+Responsibilities:
+•	Designed the user interfaces using JSP.
+•	Developed Custom tags, JSTL to support custom User Interfaces.
+•	Developed the application using Struts (MVC) Framework.
+•	Implemented Business processes such as user authentication, Account Transfer using Session EJBs.
+•	Used Eclipse to writing the code for JSP, Servlets, Struts and EJBs.
+•	Deployed the applications on Web Logic Application Server.
+•	Used Java Messaging Services (JMS) and Backend messaging for reliable and asynchronous exchange of important information such as payment status report.
+•	Developed the Ant scripts for preparing WAR files used to deploy J2EE components.
+•	Used JDBC for database connectivity to Oracle.
+•	Worked with Oracle Database to create tables, procedures, functions and select statements.
+•	Used JUnit Testing, debugging and bug fixing.
+•	Used Log4J to capture the log that includes runtime exceptions and developed WAR framework to alert the client and production support in case of application failures.
+•	Worked in Rational Unified Process (RUP) Methodology.
+Environment: Java, J2EE, JSP, JSTL, JDBC, Struts, EJB, JMS, Oracle, HTML, XML, Web Logic, Ant, CVS, Log4J, JUnit, JMS, PL/SQL, JavaScript, Eclipse IDE, UNIX Shell Scripting, Rational Unified Process (RUP).
+Education: 
+Bachelor of Computer Science – University of North Texas, Denton, Texas
+""")
+
+print 
        
 #software_accuracy = evaluate(software_resumes, TEST_SOFTWARE_RESUME_DATA)
 
 #print(software_accuracy)
-
-resume = software_resumes("""Amrinder Pelia	                                                                                              Employer Details
-Mail: amirindersingh1234@gmail.com                           Mail: Praveen@indiquesolutions.com 
-	                                                                  Phone: 703-743-0795
-
-Senior Business Analyst
-
-Summary:
-
-•	Around 10 years of experience in Business process analysis, Business modeling and Business requirements gathering.
-•	Extensive experience with Banking and Mortgage clients.
-•	Expert in creating diagrams (Use case diagrams, flow charts, activity diagrams, sequence diagrams), use case document, test plans and test case documents.
-•	Worked closely with project Stakeholders, SMEs, staff to understand requirements and specifications for new applications along with re-engineering the existing application.
-•	Experience in interacting across the hierarchy from architects, to data modelers, underwriters and risk analyst.
-•	Experience in iterative agile project management methodology with Scrum to manage the software development life cycle (SDLC).
-•	Used MS Project to manage schedules, meet deadlines and plan resources in line with triple constraint. Followed up with weekly Project Status and organized Task Review meetings. Conducted status meetings, managed deadlines, and facilitated prioritization discussions.
-•	Writing skills in preparing business requirements documents (BRD), system requirements specifications (SRS) and technical design document (TDD) and defining project plans then translating business requirements/user expectations into detailed specifications employing UML.
-•	Performing GAP analysis to check the compatibility of the existing system infrastructure with the new business requirements, 
-•	Conducting User Acceptance Testing (UAT) verifying performance, reliability and fault tolerance issues. Also familiar with testing tools (QC) to design as well as develop test plans and test scripts. 
-•	Authored business and system requirements analyses and functional specifications with supporting business process flows (data modeling), Traceability matrices, risk analysis and concept of operations for systems utilizing company standards, processes, and procedures.
-•	Expertise at using MS Visio, MS Project, MS Excel, PowerPoint, and SharePoint.
-•	Good understanding of software development methodologies such as RUP, JAD, and RAD and hands on experience in formulating JAD sessions. 
-•	
-Skill Set:  
-
-SDLC Methodologies	Waterfall, Agile - RUP, Scrum
-Operating System	Windows 2008/XP/2007/2003
-Project Management Tool	MS Office suite, SharePoint & Project, Rational Rose, Requisite Pro
-Defect Tracking	Test Director/Quality Center, HP Quality Center
-Database	Microsoft SQL Server, Oracle, MS Access.
-Application environments	.NET Framework, ASP.NET
-Education:Bachelors in Applied Sciences and Engineering, Michigan State University, GPA– 3.56
-
-Professional Experience:
-
-Fifth Third Bank, Cincinnati, OH                                                                      Mar 2015 to Present
-Senior Business Analyst/QA Lead
-
-Fifth Third Bank is one of the nation’s largest diversified financial services organizations providing retail and banking; residential mortgage banking. 
-
-Worked on implementing the IDS Rapport Solution to provide a front-end workflow processsing system integrating with the existing IDS Infolease solution. This solution was used to create contract documents and eliminated the need for several Access database and Excel spreadsheet solutions that existed. This solution aslo integrated with iLien solution for UCC filing. The product increased the efficiency of transactional submittals and documentation and booking functions.
-
-Responsibilities:
-
-•	Implemented Traceability Matrix and User Requirement Specification Document (URS) to verify the functionality coverage. 
-•	Extensive use of MS Project, MS SharePoint (used as the library for Project documentation and the communication of Project information).
-•	Created Mortgage Service Platform (MSP) diagram in MS Visio to understand the big picture of the project.
-•	Facilitated and managed meeting sessions with committee of SME from various business areas including Mortgage Servicing, Loan Monitoring and Asset Management.
-•	Responsible for working with product management to translate business objectives into functional requirements, and great user experiences for our customers.
-•	Created detailed Test plans to check the functionality of Application.
-•	Participated in QA team and Bug tracking or Defect Review meetings.
-•	Designed and Developed front end and Back end Test scenarios and Test cases
-•	Performed manual testing on different Modules of the Application by executing the Test Cases.
-•	Coordinate with all project team members to ensure project needs are clearly understood and supportable.
-•	Identify and remove or mitigate obstacles and risks to projects.
-•	Conducted peer review meetings periodically to keep track of the project’s milestones.
-•	Assisted the Project Manager with creating detailed project plans and also in developing, scheduling and tracking project timelines.
-•	Conducted GAP Analysis of current state (As-Is) and proposed state (To-Be) situations and represented in MS Visio. 
-•	Facilitated JAD sessions with the business team and technology team.
-•	Responsible for leading all aspects of projects from start to finish, including project team definition, resource allocation decisions.
-•	Developed high level design of new processes and graphically presented along with text based requirements.
-•	Experience in creating wireframes.
-•	Created Activity Diagrams, and Sequence Diagrams using UML in MS Visio.
-•	Conducted Previews and User Acceptance Test (UAT) sessions.
-
-Environment: MS Visio, DOORS
-
-Mississippi State Division of Medicaid, Jackson, MS            May 2013- Feb 2015
-Sr. Business Analyst 
-Mississippi Division of Medicaid’s Management Information System (MMIS) had to comply with the CMS mandated Health Insurance Portability and Accountability Act (HIPAA) requirements. Project was to analyse system impact and perform GAP between current HIPAA 4010 and compliance HIPAA 5010 for state Medicaid Management Information System.
-
-Responsibilities:
-•	Actively worked on Business requirement gathering, analysis and Data analysis
-•	Facilitated JAD sessions to collect User Requirements, Business Requirements and Functional Requirements.
-•	Created Business/User/Functional document using MS Project, MS Word and MS Visio that provided appropriate scope of work for technical team to develop prototype of the overall system.
-•	Gathered requirements from the administrative staff and business rules for determining member eligibility and successfully converted them into functional requirements for the developments team.
-•	Created Use Cases, various UML Diagrams and Data Flow Diagrams to determine the data flow via various systems
-•	Developed and maintained the Requirement Traceability Matrix (RTM) for the project deliverables.
-•	Proposed the change and reengineering of the ‘AS IS’ Business processes into the ‘TO BE’ process flow
-•	Involved in the day-to-day implementation of the agile methodology of application development with its various work flows, Artefacts and activities.
-•	Created Business Rule Comparison (BRC) documents using 4010 / 5010 implementation guides for X12 transactions 
-•	Extensively involved in HIPAA 5010 User Acceptance Testing (UAT). Defined and maintained Test Cases for EDI transactions.
-•	Thoroughly studied the inherent systems to have a clear understanding of the business processes and associated system workflow.
-•	Used HP Quality Centre for error reporting and communicating between developers, product support and test team members
-•	Recommended corrective actions, if necessary, along with the progress against Development/Action Plan routinely to the Project Manager.
-•	Used MS Share point for sharing documents, calendars and other data between users in different locations.
-•	Wrote test cases and test plans for the related and assigned scripts according to the test strategies defined in the project and testing team guidelines in Quality centre.
-•	Assisted in regression testing and did UAT to improve overall quality of the Application.
-•	
-Environment: UML, Windows, Agile, Mainframe, SQL, ETL, Data warehouse, Microsoft Office, Test Director, MMIS, MS Access, HTML, XML, Java Script, Java, ASP, DB2.
-Dept of Health, Austin TX						May 2012 - April 2013
-Sr. Business Analyst
-I worked as a business analyst in the project intended to make the existing application comply with HIPAA 5010 standards. I was involved in the analysis of EDI transactions 834 and 837I, 837Pbased on HIPAA 4010 and mapping them in order to make the application comply with HIPAA 5010 standards. The module that I worked on allowed the agents to track and manage the status of health benefit claims. My daily responsibilities included performing typical BA duties and additionally included doing QA work such as coordinating the testing process during the testing and UAT phase of the application. I was also responsible in maintaining the application during the “warranty period” and making sure all the issues were solved.  
-
-Responsibilities:
-•	Coordinated with the developers, testers and users on verifying, documenting and addressing any issues with the newly implemented HIPAA 4010 to 5010 conversion at the time.
-•	Created and maintained data mapping document(s) in reference to the HIPAA mandated transactions834 and 837I, 837P.
-•	Independently studied the changes being made and helped them implement in the application.
-•	Conducted and participated in meetings for requirement elicitation and documentation. 
-•	Worked with end users, SMEs, and stakeholders to fully understand issues with the older application and the requirements of the new application being built.
-•	Interviewed business users to gather requirements and analyzed the feasibility of their needs by coordinating with the project manager and the technical lead.
-•	Conducted and participated in JAD sessions with the system architect, Subject Matter Experts (SMEs) & the project sponsor for fast & effective system requirement development.
-•	Used Customer Relationship Management (CRM) in order to meet customer expectation.
-•	Identified and gathered the data requirements and wrote SQL queries using tools such as My SQL Workbench and Aqua Data Studio.
-•	Wrote very detailed BRDs and FRDs based on the requirements gathered.
-•	Used MS Visio to create flow charts, use case diagrams, activity diagrams to illustrate business rules and process flows required for the BRDs and FRDs. 
-•	Wrote test cases for testing the migration of EDI 4010 to 5010 and the processing of EDI transactions 820, 834,837I and 837P.
-•	Helped coordinate the testing process by helping the QA team prepare for the testing requirements such as environment, writing instructions, organizing walkthroughs, selecting the test groups, etc.  
-•	Used Waterfall methodology throughout the development process and was extensively involved with developers on every stage of the application development.
-
-Environment: Waterfall, SQL, MS Word, MS Excel, MS Project, MS Visio, BRDs, FRDs, Quality Assurance, UAT
-Prime Therapeutics, Eagan, MN					Jan 2011 - Apr 2012
-Business System Analyst
-Prime therapeutics is leading Pharmacy benefit Management Company. I worked with member marketing/customer experience team where I was required to work on all the correspondence materials sent out to the existing members for various reasons. I as primarily focus on Prime mail, Guided health and Specialty.
-
-Responsibilities:
-•	Worked as a liaison between technology and the business clients to improve business processes and support critical business strategies.
-•	Utilized industry knowledge to provide executive management with the development and implementation of interactive business tools and strategic analysis.
-•	Setup and manage inter-departmental status meetings, often including off-shore development and QA teams.  
-•	Scheduled review presentation meetings with developers, System Analysts (SA) and business owners for project completion and approval using Adobe Connect.
-•	Understood the Business Logic, User Requirements & developed Design & User Interface Specifications
-•	Worked with the stakeholders to understand the features they wanted to be implemented in the new version such as new notification options, account features, better sorting of the transaction list, preferred UI changes, etc.
-•	Worked with SMEs, business users and technical leads in understanding and documenting issues with the older version of the application.
-•	Wrote SQL queries for database inquiries whenever needed. Worked with System Admin for any database related task such as creating production scrubs, database access for team members, any issues, etc. 
-•	Used Agile methodology throughout the project and extensively involved in all stages of development.
-•	Helped update Product Backlog whenever needed and also created Sprint logs by working with the team lead.
-•	Conducted multiple meetings in the middle of the sprint to solve any issues encountered during the sprint.
-•	Logged issues and presented them during the sprint reviews for discussion.
-•	Designed and finalized mockups using Axure. This helped the team in better understanding proposed changes.
-•	Helped in coordinating UAT phase for every sprint.
-•	Involved in logging post-deployment issues and making sure they were addressed as per their urgency and priority.
-•	Successfully completed the project within time and budget despite having a very tight schedule. 
-	
-Environment: Agile, SCRUM, MS Visio, MS Project, Axure, SQL, My SQL Workbench. HEDIS, Lotus notes
-
-PNC Bank, Norristown, PA                                                                              Oct 2008 to Dec 2010
-Business Analyst
-
-The project was aimed at successfully implementing a system that provides an integrated, shared view of the customer across the enterprise that enforces and encourages consistent customer data. The goal was to increase efficiency and customer service through the development of a user-friendly, web-based banking information system, which will allow for maintenance of a centralized database for the managers of Bank. 
-
-Responsibilities:
-
-•	Conducted GAP Analysis to identify key areas of concern and addressed them with the Business team. Documented the AS-IS and TO-BE processes.
-•	Actively engaged client and third party integration partners in requirements gathering and validation. 
-•	Developed business Use Cases using UML for new product functionality after conducting requirements elaboration sessions with client teams.
-•	Used Rational Unified Process for the Software Development Life Cycle of this project. 
-•	Documented business and functional requirements
-•	Provided assistance in reviewing, analyzing and evaluating business requirements, user needs and functions with the objective of improving business processes and procedures.
-•	Generated process flow diagrams
-•	Maintained an issue log and driven issues to closure
-•	Worked closely with the development team to make sure all the requirements were covered.
-•	Maintained versioning in requirements
-Environment: MS Visio, Rational Requisite Pro, Quality Center
-""")
-
-for ent in resume.ents:
-       print(ent.label_, ent.text)
-
-
 
 if ENV == 'prod':
      app.debug = True
@@ -977,7 +978,7 @@ def post_job():
     employer = models.Employers.query.filter_by(email=session["email"]).first()
     image_file = url_for('static', filename='profile_pics/' + employer.image_file)
 
-    form = InterviewForm()
+    form = forms.InterviewForm()
 
     if form.validate_on_submit():
 
@@ -1004,9 +1005,19 @@ def post_job():
 
         experience_years = str(experience) + " years"
 
-        text_to_be_analyzed = str(position) + " " + experience_years + " " + str(description)
+        text_to_be_analyzed = experience_years + " " + str(description)
 
-        job = models.Jobs(text_to_be_analyzed)
+        job_entities = analyzer(text_to_be_analyzed)
+
+        entities = " "
+
+        for ent in job_entities.ents:
+
+             entities = entities + " " + ent.text
+
+        print(entities)
+
+        job = models.Jobs(entities)
 
         db.add(job)
 
