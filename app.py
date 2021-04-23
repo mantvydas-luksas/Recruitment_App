@@ -1056,7 +1056,7 @@ def search_results():
        elif location_query == "Any" and query != None:
 
            print("here")
-           adverts = models.Adverts.query.filter(Adverts.position.contains(query)).all()
+           adverts = models.Adverts.query.filter(models.Adverts.position.contains(query)).all()
        
        elif location_query != "Any" and query == None:
 
@@ -1064,7 +1064,7 @@ def search_results():
 
        elif location_query != "Any" and query != None:
            
-           adverts = models.Adverts.query.filter(Adverts.location.contains(location_query), Adverts.position.contains(query)).all()
+           adverts = models.Adverts.query.filter(models.Adverts.location.contains(location_query), models.Adverts.position.contains(query)).all()
       
        employers = []
 
