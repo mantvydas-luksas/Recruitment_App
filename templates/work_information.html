@@ -61,18 +61,18 @@
                     <div class="home_description">
                         <img class="home_picture" src="{{image_file}}" />
                         <div>
-                            
-                            <p style='white-space:pre-line'>
-                                {{user.profile}}
-                            </p>
-                            
+
+
+                            <p>{{ user.profile|safe }}</p>
+
+
                             <p class="details">
                                 Email: &nbsp;&nbsp;&nbsp;&nbsp;{{user.email}}
                             </p>
                             <p>
                                 Phone: &nbsp;&nbsp;&nbsp;&nbsp;{{user.phone}}
                             </p>
-                          
+
 
                         </div>
 
