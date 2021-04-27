@@ -77,15 +77,9 @@ def evaluate(ner_model, examples):
         scores = scorer.score(Examples)
         return scores
 
-with software_resumes.disable_pipes(*unaffected_pipes):
-        for iteration in range(200):
-            random.shuffle(TRAIN_SOFTWARE_RESUME_DATA)
-            for raw_text,entity_offsets in TRAIN_SOFTWARE_RESUME_DATA:
-                resume= software_resumes.make_doc(raw_text)
-                example = Example.from_dict(resume, entity_offsets)
-                software_resumes.update([example])
 
-software_resumes.to_disk("./software")
+
+software_resumes = spacy.load("./software")
        
 #software_accuracy = evaluate(software_resumes, TEST_SOFTWARE_RESUME_DATA)
 
