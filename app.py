@@ -1412,7 +1412,10 @@ def candidate_apply():
 
         elif f_ext == ".docx":
 
-            text_format = docx2txt.process(candidate.resume)
+            path_location = "./static/resumes/" + candidate.resume
+
+            text_format = docx2txt.process(path_location)
+
             resume_entities = resume_analyzer(text_format)
 
         entities = " "
