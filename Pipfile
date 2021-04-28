@@ -19,6 +19,9 @@ wtforms-components = "*"
 itsdangerous = "*"
 flask-mail = "*"
 sqlalchemy = "*"
+sklearn = "*"
+docx2txt = "*"
+pypdf2 = "*"
 
 [dev-packages]
 

@@ -1376,7 +1376,7 @@ a {
 .selection_details {
     align-items: center;
     display: flex;
-    margin-top: 40px;
+    margin-top: 20px;
     justify-content: center;
     flex-direction: row;
     width: 100%;
@@ -1394,14 +1394,9 @@ a {
 
     .slider input {
         height: 100%;
-        
         outline: none;
         width: 100%;
-       
     }
-
-        
-       
 
     .slider .value {
 
