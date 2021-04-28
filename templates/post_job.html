@@ -7,6 +7,18 @@
     <link rel="shortcut icon" type="image/png" href="../static/favicon.png" />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script src="https://kit.fontawesome.com/d804404426.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/c71ozghwbd45m6qx9kiedrrskws6vu59xkrj60ius2n3douq/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea',
+            plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+            toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+            toolbar_mode: 'floating',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            width: 980
+        });
+    </script>
     <title>Post Job</title>
 </head>
 <body>
@@ -73,97 +85,128 @@
                     <h2>New Job Advert</h2>
                     <form name="job_advert" action="/post_job/" method="post">
                         <div class="form_details">
+
                             <div class="form_items">
-                                <i class="fas fa-euro-sign"></i>
-                                <input type="number" class="form_input" name="salary" placeholder="Salary per year" required />
+                                <i class="fas fa-user-friends" id="special"></i>
+                                <input type="number" class="form_input" name="candidatesNumber" placeholder="Number Of Candidates" required />
                             </div>
+
                             <div class="form_items">
                                 <i class="fas fa-id-badge"></i>
                                 <input type="text" class="form_input" name="position" placeholder="Job Position" required />
                             </div>
 
                         </div>
-
                         <div class="form_details">
-
-                            <div class="form_items">
-                                <i class="fas fa-history" id="special"></i>
-                                <input type="number" class="form_input" name="experience" placeholder="Years Of Experience" required />
+                            <p class="selection_text">Select Accuracy</p>
                             </div>
-
-                            <div class="form_items">
-                                <i class="fas fa-user-friends" id="special"></i>
-                                <input type="number" class="form_input" name="candidatesNumber" placeholder="Number Of Candidates" required />
-                            </div>
-                        </div>
-
-                        <div class="form_items">
-                            <textarea maxlength="1600" class="job_description" name="description" placeholder="Job Description" required></textarea>
-                        </div>
-
-                        <div class="form_details">
                             
-                            <div class="date_item">
-                               
-                                {{ form.csrf_token }}
-                                {{form.entryDate.label(class='custom_label')}}
-                                {{form.entryDate(class_='datepicker')}}
-                                {{form.hidden_tag()}}
+                                <div class="selection_details">
+                                
+                                    <div class="slider">
+                                        <input type="range" class="accuracy_selection" min="0" max="100" value="40" name="accuracy" step="20" />
+                                    </div>
 
+                                    <div class="value">100</div>
+                                    
 
+                                </div>
+                            
+
+                            <div class="form_items">
+                                <textarea maxlength="4000" id="mytextarea" class="job_description" name="description" placeholder="Job Description"></textarea>
                             </div>
 
-                            <div class="date_item">
-                                {{ form.csrf_token }}
-                                {{form.entryTime.label(class='custom_label')}}
-                                {{form.entryTime(class_='datepicker')}}
-                                {{form.hidden_tag()}}
+                            <div class="form_details">
+
+                                <div class="date_item">
+
+                                    {{ form.csrf_token }}
+                                    {{form.entryDate.label(class='custom_label')}}
+                                    {{form.entryDate(class_='datepicker')}}
+                                    {{form.hidden_tag()}}
 
 
+                                </div>
+
+                                <div class="date_item">
+                                    {{ form.csrf_token }}
+                                    {{form.entryTime.label(class='custom_label')}}
+                                    {{form.entryTime(class_='datepicker')}}
+                                    {{form.hidden_tag()}}
+
+
+                                </div>
                             </div>
-                        </div>
 
+                            <div class="form_details">
+                                <div class="form_items">
+                                    <label for="location" class="custom_label">City Selection</label>
+                                    <select class="custom_select" id="location" name="location" required>
+                                        <option value="Antrim">Antrim</option>
+                                        <option value="Armagh">Armagh</option>
+                                        <option value="Belfast">Belfast</option>
+                                        <option value="Carlow">Carlow</option>
+                                        <option value="Cavan">Cavan</option>
+                                        <option value="Clare">Clare</option>
+                                        <option value="Cork">Cork</option>
+                                        <option value="Derry">Derry</option>
+                                        <option value="Donegal">Donegal</option>
+                                        <option value="Down">Down</option>
+                                        <option value="Dublin">Dublin</option>
+                                        <option value="Fermanagh">Fermanagh</option>
+                                        <option value="Galway">Galway</option>
+                                        <option value="Kerry">Kerry</option>
+                                        <option value="Kildare">Kildare</option>
+                                        <option value="Kilkenny">Kilkenny</option>
+                                        <option value="Laois">Laois</option>
+                                        <option value="Leitrim">Leitrim</option>
+                                        <option value="Limerick">Limerick</option>
+                                        <option value="Longford">Longford</option>
+                                        <option value="Louth">Louth</option>
+                                        <option value="Mayo">Mayo</option>
+                                        <option value="Meath">Meath</option>
+                                        <option value="Monaghan">Monaghan</option>
+                                        <option value="Offaly">Offaly</option>
+                                        <option value="Roscommon">Roscommon</option>
+                                        <option value="Sligo">Sligo</option>
+                                        <option value="Tipperary">Tipperary</option>
+                                        <option value="Tyrone">Tyrone</option>
+                                        <option value="Waterford">Waterford</option>
+                                        <option value="Westmeath">Westmeath</option>
+                                        <option value="Wexford">Wexford</option>
+                                        <option value="Wicklow">Wicklow</option>
+                                    </select>
+                                </div>
 
-                        <div class="form_items">
-                            <label for="location" class="custom_label">Select city</label>
-                            <select class="custom_select" id="location" name="location" required>
-                                <option value="Antrim">Antrim</option>
-                                <option value="Armagh">Armagh</option>
-                                <option value="Belfast">Belfast</option>
-                                <option value="Carlow">Carlow</option>
-                                <option value="Cavan">Cavan</option>
-                                <option value="Clare">Clare</option>
-                                <option value="Cork">Cork</option>
-                                <option value="Derry">Derry</option>
-                                <option value="Donegal">Donegal</option>
-                                <option value="Down">Down</option>
-                                <option value="Dublin">Dublin</option>
-                                <option value="Fermanagh">Fermanagh</option>
-                                <option value="Galway">Galway</option>
-                                <option value="Kerry">Kerry</option>
-                                <option value="Kildare">Kildare</option>
-                                <option value="Kilkenny">Kilkenny</option>
-                                <option value="Laois">Laois</option>
-                                <option value="Leitrim">Leitrim</option>
-                                <option value="Limerick">Limerick</option>
-                                <option value="Longford">Longford</option>
-                                <option value="Louth">Louth</option>
-                                <option value="Mayo">Mayo</option>
-                                <option value="Meath">Meath</option>
-                                <option value="Monaghan">Monaghan</option>
-                                <option value="Offaly">Offaly</option>
-                                <option value="Roscommon">Roscommon</option>
-                                <option value="Sligo">Sligo</option>
-                                <option value="Tipperary">Tipperary</option>
-                                <option value="Tyrone">Tyrone</option>
-                                <option value="Waterford">Waterford</option>
-                                <option value="Westmeath">Westmeath</option>
-                                <option value="Wexford">Wexford</option>
-                                <option value="Wicklow">Wicklow</option>
-                            </select>
-                        </div>
+                                <div class="form_items">
+                                    <label for="salary" class="custom_label">Select Salary</label>
+                                    <select class="custom_select" id="location" name="salary" required>
+                                        <option value="Negotiable">Negotiable</option>
+                                        <option value="20,000 - 24,000">20,000 - 24,000</option>
+                                        <option value="24,000 - 30,000">24,000 - 30,000</option>
+                                        <option value="30,000 - 34,000">30,000 - 34,000</option>
+                                        <option value="34,000 - 40,000">34,000 - 40,000</option>
+                                        <option value="40,000 - 44,000">40,000 - 44,000</option>
+                                        <option value="44,000 - 50,000">44,000 - 50,000</option>
+                                        <option value="50,000 - 54,000">50,000 - 54,000</option>
+                                        <option value="54,000 - 60,000">54,000 - 60,000</option>
+                                        <option value="60,000 - 64,000">60,000 - 64,000</option>
+                                        <option value="64,000 - 70,000">64,000 - 70,000</option>
+                                        <option value="70,000 - 74,000">70,000 - 74,000</option>
+                                        <option value="74,000 - 80,000">74,000 - 80,000</option>
+                                        <option value="80,000 - 84,000">80,000 - 84,000</option>
+                                        <option value="84,000 - 90,000">84,000 - 90,000</option>
+                                        <option value="90,000 - 94,000">90,000 - 94,000</option>
+                                        <option value="94,000 - 100,000">94,000 - 100,000</option>
+                                        <option value="100,000 - 120,000">100,000 - 120,000</option>
+                                        <option value="120,000 - 140,000">120,000 - 140,000</option>
+                                        <option value=">140,000">>140,000</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                        <input type="submit" class="submit_job" name="job_submit" value="Submit" />
+                            <input type="submit" class="submit_job" name="job_submit" value="Submit" />
                     </form>
                 </div>
 
@@ -182,6 +225,21 @@
     </main>
 
     <script src="../static/script.js"></script>
+
+    <script>
+        const slider = document.querySelector(".slider input");
+        const value = document.querySelector(".value");
+
+        value.textContent = slider.value + "%";
+
+        slider.oninput = function () {
+            value.textContent = this.value + "%";
+
+        }
+
+
+    </script>
+    
 
 </body>
 

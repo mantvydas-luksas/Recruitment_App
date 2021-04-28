@@ -1373,6 +1373,49 @@ a {
     width: 100%;
 }
 
+.selection_details {
+    align-items: center;
+    display: flex;
+    margin-top: 40px;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+}
+
+.slider {
+
+    height: 40px;
+    width: 480px;
+    display: flex;
+    align-items: center;
+    margin-right: 18px;
+   
+}
+
+    .slider input {
+        height: 100%;
+        
+        outline: none;
+        width: 100%;
+       
+    }
+
+        
+       
+
+    .slider .value {
+
+        font-size: 14px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-align: center;
+    }
+
+.accuracy_selection {
+
+    width: 480px;
+}
+
 .date_item {
     display: flex;
     flex-direction: row;
@@ -1390,7 +1433,7 @@ a {
     font-size: 14px;
     border: 2px solid #AAAAAA;
     border-radius: 4px;
-    width: 200px;
+    width: 180px;
     margin-left: 40px;
     text-align: center;
 
@@ -1400,8 +1443,9 @@ a {
 
         display: flex;
         flex-direction: row;
-        margin-left: 24px;
+        margin-left: 2px;
         padding: 24px;
+        text-align: center;
     
     
 
@@ -1663,6 +1707,13 @@ input[type=number] {
     width: 280px;
 }
 
+.candidate_number {
+
+    display: flex;
+    justify-content: center;
+   
+}
+
 .update {
 
     margin-left: 40px;
@@ -1673,7 +1724,8 @@ input[type=number] {
 .custom_label {
     color: #FFFFFF;
     font-size: 14px;
-    margin-left: 108px;
+    margin-left: 40px;
+    text-align: center;
 
 }
 
@@ -1684,10 +1736,10 @@ input[type=number] {
     border: none;
     border-radius: 4px;
     border: 2px solid #AAAAAA;
-    width: 204px;
+    width: 180px;
     outline: none;
     height: 26px;
-    margin-left: 64px;
+    margin-left: 48px;
     text-align: center;
 }
 
@@ -1828,8 +1880,6 @@ input[type=number] {
     
 }
 
-
-
 .advert {
     display: flex;
     flex-direction: row;
@@ -1863,6 +1913,12 @@ input[type=number] {
         text-align: center;
         padding: 8px;
     }
+
+.selection_text {
+
+    font-size: 14px;
+    margin-top: 24px;
+}
 
 .job_item_additional > form{
     margin-top: 8px;

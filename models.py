@@ -18,7 +18,7 @@ class Candidates(Base):
     email = Column(String(255), unique=True)
     password = Column(String(255))
     profile = Column(Text, nullable=False, default='No profile description added yet.')
-    resume = Column(String(20))
+    resume = Column(String(200))
     image_file = Column(String(20), nullable=False, default='profile_default.png')
     confirm_email = Column(Boolean, default=False)
 
@@ -57,8 +57,9 @@ class Submissions(Base):
     employer_id = Column(Integer, ForeignKey("employers.employer_id", ondelete='CASCADE'))
   
     def __init__(self, resume_entities, candidate_id, job_id, employer_id):
-        self.result = result
+
         self.resume_entities = resume_entities
+
      
 class Jobs(Base):
     __tablename__ = 'jobs'
@@ -73,27 +74,27 @@ class Jobs(Base):
 class Adverts(Base):
     __tablename__ = 'adverts'
     advert_id = Column(Integer, primary_key=True)
-    salary = Column(Integer)
+    salary = Column(String(200))
     position = Column(String(255))
-    experience = Column(Integer)
     location = Column(String(255))
     description = Column(Text)
     candidates_number = Column(Integer)
+    selection_accuracy = Column(Integer)
     date = Column(Text)
     time = Column(Text)
     employer_id = Column(Integer, ForeignKey("employers.employer_id", ondelete='CASCADE'))
     
 
-    def __init__(self, salary, position, experience, location, description, candidate_number, date, time, employer_id):
+    def __init__(self, salary, position, location, description, candidate_number, date, time, employer_id, selection_accuracy):
         self.salary = salary
         self.position = position
-        self.experience = experience
         self.location = location
         self.description = description
         self.candidates_number = candidate_number
         self.date = date
         self.time = time
         self.employer_id = employer_id
+        self.selection_accuracy = selection_accuracy
 
 class Employers(Base):
     __tablename__ = 'employers'
