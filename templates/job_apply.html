@@ -81,11 +81,12 @@
                                         <input type="submit" value="Employer Information" class="information_link" />
                                         <input name="advert_id" value="{{advert.advert_id}}" style="visibility:hidden" />
                                     </form>
-
-                                    <form action="/candidate_apply" method="post">
-                                        <input type="submit" value="Apply" class="information_link" />
-                                        <input name="advert_id" value="{{advert.advert_id}}" style="visibility:hidden" />
-                                    </form>
+                                    {% if apply_button == True %}
+                                        <form action="/candidate_apply" method="post">
+                                            <input type="submit" value="Apply" class="information_link" />
+                                            <input name="advert_id" value="{{advert.advert_id}}" style="visibility:hidden" />
+                                        </form>
+                                    {% endif %}
                                 </div>
                               
 </div>

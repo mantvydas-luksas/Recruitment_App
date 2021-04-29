@@ -1194,7 +1194,16 @@ a {
         text-align: center;
     }
 
-    .table .result {
+    .table .correct {
+        background: green;
+        padding: 4px;
+        padding-left: 40px;
+        padding-right: 40px;
+        border-radius: 8px;
+        opacity: 0.6;
+    }
+
+    .table .fail {
         background: red;
         padding: 4px;
         padding-left: 40px;

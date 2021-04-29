@@ -439,7 +439,7 @@ if ENV == 'prod':
 else:
      app.debug = False
      try:
-        url = 'postgres://goqvjklcqljchu:e4e004c7a8dbe96042d5fcd958761d3a626d9753aea430e6da67bf84f54ff33e@ec2-54-217-195-234.eu-west-1.compute.amazonaws.com:5432/ddg3iec71h2bt4'
+        url = 'postgres://kndzehiilznkjm:04a790c318756f35019897993430d2494b7e3c509569ad4d1a07bd924d92cace@ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d2nvtu092dj3rv'
         url = url.split('postgres://')[1]
         engine = create_engine('postgresql+psycopg2://{}'.format(url), 
                            convert_unicode=True, encoding='utf8')
@@ -1275,7 +1275,25 @@ def job_apply():
 
     image_file = employer.image_file
 
-    return render_template('job_apply.html', user=session, advert=advert, employer=employer, image_file=image_file)
+    apply_button = True
+
+    return render_template('job_apply.html', user=session, advert=advert, employer=employer, image_file=image_file, apply_button=apply_button)
+
+@app.route('/job_view/<advert_id>')
+@is_logged_in_candidate
+def job_view(advert_id):
+
+    id = advert_id
+
+    advert = models.Adverts.query.filter_by(advert_id=id).first()
+
+    employer = models.Employers.query.filter_by(employer_id=advert.employer_id).first()
+
+    image_file = employer.image_file
+
+    apply_button = False
+
+    return render_template('job_apply.html', user=session, advert=advert, employer=employer, image_file=image_file, apply_button = apply_button)
 
 @app.route('/candidate_settings/', methods=['GET', 'POST'])
 @is_logged_in_candidate
@@ -1348,7 +1366,19 @@ def submissions():
     candidate = models.Candidates.query.filter_by(email=session["email"]).first()
     image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
 
-    return render_template('submissions.html', user=session, image_file=image_file)
+    adverts = {}
+
+    employers = {}
+
+    submissions = models.Submissions.query.filter_by(candidate_id=candidate.candidate_id).all()
+
+    for submission in submissions:
+        
+        adverts[submission.job_id] = models.Adverts.query.filter_by(advert_id=submission.job_id).first()
+
+        employers[submission.employer_id] = models.Employers.query.filter_by(employer_id=submission.employer_id).first()
+
+    return render_template('submissions.html', user=session, image_file=image_file, submissions=submissions, adverts=adverts, employers=employers)
 
 @app.route('/employer_information', methods=["POST", "GET"])
 @is_logged_in_candidate
@@ -1434,6 +1464,8 @@ def candidate_apply():
 
         submission.job_id = job.job_id
 
+        db.add(submission)
+
         db.commit()
 
         get_result(submission)
@@ -1472,12 +1504,28 @@ def get_result(submission):
 
     prediction = round(prediction, 2)
 
-    print(prediction)
+    selected_accuracy = 0
 
-    if(prediction >= advert.selection_accuracy):
-        print("Candidate Accepted")
+    if(advert.selection_accuracy == 0):
+        selected_accuracy = 0
+    elif(advert.selection_accuracy == 20):
+        selected_accuracy = 6
+    elif(advert.selection_accuracy == 40):
+        selected_accuracy = 12
+    elif(advert.selection_accuracy == 60):
+        selected_accuracy = 18
+    elif(advert.selection_accuracy == 80):
+        selected_accuracy = 24
+    elif(advert.selection_accuracy == 100):
+        selected_accuracy = 30
+
+    if(prediction >= selected_accuracy):
+        submission.result = 1
+        advert.successful_candidates = advert.successful_candidates + 1
+        db.commit()
     else:
-        print("Candidate Rejected")
+        submission.result = 0
+        db.commit()
 
 @app.route('/employer_submit', methods=['GET', 'POST'])
 def employer_submit():

@@ -51,7 +51,7 @@ class Submissions(Base):
     __tablename__ = 'submissions'
     submission_id = Column(Integer, primary_key=True)
     result = Column(Integer)
-    resume_entities= Column(Text)
+    resume_entities = Column(Text)
     candidate_id = Column(Integer, ForeignKey("candidates.candidate_id", ondelete='CASCADE'))
     job_id = Column(Integer, ForeignKey("jobs.job_id", ondelete='CASCADE'))
     employer_id = Column(Integer, ForeignKey("employers.employer_id", ondelete='CASCADE'))
@@ -79,6 +79,7 @@ class Adverts(Base):
     location = Column(String(255))
     description = Column(Text)
     candidates_number = Column(Integer)
+    accepted_candidates = Column(Integer, default=0)
     selection_accuracy = Column(Integer)
     date = Column(Text)
     time = Column(Text)

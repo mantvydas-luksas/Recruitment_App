@@ -67,15 +67,23 @@
                         </thead>
                             
                             <tbody>
-                                <tr>
-                                    <td>Job Title</td>
-                                    <td><span class="result">Fail</span></td>
-                                    <td>Job Title</td>
-                                    <td>Job Title</td>
-                                    <td><a href="/search" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
+                                {% for submission in submissions %}
+                                    <tr>
+                                        <td>{{adverts[submission.job_id].position.upper()}}</td>
+                                        {% if submission.result == 1 %}
+                                            <td><span class="correct">Accepted</span></td>
+                                        {% endif %}
 
-                                </tr>
-                                
+                                        {% if submission.result == 0 %}
+                                            <td><span class="fail">Rejected</span></td>
+                                        {% endif %}
+                                        <td>{{employers[submission.employer_id].company.upper()}}</td>
+                                        <td>{{adverts[submission.job_id].location}}</td>
+                                        <td><a href="/job_view/{{submission.job_id}}" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
+
+                                    </tr>
+                                {% endfor %}
+
                             </tbody>
 
 
