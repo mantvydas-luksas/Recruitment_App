@@ -62,7 +62,7 @@
                         <img class="home_picture" src="{{image_file}}" />
                         <div>
                             <p style='white-space:pre-line'>
-                                {{user.profile}}
+                                {{user.profile|safe}}
                             </p>
                             <p>
                                 Email: &nbsp;&nbsp;&nbsp;&nbsp;{{user.email}}
@@ -83,13 +83,11 @@
 
                 </div>
 
-
-
                 <div class="cards">
                     <div class="card">
                         <i class="fas fa-paste"></i>
                         <div class="card_name">
-                            <p class="digit">0</p>
+                            <p class="digit">{{candidate.total_submissions}}</p>
                             <p class="title">Submissions</p>
 
                         </div>
@@ -98,7 +96,7 @@
                     <div class="card">
                         <i class="far fa-check-square"></i>
                         <div class="card_name">
-                            <p class="digit">0</p>
+                            <p class="digit">{{candidate.total_accepted}}</p>
                             <p class="title">AI Accepted</p>
 
                         </div>
@@ -107,7 +105,7 @@
                     <div class="card">
                         <i class="fas fa-times-circle"></i>
                         <div class="card_name">
-                            <p class="digit">0</p>
+                            <p class="digit">{{candidate.total_rejected}}</p>
                             <p class="title">AI Rejected</p>
 
 
@@ -123,9 +121,17 @@
 
                         <div>
                             <h2>Upcoming interview</h2>
-                            <p>
-                                Don't forget your interview for company at date. The location is and the time the employer is expecting you is on date.
-                            </p>
+                            {% if advert %}
+                                <p>
+                                    Don't forget your interview for {{employer.company}} on {{advert.date}}. It is in {{advert.location}} and the time the employer is expecting you is at {{advert.time}}.
+                                </p>
+                            {% else %}
+                                <p>
+                                    No upcoming interview
+
+                                </p>
+                            {% endif %}
+
                         </div>
                     </div>
 
@@ -133,9 +139,15 @@
                         <i class="fas fa-clipboard-check"></i>
                         <div>
                             <h2>Last Login</h2>
-                            <p>
-                                The last time you logged in was at time.
-                            </p>
+                            {% if candidate.last_login %}
+                                <p>
+                                    The last time you logged in was on {{candidate.last_login}}
+                                </p>
+                            {% else %}
+                                <p>
+                                    No data just yet
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -68,22 +68,29 @@
                             <tr>
                                 <th>Position</th>
                                 <th>Selection</th>
+                                <th>Vacancies</th>
                                 <th>Accepted</th>
-                                <th>Rejected</th>
                                 <th>Information</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {% for advert in adverts %}
-                                <tr>
-                                    <td>{{advert.position.upper()}}</td>
-                                    <td><span class="result">Pending</span></td>
-                                    <td>Job Title</td>
-                                    <td>Job Title</td>
-                                    <td><a href="/candidate_result" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
+                            <tr>
+                                <td>{{advert.position.upper()}}</td>
+                                {% if advert.accepted_candidates == advert.candidates_number %}
+                                <td><span class="correct">Completed</span></td>
+                                {% endif %}
 
-                                </tr>
+                                {% if advert.accepted_candidates != advert.candidates_number %}
+                                <td><span class="fail">Pending</span></td>
+                                {% endif %}
+                                <td>{{advert.candidates_number}}</td>
+                                <td>{{advert.accepted_candidates}}</td>
+                                <td><a href="/candidate_result/{{advert.advert_id}}" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
+                               
+
+                            </tr>
                             {% endfor %}
 
                         </tbody>

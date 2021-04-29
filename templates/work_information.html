@@ -88,7 +88,7 @@
                         <div class="card_name">
                            
                             <p class="title">Adverts</p>
-                            <p class="digit">0</p>
+                            <p class="digit">{{employer.total_adverts}}</p>
 
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                         <div class="card_name">
                            
                             <p class="title">Candidates Accepted</p>
-                            <p class="digit">0</p>
+                            <p class="digit">{{employer.candidates_accepted}}</p>
 
                         </div>
                     </div>
@@ -107,7 +107,7 @@
                         <i class="fas fa-times-circle"></i>
                         <div class="card_name">
                             <p class="title">Candidates Rejected</p>
-                            <p class="digit">0</p>
+                            <p class="digit">{{employer.candidates_rejected}}</p>
 
 
                         </div>
@@ -120,10 +120,17 @@
                         <i class="fas fa-calendar-week"></i>
 
                         <div>
-                            <h2>Upcoming interview</h2>
-                            <p>
-                                Don't forget your upcoming interview at date. The time candidates are expecting you is time.
-                            </p>
+                            <h2>Upcoming interviews</h2>
+                            {% if advert %}
+                                <p>
+                                    Don't forget your upcoming interviews on {{advert.date}}. The time candidates are expecting you is {{advert.time}}.
+                                </p> 
+                            {% else %}
+                                <p>
+                                    You have no upcoming interviews
+                                </p>
+                            {% endif %}
+
                         </div>
                     </div>
 
@@ -131,9 +138,16 @@
                         <i class="fas fa-clipboard-check"></i>
                         <div>
                             <h2>Last Login</h2>
-                            <p>
-                                The last time you logged in was on date.
-                            </p>
+                            {% if employer.last_login %}
+                                <p>
+                                    The last time you logged in was on {{employer.last_login}}
+                                </p>
+                            
+                            {% else %}
+                                <p>
+                                    No data just yet
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

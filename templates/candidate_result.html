@@ -51,7 +51,7 @@
             </div>
 
             <div class="welcome_page">
-                <h2>Selected Candidates for job title</h2>
+                <h2 class="selected_introduction">Selected candidates for a {{advert.position.lower()}} job position</h2>
 
                 <div class="custom_table">
                     <table class="table">
@@ -67,14 +67,16 @@
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>Job Title</td>
-                                <td>Email</td>
-                                <td>Job Title</td>
-                                <td>Job Title</td>
-                                <td><a href="/search" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
+                            {% for submission in submissions %}
+                                <tr>
+                                    <td>{{candidates[submission.candidate_id].firstname}} {{candidates[submission.candidate_id].lastname}}</td>
+                                    <td>{{candidates[submission.candidate_id].email}}</td>
+                                    <td>{{candidates[submission.candidate_id].phone}}</td>
+                                    <td><a href="{{resumes[submission.candidate_id]}}">Click To View</a></td>
+                                    <td><a href="/candidate_profile/{{submission.candidate_id}}" class="job_details"><i class="fas fa-info-circle"></i>View Details</a></td>
 
-                            </tr>
+                                </tr>
+                            {% endfor %}
 
                         </tbody>
 

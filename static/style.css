@@ -1235,13 +1235,34 @@ a {
         color: #FFFFFF;
         background-color: rgba(0,0,0,0.8);
     }
-  
-  
+
+        .table .advert_remove i {
+            font-size: 14px;
+            background-color: #AAAAAA;
+            color: #111111;
+            padding: 4px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 8px;
+            margin-right: 18px;
+        }
+
+        .table .advert_remove i:hover {
+            transition-duration: 0.8s;
+            color: #FFFFFF;
+            background-color: rgba(0,0,0,0.8);
+        }
     
 
 .card_name {
        margin-top: 28px;
        font-size: 16px;
+
+}
+
+.selected_introduction {
+
+    font-size: 16px;
 
 }
 

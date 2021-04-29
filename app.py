@@ -25,6 +25,7 @@ from spacy.scorer import Scorer
 from spacy.tokens import DocBin
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from datetime import datetime
 import secrets
 import os
 import json
@@ -372,22 +373,56 @@ Education: Bachelor’s in Computer Science & Engineering
 
 
 advert = advert_analyzer("""
-Are you looking to develop software for networks worldwide while working in a software development team and grow your career? Do you also want to work in an exciting and collaborative environment using the latest tools and technologies? Then Ericsson is looking for you!
+The successful candidate for this role will be looking for an exciting opportunity in a hyper-growth environment. You should have a passion for technology and be willing to take on new challenges and input to the company’s growth.
 
-We believe that everybody and everything can be connected; it’s what we call The Networked Society. As of 2021, over 50 billion devices are now connected. Networks powered by our technology are enabling self-drive cars, reducing our carbon footprint through smarter energy use in the home and connecting people even though they are thousands of miles apart. We develop software solutions and applications in Java, Python, JavaScript on the Linux Platform, both on bare metal and in the cloud. We use the latest Agile processes, harnessing the power of Automated Testing, Continuous Delivery and Deployment. At a time when bringing the world together matters more than ever before, you can be part of continuing to build our new, connected world
 
-We are looking for enthusiastic graduate applicants to start with us in July and August 2021. You will begin your exciting career journey with us with a 6-week crash course in our technologies, tools, and ways of working. You will then join your new team and get involved immediately in their latest projects, guided by mentors, experienced colleagues and former graduates alike. Our goal is to empower you to make an impact from Day 1. Through mentorship, encouragement, and training, we want to give you all the tools to kickstart your career in software development in the best way possible.
+What You'll Do
 
-Key Qualification
-You will
-Be a contributing development team member, working on projects of varying sizes and scopes.
-Be introduced to new technologies and integrations to provide you with the power and means to seek new problems and find new solutions.
-Work closely with your team to build a highly-communicative and collaboratively driven method of working.
-Have your skills honed and developed through your project and team input, as well as through on-the-job training and dedicated learning and development programs and initiatives.
-To be successful in the role you must have
-A minimum 2.1 Honours Degree (QQI Level 8 or above) in Computer Science, Software Development, or a related programming-centric qualification.
-A major passion for technology and an aptitude for problem solving
-(Ideally) experience with or an active interest in Java development and / or microservices.
+Maintaining existing product features;
+Adhering to company standards on coding quality, style, and design;
+Creating and maintaining automated tests to verify code quality;
+Being on-call for certain scheduled times;
+Communicating work status regularly and reflecting same in project tracking systems.
+Troubleshoot resolve internal external issues or escalate them to the correct team to be resolved in a timely manner
+Work closely with Engineers to upskill on resolving issues.
+Provide data on the types of issues being logged and look to propose areas that can be improved on or tooling that could potentially be built to cut down on the number of issues being raised.
+Integrate closely with other teams to gather information on their workflows and see if there are any ways of improving from a support perspective which will lead to a decrease in issues overall. ”being proactive not reactive”
+Constantly look to improve on the overall process and work with internal teams to see how they can be supported in the best way we can.
+
+Candidate Profile
+
+You are
+
+Reasoned. You can make a decision and defend it confidently, based on a thorough understanding of business and product development and process
+Energised but calm in dynamic situations
+Disciplined and determined, and motivated by team success
+Friendly, empathetic, and considerate
+
+About You
+
+Ability to work with different teams, prioritise tasks and manage time efficiently
+Natural inclination to continually improve our technical footprint
+Strong experience in supporting Engineering teams
+Previous hands on experience working with customer facing teams
+Experience working with technology delivering “best in class” products
+A deep understanding of software and support workflows
+Focus on quality, while increasing efficiency, delivering value, while reducing waste
+You have a proven history of building close working relationships with your stakeholders and creating technical solutions to be proud of
+Excellent verbal and written communication skills
+Strong level of ownership, autonomy with a focus on delivering impactful results.
+
+Desirable
+
+Strong desire of success and support the company to deliver on our goals
+Proficiency in one of the following: ASP.NET, Python, C#, or JavaScript
+Knowledge of some or all of the following:
+React/React-Native with Typescript
+Redux
+Webpack
+Enzyme
+Jest
+Cloud Technologies (Azure, AWS, GCP)
+Android (Java/Kotlin), iOS (swift) or React Native mobile development experience
 
 
 """)
@@ -396,16 +431,19 @@ A major passion for technology and an aptitude for problem solving
 
 #advert_entities = ""
 
+
+
+
+
 #for ent in resumes.ents:
        
-  #  resume_entities = resume_entities + " " + ent.text
+   # resume_entities = resume_entities + " " + ent.text
     
 
 #for ent in advert.ents:
     
-  #  advert_entities = advert_entities + " " + ent.text
+   # advert_entities = advert_entities + " " + ent.text
     
-
 #text = [resume_entities, advert_entities]
 
 #count_vectorizer = CountVectorizer()
@@ -423,7 +461,7 @@ A major passion for technology and an aptitude for problem solving
 #if(prediction > 20):
   #  print("Candidate Accepted")
 #else:
- #   print("Candidate Rejected")
+    #print("Candidate Rejected")
 
 #resume_accuracy = evaluate(resume_analyzer, TEST_SOFTWARE_RESUME_DATA)
 
@@ -437,7 +475,7 @@ if ENV == 'prod':
      app.debug = True
      app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:testing@localhost/postgres'
 else:
-     app.debug = False
+     app.debug = True
      try:
         url = 'postgres://kndzehiilznkjm:04a790c318756f35019897993430d2494b7e3c509569ad4d1a07bd924d92cace@ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d2nvtu092dj3rv'
         url = url.split('postgres://')[1]
@@ -470,10 +508,26 @@ def login():
 @app.route('/logout')
 def logout():
 
+    if "logged_in_candidate" in session:
+        candidate = models.Candidates.query.filter_by(email=session['email']).first()
+
+        candidate.last_login = session['date']
+        db.commit();
+        session.pop('logged_in_candidate', None)
+
+    if "logged_in_employer" in session:
+
+        employer = models.Employers.query.filter_by(email=session['email']).first()
+
+        employer.last_login = session['date']
+        db.commit();
+
+        session.pop('logged_in_employer', None)
+
     session.pop('candidate', None)
     session.pop('employer', None)
     session.pop('logged_in', None)
-
+    
     session.clear()
 
     flash("You have been successfully logged out", "success")
@@ -715,6 +769,10 @@ def login_submit():
 
                         session['logged_in'] = True
 
+                        session['logged_in_candidate'] = True
+
+                        session['date'] = datetime.today().strftime('%d/%m/%Y')
+
                         return redirect(url_for('information'))
                     else:
                         flash("Invalid Password", "fail")
@@ -769,6 +827,10 @@ def login_submit():
 
                        session['logged_in'] = True
 
+                       session['logged_in_employer'] = True;
+
+                       session['date'] = datetime.today().strftime('%d/%m/%Y')
+
                        return redirect(url_for('work_information'))
                         
                    else:
@@ -820,7 +882,7 @@ def candidate_submit():
 
                 data = models.Candidates(first_name, last_name, phone, email, stored_password)
 
-                data.profile = "Please add your own description in account settings"
+                data.profile = "No profile description added yet"
 
                 s = Serializer(app.config['SECRET_KEY'], 1800)
 
@@ -879,6 +941,7 @@ def confirm_email_candidate(email, token):
 
          flash("Token is expired, check email for new one", "fail")
          return redirect(url_for('login'))
+
 
 @app.route('/confirm_email_employer/<email>/<token>')
 def confirm_email_employer(email, token):
@@ -983,14 +1046,32 @@ def confirm_delete_employer():
             return redirect(url_for("employer_settings"))
     return render_template('delete_landing_employer.html')
 
-@app.route('/candidate_result/')
+@app.route('/candidate_result/<advert_id>')
 @is_logged_in_employer
-def candidate_result():
+def candidate_result(advert_id):
+
+    id = advert_id
 
     employer = models.Employers.query.filter_by(email=session["email"]).first()
     image_file = url_for('static', filename='profile_pics/' + employer.image_file)
 
-    return render_template('candidate_result.html', user=session, image_file=image_file)
+    submissions = models.Submissions.query.filter((models.Submissions.job_id==id) & (models.Submissions.result == 1)).all()
+
+    advert = models.Adverts.query.filter_by(advert_id=id).first()
+
+    candidates = {}
+
+    resumes = {}
+
+    for submission in submissions:
+
+        candidate = models.Candidates.query.filter_by(candidate_id = submission.candidate_id).first()
+
+        candidates[submission.candidate_id] = models.Candidates.query.filter_by(candidate_id = submission.candidate_id).first()
+
+        resumes[submission.candidate_id] = url_for('static', filename='resumes/' + candidate.resume)
+
+    return render_template('candidate_result.html', user=session, image_file=image_file, candidates=candidates, advert=advert, submissions=submissions, resumes=resumes)
 
 
 @app.route('/adverts/')
@@ -1182,6 +1263,10 @@ def post_job():
 
         db.commit()
 
+        employer.total_adverts = employer.total_adverts + 1
+
+        db.commit()
+
         text_to_be_analyzed = str(description)
 
         job_entities = advert_analyzer(text_to_be_analyzed)
@@ -1295,6 +1380,19 @@ def job_view(advert_id):
 
     return render_template('job_apply.html', user=session, advert=advert, employer=employer, image_file=image_file, apply_button = apply_button)
 
+@app.route('/candidate_profile/<candidate_id>')
+@is_logged_in_employer
+def candidate_profile(candidate_id):
+
+    id = candidate_id
+
+    candidate = models.Candidates.query.filter_by(candidate_id=id).first()
+
+    image_file = candidate.image_file
+
+    return render_template('candidate_profile.html', user=session, candidate=candidate, image_file=image_file)
+
+
 @app.route('/candidate_settings/', methods=['GET', 'POST'])
 @is_logged_in_candidate
 def candidate_settings():
@@ -1377,9 +1475,19 @@ def submissions():
         adverts[submission.job_id] = models.Adverts.query.filter_by(advert_id=submission.job_id).first()
 
         employers[submission.employer_id] = models.Employers.query.filter_by(employer_id=submission.employer_id).first()
+    
+    print(adverts)
 
-    return render_template('submissions.html', user=session, image_file=image_file, submissions=submissions, adverts=adverts, employers=employers)
+    print(employers)
 
+    if adverts != None and employers != None:
+
+        return render_template('submissions.html', user=session, image_file=image_file, submissions=submissions, adverts=adverts, employers=employers)
+    else:
+
+        return redirect(url_for("login"))
+    
+   
 @app.route('/employer_information', methods=["POST", "GET"])
 @is_logged_in_candidate
 def employer_information():
@@ -1488,6 +1596,10 @@ def get_result(submission):
 
     advert = models.Adverts.query.filter_by(advert_id=job.job_id).first()
 
+    candidate = models.Candidates.query.filter_by(candidate_id=submission.candidate_id).first()
+
+    employer = models.Employers.query.filter_by(employer_id=submission.employer_id).first()
+
     print(job.job_id)
 
     advert_entities = job.description_entities
@@ -1519,11 +1631,22 @@ def get_result(submission):
     elif(advert.selection_accuracy == 100):
         selected_accuracy = 30
 
-    if(prediction >= selected_accuracy):
+    candidate.total_submissions = candidate.total_submissions + 1
+
+    db.commit()
+
+    if(prediction >= selected_accuracy and advert.accepted_candidates < advert.candidates_number):
         submission.result = 1
-        advert.successful_candidates = advert.successful_candidates + 1
+        advert.accepted_candidates = advert.accepted_candidates + 1
+        employer.candidates_accepted = employer.candidates_accepted + 1
+        candidate.total_accepted = candidate.total_accepted + 1
         db.commit()
+
+        if(advert.accepted_candidates == advert.candidates_number):
+            advert.completed_selection = True
     else:
+        employer.candidates_rejected = employer.candidates_rejected + 1
+        candidates.total_rejected = candidate.total_rejected + 1
         submission.result = 0
         db.commit()
 
@@ -1545,11 +1668,13 @@ def employer_submit():
 
                 data = models.Employers(email, format_company, phone, stored_password)
 
-                token = e.dumps(email, salt='email-confirm')
+                s = Serializer(app.config['SECRET_KEY'], 1800)
+
+                token = s.dumps({"email_id": email}).decode('utf-8')
 
                 message = Message("Confirm Email for WorkNow", sender="noreply@work-now.herokuapp.com", recipients=[email])
 
-                link =  {url_for('confirm_email_employer', email=email, token=token, _external=True)}
+                link =  url_for('confirm_email_employer', email=email, token=token, _external=True)
 
                 message.html = render_template('confirm_email.html', link=link)
 
@@ -1587,14 +1712,28 @@ def password_submit():
 def information():
 
    candidate = models.Candidates.query.filter_by(email=session["email"]).first()
+
    image_file = url_for('static', filename='profile_pics/' + candidate.image_file)
+
+   advert = None
+
+   employer = None
+
+   try:
+        submission = models.Submissions.query.filter((models.Submissions.candidate_id == candidate.candidate_id) & (models.Submissions.result == 1)).first()
+
+        advert = models.Adverts.query.filter_by(advert_id = submission.job_id).first()
+
+        employer = models.Employers.query.filter_by(employer_id = advert.employer_id).first()
+   except:
+        pass
 
    if candidate.resume != None:
 
         resume_file = url_for('static', filename='resumes/' + candidate.resume)
-        return render_template('information.html', user=session, image_file=image_file, resume_file=resume_file)
+        return render_template('information.html', user=session, image_file=image_file, resume_file=resume_file, candidate=candidate, advert=advert, employer=employer)
    else: 
-        return render_template('information.html', user=session, image_file=image_file)
+        return render_template('information.html', user=session, image_file=image_file, candidate=candidate, advert=advert, employer=employer)
 
 @app.route('/work_information/')
 @is_logged_in_employer
@@ -1602,10 +1741,17 @@ def work_information():
     employer = models.Employers.query.filter_by(email=session["email"]).first()
     image_file = url_for('static', filename='profile_pics/' + employer.image_file)
 
-    return render_template('work_information.html', user=session, image_file = image_file)
+    advert = None
+
+    try:
+        advert = models.Adverts.query.filter((models.Adverts.employer_id == employer.employer_id) & (models.Adverts.completed_selection == True)).first()
+    except:
+        pass
+
+    return render_template('work_information.html', user=session, image_file = image_file, employer=employer, advert=advert)
 
 if __name__ == '__main__':
     models.Base.metadata.create_all(bind=engine)
-    app.run()
+    app.run(port=4000)
 
     
