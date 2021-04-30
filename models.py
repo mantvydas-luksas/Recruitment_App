@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import Sequence
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 Base = declarative_base()
 
@@ -34,22 +35,6 @@ class Candidates(Base):
         self.phone = phone
         self.email = email
         self.password = password
-
-    def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user_id': self.candidate_id}).decode('utf-8')
-
-    @staticmethod
-    def verify_reset_token(token):
-        
-        s = Serializer(app.config['SECRET_KEY'])
-
-        try:
-            user_id = s.loads(token)['user_id']
-        except:
-            return None
-
-        return Candidates.query.get(user_id)
 
 class Submissions(Base):
     __tablename__ = 'submissions'
@@ -126,19 +111,4 @@ class Employers(Base):
         self.phone = phone
         self.password = password
 
-    def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user_id': self.employer_id}).decode('utf-8')
-
-    @staticmethod
-    def verify_reset_token(token):
-        
-        s = Serializer(app.config['SECRET_KEY'])
-
-        try:
-            user_id = s.loads(token)['user_id']
-        except:
-            return None
-
-        return Employers.query.get(user_id)
- 
+    

@@ -431,10 +431,6 @@ Android (Java/Kotlin), iOS (swift) or React Native mobile development experience
 
 #advert_entities = ""
 
-
-
-
-
 #for ent in resumes.ents:
        
    # resume_entities = resume_entities + " " + ent.text
@@ -475,9 +471,9 @@ if ENV == 'prod':
      app.debug = True
      app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:testing@localhost/postgres'
 else:
-     app.debug = True
+     app.debug = False
      try:
-        url = 'postgres://kndzehiilznkjm:04a790c318756f35019897993430d2494b7e3c509569ad4d1a07bd924d92cace@ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d2nvtu092dj3rv'
+        url = 'postgres://vleqnioohncunw:0a898aacb7dc48d47ca31852e5b185dccdf1be384ce5973bd799f7e80e0a99fb@ec2-54-220-35-19.eu-west-1.compute.amazonaws.com:5432/dcb9ere5a41vst'
         url = url.split('postgres://')[1]
         engine = create_engine('postgresql+psycopg2://{}'.format(url), 
                            convert_unicode=True, encoding='utf8')
@@ -533,6 +529,36 @@ def logout():
     flash("You have been successfully logged out", "success")
     
     return redirect(url_for('login'))
+
+def get_reset_token_candidate(candidate, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': candidate.candidate_id}).decode('utf-8')
+
+def get_reset_token_employer(employer, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': employer.employer_id}).decode('utf-8')
+
+def verify_reset_token_candidate(token):
+        
+        s = Serializer(app.config['SECRET_KEY'])
+
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+
+        return models.Candidates.query.get(user_id)
+
+def verify_reset_token_employer(token):
+        
+        s = Serializer(app.config['SECRET_KEY'])
+
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+
+        return models.Employers.query.get(user_id)
 
 @app.route('/', methods=['POST'])
 def change():
@@ -595,7 +621,7 @@ def candidate_registration():
     return render_template('candidate_registration.html')
 
 def send_reset_email_candidate(user):
-    token = user.get_reset_token()
+    token = get_reset_token_candidate(user)
 
     message = Message('Password Reset for WorkNow', sender="noreply@work-now.herokuapp.com", recipients=[user.email])
 
@@ -605,7 +631,7 @@ def send_reset_email_candidate(user):
     mail.send(message)
 
 def send_reset_email_employer(user):
-    token = user.get_reset_token()
+    token = get_reset_token_employer(user)
 
     message = Message('Password Reset for WorkNow', sender="noreply@work-now.herokuapp.com", recipients=[user.email])
 
@@ -626,28 +652,30 @@ def email_request():
 
     if request.method == 'POST':
         forgot_email = request.form['forgot_email']
-      
+     
         try:
-            
+
             candidate = models.Candidates.query.filter_by(email=forgot_email).first()
             send_reset_email_candidate(candidate)
             flash('An email has been sent to reset password', 'success')
             return redirect(url_for('login'))
+
         except:
             flag = 1
-        try: 
+
+        try:
+
             employer = models.Employers.query.filter_by(email=forgot_email).first()
             send_reset_email_employer(employer)
             flash('An email has been sent to reset password', 'success')
             return redirect(url_for('login'))
-
+        
         except:
             flag = 1
 
-    if flag == 1:
-
-        flash("Invalid Email", "fail")
-        return redirect(url_for('email_request'))
+        if flag == 1: 
+            flash("Invalid Email", "fail")
+            return render_template('email_request.html')
 
     return render_template('email_request.html')
 
@@ -657,7 +685,9 @@ def new_password_candidate(token):
     if 'logged_in' in session:
         return redirect(url_for("search"))
 
-    candidate = Candidates.verify_reset_token(token)
+    candidate = verify_reset_token_candidate(token)
+
+    type = "candidate"
 
     if candidate is None: 
         flash("Invalid or expired token", "fail")
@@ -678,7 +708,7 @@ def new_password_candidate(token):
             flash('Passwords do not match', 'fail')
             return render_template('new_password.html', token=token)
     
-    return render_template('new_password.html', token=token)
+    return render_template('new_password.html', token=token, type=type)
 
 
 @app.route('/new_password_employer/<token>', methods=["POST", "GET"])
@@ -687,7 +717,9 @@ def new_password_employer(token):
     if 'logged_in' in session:
         return redirect(url_for("search"))
 
-    employer = models.Employers.verify_reset_token(token)
+    employer = verify_reset_token_employer(token)
+
+    type = "employer"
 
     if employer is None: 
         flash("Invalid or expired token", "fail")
@@ -698,7 +730,7 @@ def new_password_employer(token):
         confirm_password = request.form['confirm']
 
         if password == confirm_password:
-            candidate.password = sha256_crypt.encrypt(str(confirm_password))
+            employer.password = sha256_crypt.encrypt(str(confirm_password))
 
             db.commit()
             flash('Your password has been updated', 'success')
@@ -708,7 +740,7 @@ def new_password_employer(token):
             flash('Passwords do not match', 'fail')
             return render_template('new_password.html', token=token)
     
-    return render_template('new_password.html', token=token)
+    return render_template('new_password.html', token=token, type=type)
 
 @app.route('/login_submit', methods=['GET', 'POST'])
 def login_submit():
@@ -1642,11 +1674,14 @@ def get_result(submission):
         candidate.total_accepted = candidate.total_accepted + 1
         db.commit()
 
+        advert = models.Adverts.query.filter_by(advert_id=job.job_id).first()
+
         if(advert.accepted_candidates == advert.candidates_number):
             advert.completed_selection = True
+            db.commit()
     else:
         employer.candidates_rejected = employer.candidates_rejected + 1
-        candidates.total_rejected = candidate.total_rejected + 1
+        candidate.total_rejected = candidate.total_rejected + 1
         submission.result = 0
         db.commit()
 
