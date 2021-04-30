@@ -87,6 +87,19 @@
                                             <input name="advert_id" value="{{advert.advert_id}}" style="visibility:hidden" />
                                         </form>
                                     {% endif %}
+
+                                    {% if apply_button == False and position_full == False %}
+                                        <form action="/search" method="post">
+                                            <input type="submit" value="Already Applied" class="information_link" />
+                                        </form>
+                                    {% endif %}
+
+                                    {% if position_full == True %}
+                                        <form action="/search" method="post">
+                                            <input type="submit" value="Position full" class="information_link" />
+                                        </form>
+                                    {% endif %}
+
                                 </div>
                               
 </div>

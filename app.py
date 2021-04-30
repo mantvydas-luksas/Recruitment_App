@@ -570,8 +570,12 @@ def index():
 
     return render_template('index.html', user=session)
 
-@app.route('/search')
+
+@app.route('/search', methods=['get', 'post'])
 def search():
+    
+    if request.method == 'POST':
+        return redirect(url_for('search'))
 
     return render_template('search.html', user=session)
 
@@ -602,11 +606,12 @@ def contact():
 
         complete_message = "New Enquiry Received:\n\nName: \n" + first_name + " " + last_name + "\n\nEmail: \n" + email + "\n\nPhone: \n" + phone + "\n\nMessage: \n" + enquiry 
 
-        message.html = complete_message
+        message.body = complete_message
 
         mail.send(message)
 
         flash('Thank you, your message has been sent', 'form_feedback')
+
         return redirect(url_for('contact'))
 
     return render_template('contact.html', user=session)
@@ -1390,11 +1395,32 @@ def job_apply():
 
     employer = models.Employers.query.filter_by(employer_id=advert.employer_id).first()
 
+    candidate = models.Candidates.query.filter_by(email=session['email']).first()
+
+    submission_check = None
+
+    capacity_check = None
+
+    position_full = False
+
+    if advert.completed_selection == True:
+        position_full = True
+
+    try:
+        submission_check = models.Submissions.query.filter((models.Submissions.job_id == advert.advert_id) & (models.Submissions.candidate_id == candidate.candidate_id)).first()
+    except:
+        pass
+
     image_file = employer.image_file
 
-    apply_button = True
+    if submission_check != None:
 
-    return render_template('job_apply.html', user=session, advert=advert, employer=employer, image_file=image_file, apply_button=apply_button)
+        apply_button = False
+    else:
+
+        apply_button = True
+
+    return render_template('job_apply.html', user=session, advert=advert, employer=employer, image_file=image_file, apply_button=apply_button, position_full=position_full)
 
 @app.route('/job_view/<advert_id>')
 @is_logged_in_candidate
@@ -1667,6 +1693,8 @@ def get_result(submission):
 
     db.commit()
 
+    accepted = False
+
     if(prediction >= selected_accuracy and advert.accepted_candidates < advert.candidates_number):
         submission.result = 1
         advert.accepted_candidates = advert.accepted_candidates + 1
@@ -1674,16 +1702,47 @@ def get_result(submission):
         candidate.total_accepted = candidate.total_accepted + 1
         db.commit()
 
+        message = Message('Application Successful', sender="noreply@work-now.herokuapp.com", recipients=[candidate.email])
+
+        message.html = render_template('result_email.html', employer=employer, advert=advert)
+        
+        mail.send(message)
+
         advert = models.Adverts.query.filter_by(advert_id=job.job_id).first()
 
         if(advert.accepted_candidates == advert.candidates_number):
             advert.completed_selection = True
             db.commit()
+
+            message = Message('Candidate selection completed', sender="noreply@work-now.herokuapp.com", recipients=[employer.email])
+
+            message.html = render_template('employer_email.html', advert=advert)
+        
+            mail.send(message)
+
+            submissions = models.Submissions.query.filter(models.Submissions.job_id == advert.advert_id).all()
+
+            for submission in submissions:
+
+                candidate = models.Candidates.query.filter_by(candidate_id = submission.candidate_id).first()
+
+                message = Message('Interview Invitation', sender="noreply@work-now.herokuapp.com", recipients=[candidate.email])
+
+                message.html = render_template('success_email.html', advert=advert, employer=employer)
+        
+                mail.send(message)
+
     else:
         employer.candidates_rejected = employer.candidates_rejected + 1
         candidate.total_rejected = candidate.total_rejected + 1
         submission.result = 0
         db.commit()
+
+        message = Message('Application Rejected', sender="noreply@work-now.herokuapp.com", recipients=[candidate.email])
+
+        message.html = render_template('rejected_email.html', employer=employer, advert=advert)
+        
+        mail.send(message)
 
 @app.route('/employer_submit', methods=['GET', 'POST'])
 def employer_submit():
@@ -1757,16 +1816,19 @@ def information():
    try:
         submission = models.Submissions.query.filter((models.Submissions.candidate_id == candidate.candidate_id) & (models.Submissions.result == 1)).first()
 
-        advert = models.Adverts.query.filter_by(advert_id = submission.job_id).first()
+        advert = models.Adverts.query.filter((models.Adverts.advert_id == submission.job_id) & (models.Adverts.completed_selection == True)).first()
 
         employer = models.Employers.query.filter_by(employer_id = advert.employer_id).first()
+
    except:
         pass
 
    if candidate.resume != None:
 
         resume_file = url_for('static', filename='resumes/' + candidate.resume)
+
         return render_template('information.html', user=session, image_file=image_file, resume_file=resume_file, candidate=candidate, advert=advert, employer=employer)
+
    else: 
         return render_template('information.html', user=session, image_file=image_file, candidate=candidate, advert=advert, employer=employer)
 
