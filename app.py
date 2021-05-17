@@ -433,12 +433,12 @@ Android (Java/Kotlin), iOS (swift) or React Native mobile development experience
 
 #for ent in resumes.ents:
        
-   # resume_entities = resume_entities + " " + ent.text
+    #resume_entities = resume_entities + " " + ent.text
     
 
 #for ent in advert.ents:
     
-   # advert_entities = advert_entities + " " + ent.text
+    #advert_entities = advert_entities + " " + ent.text
     
 #text = [resume_entities, advert_entities]
 
@@ -457,7 +457,7 @@ Android (Java/Kotlin), iOS (swift) or React Native mobile development experience
 #if(prediction > 20):
   #  print("Candidate Accepted")
 #else:
-    #print("Candidate Rejected")
+   # print("Candidate Rejected")
 
 #resume_accuracy = evaluate(resume_analyzer, TEST_SOFTWARE_RESUME_DATA)
 
