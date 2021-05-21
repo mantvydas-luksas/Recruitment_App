@@ -33,8 +33,8 @@ import time
 import random
 import models
 import forms
-import docx2txt
-import PyPDF2
+import docx2txt #MIT License
+import PyPDF2 # Check license
 from pathlib import Path
 from functools import wraps
 
@@ -89,6 +89,7 @@ def evaluate(ner_model, examples):
 resume_analyzer = spacy.load("./resume_robot")
 
 advert_analyzer = spacy.load("./advert_robot")
+
 
 if ENV == 'prod':
      app.debug = True
