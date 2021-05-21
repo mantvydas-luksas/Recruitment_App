@@ -47,8 +47,8 @@ app.config['SECRET_KEY'] = 'super secret key'
 app.config['MAIL_SERVER'] = 'smtp-relay.sendinblue.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'mantvydas.luksas@gmail.com'
-app.config['MAIL_PASSWORD'] = 'URG02hNB5pq4Zt7b'
+app.config['MAIL_USERNAME'] = 'mantvydas.luksas@mycit.ie'
+app.config['MAIL_PASSWORD'] = 'qCaLQnOJIj2kY58v'
 
 mail = Mail(app)
 
