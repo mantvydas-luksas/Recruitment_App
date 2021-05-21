@@ -1,4 +1,8 @@
 #coding: utf-8
+#Student Name: Mantvydas Luksas
+#Student ID: R00150390 
+
+
 from flask import Flask, render_template, request, flash, redirect, url_for, session, logging, g
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import URLSafeTimedSerializer
@@ -33,8 +37,8 @@ import time
 import random
 import models
 import forms
-import docx2txt #MIT License
-import PyPDF2 # Check license
+import docx2txt 
+import PyPDF2 
 from pathlib import Path
 from functools import wraps
 
